@@ -54,4 +54,4 @@ Kombinuje praktické pomůcky (fonty, barevné palety, moodboard) s učící č�
 ---
 
 ## 🏫 Autor
-Ročníková práce – Střední průmyslová škola Ústí nad Labem, Stříbrníky
+Lukáš Buriánek - Krystus
