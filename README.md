@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎨 Grafický nástroj – Ročníková práce
 
-## Getting Started
+Tento projekt je webová aplikace určená pro grafiky všech úrovní – od začátečníků po pokročilé.  
+Kombinuje praktické pomůcky (fonty, barevné palety, moodboard) s učící částí a komunitními funkcemi.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Cíle projektu
+- Vytvořit přehlednou a interaktivní webovou aplikaci.  
+- Poskytnout databázi fontů, barev a tipů na jejich použití.  
+- Umožnit experimentování s barvami a fonty pomocí interaktivního moodboardu.  
+- Nabídnout učící část (grafický manuál, testy).  
+- Vytvořit prostor pro sdílení a inspiraci mezi uživateli (nástěnka).  
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ✨ Hlavní funkce
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🅰️ Fonty
+- Přehled fontů ke stažení.  
+- Náhled textů v jednotlivých fontech.  
+- Tipy na použití (web, plakát, aplikace).  
 
-## Learn More
+### 🎨 Barevné palety
+- Kompletní barevné spektrum + „eye-catching colors“.  
+- Generátor kombinací ladících barev.  
+- Náhled použití barev v layoutu (web, plakát, app).  
 
-To learn more about Next.js, take a look at the following resources:
+### 📌 Moodboard / editor
+- Pracovní plocha pro barvy, fonty a obrázky.  
+- Úpravy (velikost, rotace, vrstvy, průhlednost).  
+- Uložení a export do PNG/PDF.  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 📘 Grafický manuál
+- Vysvětlení základních principů (typografie, barvy, layout).  
+- Interaktivní ukázky.  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 📝 Grafické testy
+- Krátké úkoly na barvy a typografii.  
+- Okamžitá zpětná vazba a doporučení.  
 
-## Deploy on Vercel
+### 🖼️ Uživatelská nástěnka
+- Sdílení vlastních prací.  
+- Lajkování, komentáře, ukládání inspirace.  
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 💡 Přínos projektu
+- Praktický nástroj využitelný při práci s grafikou.  
+- Kombinace učebního materiálu a editoru.  
+- Jednoduchá a moderní webová aplikace.  
+- Možnost dalšího rozšiřování (nové funkce, databáze fontů, propojení s externími nástroji).  
+
+---
+
+## 🏫 Autor
+Ročníková práce – Střední průmyslová škola Ústí nad Labem, Stříbrníky
