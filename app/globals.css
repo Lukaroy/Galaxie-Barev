@@ -1,14 +1,50 @@
-/* --- Navbar --- */
+:root {
+  --font-inder: 'Inder', system-ui, sans-serif;
+  --font-montserrat: system-ui;
+}
+
+/* ---------------- RESET ---------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-inder);
+  color: white;
+  background-image: url("/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* ---------------- TYPOGRAFIE ---------------- */
+h1, h2, h3, .title {
+  font-family: var(--font-montserrat);
+}
+
+/* ---------------- NAVBAR ---------------- */
 .navbar {
   width: 100%;
   padding: 1rem 2rem;
   display: flex;
   align-items: center;
   color: white;
-  box-sizing: border-box; 
+  position: relative;
+  z-index: 1002;
 }
 
-.nav-left {
+.nav-left,
+.nav-right {
   display: flex;
   align-items: center;
 }
@@ -20,129 +56,374 @@
 }
 
 .nav-links {
-  display: flex;
   list-style: none;
-  margin: 0;
-  padding: 0;
-  gap: 2rem;
+  display: flex;
+  gap: 3rem;
 }
 
 .navbar a {
   color: white;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
+  transition: color 0.3s;
 }
 
 .navbar a:hover {
   color: #9872C7;
 }
 
-.nav-right {
-  display: flex;
-  align-items: center;
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
 }
 
-
-/* --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
-
-/* --- Container a texty --- */
+/* ---------------- HERO / CONTAINER ---------------- */
 .container {
-  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  min-height: calc(100vh - 120px);
   display: flex;
   flex-direction: column;
-  justify-content: center;  
-  align-items: center;      
-  height: calc(100vh - 60px);
+  justify-content: center;
+  align-items: center;
   text-align: center;
   padding: 0 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.container img {
+  margin-bottom: clamp(30px, 4vw, 40px);
 }
 
 .title {
   color: #CFBEE4;
-  font-size: 5rem;
-  margin-bottom: 1rem;
+  font-weight: 900;
+  font-size: clamp(3rem, 7vw, 5rem);
 }
 
 .subtitle {
-  color: #ffffff;
-  font-size: 3rem;
-  margin-bottom: 2rem;
+  font-family: var(--font-montserrat);
+  color: white;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  margin-bottom: clamp(60px, 8vw, 80px);
 }
-/* --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-/* --- Tlačítka --- */
+.mototitle {
+  font-family: var(--font-inder);
+  color: white;
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+  font-weight: 200;
+  text-align: center;
+  margin-top: clamp(30px, 4vw, 40px);
+  max-width: 600px;
+  line-height: 1.5;
+  padding: 0 1rem;
+  word-break: break-word;
+}
+
+/* ---------------- BUTTONS ---------------- */
 .button-group {
   display: flex;
-  gap: 1rem; 
-  justify-content: center; 
-  margin-top: 1rem;
+  gap: 2rem;
+  justify-content: center;
 }
 
-.my-button {
-  background-color: #684D89;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 0.5rem;
+.button {
+  font-family: var(--font-montserrat);
+  font-weight: 900;
+  font-size: 1.5rem;
+  padding: 1rem 5rem;
+  border-radius: 2rem;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: 0.3s;
+  color: white;
+  border: none;
 }
 
-.my-button:hover {
-  background-color: #9872C7;
+.button.primary {
+  background-color: #4F3173;
 }
 
+.button.primary:hover {
+  background-color: #684D89;
+}
 
-.my-button2 {
+.button.secondary {
+  background: transparent;
+  border: 3px solid #684D89;
+}
+
+.button.secondary:hover {
+  background-color: #4F3173;
+}
+
+/* ---------------- SLIDE MENU ---------------- */
+.slide-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  max-width: 80%;
+  height: 100%;
+  background-color: #684D89;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 5rem;
+  padding-bottom: 2rem;
+  border-top-left-radius: 2rem;
+  border-bottom-left-radius: 2rem;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.5);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 1003; 
+}
+
+.slide-menu.open {
+  transform: translateX(0);
+}
+
+.slide-menu .close-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.slide-menu .close-btn:hover {
+  transform: rotate(90deg);
+}
+
+.slide-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  text-align: center;
+}
+
+.slide-links a {
+  color: white;
+  font-family: var(--font-inder);
+  font-weight: 700;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.slide-links a:hover {
+  color: #CFBEE4;
+}
+
+.mobile-login {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+/* ---------------- BLUR OVERLAY ---------------- */
+.blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+  transition: opacity 0.4s ease;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.blur-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ---------------- LOGIN ---------------- */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.login-container {
+  position: absolute;
+  top: 20%;
+  left: 10%; 
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+  text-align: left;
+}
+
+.login-container h2 {
+  font-family: var(--font-inder);
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 0.3rem;
+  color: white;
+}
+
+.login-container h2 span {
+  font-family: var(--font-montserrat);
+  font-weight: 700;
+  font-size: 3rem;
+  display: block;
+  color: white;
+}
+
+.signup-link {
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.signup-link a {
+  color: #684D89;
+  text-decoration: none;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.login-form input {
+  padding: 0.9rem 1.1rem;
+  border-radius: 0.8rem;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  background-color: #3B364D;
+  color: white;
+}
+
+.login-form input::placeholder {
+  color: rgba(255,255,255,0.7);
+}
+
+.forgot-password {
+  font-size: 0.85rem;
+  text-align: right;
+  color: #684D89;
+  text-decoration: none;
+}
+
+.login-button {
+  margin-top: 0.8rem;
+  padding: 0.9rem;
+  border-radius: 1.2rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: #684D89;
+  color: white;
+  transition: 0.3s;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.social-login {
+  margin-top: 1.8rem;
+  display: flex;
+  gap: 2rem;
+}
+
+.social-login button {
+  flex: 1;
+  padding: 0.8rem;
+  border-radius: 0.9rem;
+  border: 2px solid #CFBEE4;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
   background-color: transparent;
   color: white;
-  padding: 0.75rem 1.5rem;
-  border: 2px solid #684D89;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.3s;
 }
 
-.my-button2:hover {
-  background-color: #9872C7;
+.social-login button:hover {
+  transform: translateY(-2px);
 }
-/* --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-/* --- Responsivní Media Queries --- */
+/* ---------------- RESPONSIVE ---------------- */
+@media (max-width: 1024px) {
+  .login-container {
+    padding: 1.5rem;
+  }
+}
+
 @media (max-width: 768px) {
-  .title {
-    font-size: 4.5rem;
+  .nav-links,
+  .nav-right {
+    display: none;
   }
-  .subtitle {
-    font-size: 2.7rem;
+
+  .hamburger {
+    display: block;
   }
-  .my-button {
-    padding: 0.6rem 1.2rem;
+
+  .container {
+    min-height: calc(100vh - clamp(150px, 10vw, 120px));
+    padding-top: clamp(1rem, 5vw, 2rem);
   }
-  .navbar ul {
+
+  .button-group {
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
+    width: 100%;
     align-items: center;
+  }
+
+  .button {
+    width: 55%;
+    padding: 1.2rem 2rem;
   }
 }
 
 @media (max-width: 480px) {
-  .title {
-    font-size: 4rem;
+  .login-container {
+    padding: 1rem;
   }
-  .subtitle {
+
+  .login-container h2 {
+    font-size: 1.2rem;
+  }
+
+  .login-container h2 span {
     font-size: 2rem;
   }
-  .my-button {
-    padding: 0.5rem 1rem;
+
+  .login-form input {
+    font-size: 0.95rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .login-button {
+    font-size: 1rem;
+    padding: 0.8rem;
   }
 }
-/* --------------------------------------------------------------------------------------------------------------------------------------------------------------------- */
 
-body {
-background-image: url("/background.png");
-background-size: cover;
-background-position: center;
-background-repeat: no-repeat;
-background-attachment: fixed;
+/* ---------------- BLOKOVÁNÍ SCROLLU PŘI MENU ---------------- */
+body.menu-open {
+  overflow: hidden;
 }
