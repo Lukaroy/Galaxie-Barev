@@ -253,7 +253,7 @@ h1, h2, h3, .title {
 /* ---------------- LOGIN ---------------- */
 .login-container {
   position: absolute;
-  top: 20%;
+  top: 15%;
   left: 10%;
   width: 100%;
   max-width: 420px;
@@ -358,7 +358,7 @@ h1, h2, h3, .title {
 
 .register-container {
   position: absolute;
-  top: 18%;
+  top: 10%;
   left: 10%;
   width: 100%;
   max-width: 600px;
@@ -368,7 +368,7 @@ h1, h2, h3, .title {
 
 .register-container h2 {
   font-family: var(--font-inder);
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   font-weight: 400;
   margin-bottom: 0.3rem;
   color: white;
@@ -377,7 +377,7 @@ h1, h2, h3, .title {
 .register-container h2 span {
   font-family: var(--font-montserrat);
   font-weight: 700;
-  font-size: 3rem;
+  font-size: 2.5rem;
   display: block;
 }
 
