@@ -1,0 +1,111 @@
+.login-container {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  text-align: left;
+}
+
+.login-container h2 {
+  font-family: var(--font-inder);
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-bottom: 0.3rem;
+  color: var(--color-white);
+}
+
+.login-container h2 span {
+  font-family: var(--font-montserrat);
+  font-weight: 700;
+  font-size: 3rem; 
+  display: block;
+  color: var(--color-white);
+}
+
+.signup-link a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.login-form input {
+  padding: 0.9rem 1.1rem; 
+  border-radius: 0.8rem;
+  border: none;
+  outline: none;
+  font-size: 1rem;        
+  background-color: #3B364D;
+  color: var(--color-white);
+}
+
+.login-form input::placeholder { color: #7F7C8B; }
+
+.forgot-password {
+  font-size: 0.85rem;
+  text-align: right;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.login-button {
+  margin-top: 0.8rem;
+  padding: 0.9rem;           
+  border-radius: 1.2rem;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.1rem;         
+  background: var(--color-primary);
+  color: var(--color-white);
+  transition: var(--transition-fast);
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.social-login {
+  margin-top: 1.8rem;
+  display: flex;
+  gap: 2rem;
+}
+
+.social-login button {
+  flex: 1;
+  padding: 0.8rem;           
+  border-radius: 0.9rem;
+  border: 2px solid var(--color-accent);
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition-fast);
+  background-color: transparent;
+  color: var(--color-white);
+}
+
+.social-login button:hover { transform: translateY(-2px); }
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid #aaa;
+}
+
+.divider::before { margin-right: 0.75rem; }
+.divider::after { margin-left: 0.75rem; }

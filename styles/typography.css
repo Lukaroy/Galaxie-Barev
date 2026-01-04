@@ -1,0 +1,30 @@
+h1, h2, h3, .title, h2 span {
+  font-family: var(--font-montserrat);
+}
+
+.title {
+  color: var(--color-accent);
+  font-weight: 900;
+  font-size: clamp(3rem, 7vw, 5rem);
+}
+
+.subtitle {
+  font-family: var(--font-montserrat);
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  margin-bottom: clamp(60px, 8vw, 80px);
+}
+
+.mototitle {
+  font-family: var(--font-inder);
+  color: var(--color-white);
+  font-size: 1.2rem;
+  font-weight: 200;
+  text-align: center;
+  margin-top: 1.5rem;
+  max-width: 600px;
+  line-height: 1.5;
+  padding: 0 1rem;
+  word-break: break-word;
+}

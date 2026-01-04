@@ -15,15 +15,15 @@ export default function Navbar() {
         <div className="nav-center">
           <ul className="nav-links">
             <li><Link href="/">Domů</Link></li>
-            <li><Link href="/color">Barvy</Link></li>
-            <li><Link href="/fonts">Fonty</Link></li>
+            <li><Link href="/barvy">Barvy</Link></li>
+            <li><Link href="/fonty">Fonty</Link></li>
             <li><Link href="/moodboard">Moodboard</Link></li>
-            <li><Link href="/galery">Galerie</Link></li>
+            <li><Link href="/galerie">Galerie</Link></li>
           </ul>
         </div>
 
         <div className="nav-right">
-          <Link href="/login">Přihlásit</Link>
+          <Link href="/prihlaseni">Přihlásit</Link>
         </div>
 
         {!open && (
@@ -44,13 +44,13 @@ export default function Navbar() {
         </button>
         <ul className="slide-links">
           <li><Link href="/" onClick={() => setOpen(false)}>Domů</Link></li>
-          <li><Link href="/color" onClick={() => setOpen(false)}>Barvy</Link></li>
-          <li><Link href="/fonts" onClick={() => setOpen(false)}>Fonty</Link></li>
+          <li><Link href="/barvy" onClick={() => setOpen(false)}>Barvy</Link></li>
+          <li><Link href="/fonty" onClick={() => setOpen(false)}>Fonty</Link></li>
           <li><Link href="/moodboard" onClick={() => setOpen(false)}>Moodboard</Link></li>
-          <li><Link href="/galery" onClick={() => setOpen(false)}>Galerie</Link></li>
+          <li><Link href="/galerie" onClick={() => setOpen(false)}>Galerie</Link></li>
 
           <li className="mobile-login">
-            <Link href="/login" onClick={() => setOpen(false)}>Přihlášení</Link>
+            <Link href="/prihlaseni" onClick={() => setOpen(false)}>Přihlášení</Link>
           </li>
         </ul>
       </div>

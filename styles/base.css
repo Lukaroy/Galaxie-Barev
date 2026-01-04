@@ -1,0 +1,38 @@
+:root {
+  --font-inder: 'Inder', system-ui, sans-serif;
+  --font-montserrat: system-ui;
+
+  --color-primary: #684D89;
+  --color-secondary: #4F3173;
+  --color-accent: #CFBEE4;
+  --color-white: #fff;
+  --transition-fast: 0.3s ease;
+}
+
+/* ---------------- RESET ---------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-inder);
+  color: var(--color-white);
+  background-image: url("/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
