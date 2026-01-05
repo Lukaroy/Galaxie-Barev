@@ -37,16 +37,16 @@ h1, h2, h3, .title {
   width: 100%;
   padding: 1rem 2rem;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   color: white;
   position: relative;
   z-index: 1002;
 }
 
-.nav-left,
-.nav-right {
-  display: flex;
-  align-items: center;
+.nav-left img {
+  width: 32px;
+  height: 32px;
 }
 
 .nav-center {
@@ -72,13 +72,194 @@ h1, h2, h3, .title {
   color: #9872C7;
 }
 
-.hamburger {
-  display: none;
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Profil */
+.profile-wrapper {
+  position: relative;
+}
+
+.profile-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.profile-text {
+  font-weight: 600;
+  color: white;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 44px;
+  right: 0;
+  background: #3B364D;
+  border-radius: 8px;
+  padding: 8px 0;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 4px;
+}
+
+.profile-avatar-small {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.profile-name {
+  font-weight: bold;
+  color: #CFBEE4;
+  font-size: 14px;
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  text-align: left;
   background: none;
   border: none;
+  color: #fff;
+}
+
+.dropdown-item:hover {
+  background-color: #4F3173;
+}
+
+.logout-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+}
+.logout-btn:hover,
+.profile-menu-link:hover {
+  color: #CFBEE4;
+}
+
+/* Hamburger menu */
+.hamburger {
+  display: none;
   font-size: 2rem;
+  background: none;
+  border: none;
   color: white;
   cursor: pointer;
+}
+
+.slide-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  max-width: 80%;
+  height: 100%;
+  background-color: #684D89;
+  display: flex;
+  flex-direction: column;
+  padding-top: 5rem;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 1003;
+}
+
+.slide-menu.open {
+  transform: translateX(0);
+}
+
+.slide-menu .close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.slide-menu .close-btn:hover {
+  transform: rotate(90deg);
+}
+
+.slide-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: center;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.slide-links a,
+.slide-links button {
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.slide-links a:hover,
+.slide-links button:hover {
+  color: #CFBEE4;
+}
+
+/* Mobilní profil dole */
+.mobile-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  align-items: center;
+  text-align: center; 
+}
+
+.profile-menu-link,
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  font-weight: 700;
+  justify-content: center; 
+  width: 100%;            
+}
+.desktop-only {
+  display: block;
 }
 
 /* ---------------- HERO / CONTAINER ---------------- */
@@ -130,6 +311,7 @@ h1, h2, h3, .title {
   display: flex;
   gap: 2rem;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .button {
@@ -142,6 +324,7 @@ h1, h2, h3, .title {
   transition: 0.3s;
   color: white;
   border: none;
+  text-align: center;
 }
 
 .button.primary {
@@ -161,99 +344,10 @@ h1, h2, h3, .title {
   background-color: #4F3173;
 }
 
-/* ---------------- SLIDE MENU ---------------- */
-.slide-menu {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 300px;
-  max-width: 80%;
-  height: 100%;
-  background-color: #684D89;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top: 5rem;
-  padding-bottom: 2rem;
-  border-top-left-radius: 2rem;
-  border-bottom-left-radius: 2rem;
-  box-shadow: -4px 0 20px rgba(0,0,0,0.5);
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-  z-index: 1003; 
-}
-
-.slide-menu.open {
-  transform: translateX(0);
-}
-
-.slide-menu .close-btn {
-  position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
-  font-size: 2rem;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.slide-menu .close-btn:hover {
-  transform: rotate(90deg);
-}
-
-.slide-links {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  text-align: center;
-}
-
-.slide-links a {
-  color: white;
-  font-family: var(--font-inder);
-  font-weight: 700;
-  font-size: 1.5rem;
-  text-decoration: none;
-  transition: color 0.3s;
-}
-
-.slide-links a:hover {
-  color: #CFBEE4;
-}
-
-.mobile-login {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid rgba(255,255,255,0.2);
-}
-
-/* ---------------- BLUR OVERLAY ---------------- */
-.blur-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  backdrop-filter: blur(5px);
-  transition: opacity 0.4s ease;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 1000;
-}
-
-.blur-overlay.active {
-  opacity: 1;
-  pointer-events: all;
-}
-
 /* ---------------- LOGIN ---------------- */
 .login-container {
   position: absolute;
-  top: 15%;
+  top: 20%;
   left: 10%;
   width: 100%;
   max-width: 420px;
@@ -355,10 +449,9 @@ h1, h2, h3, .title {
 }
 
 /* ---------------- REGISTER ---------------- */
-
 .register-container {
   position: absolute;
-  top: 10%;
+  top: 20%;
   left: 10%;
   width: 100%;
   max-width: 600px;
@@ -437,45 +530,40 @@ h1, h2, h3, .title {
 }
 
 
-/* --- Čára s textem --- */
 .divider {
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 1.5rem 0;
-  color: #aaa;
-  font-size: 0.9rem;
+  margin: 20px 0;
+  color: #777;
+  font-size: 14px;
 }
 
 .divider::before,
 .divider::after {
   content: "";
   flex: 1;
-  border-bottom: 1px solid #aaa;
+  height: 1px;
+  background: #ccc;
 }
 
-.divider::before {
-  margin-right: 0.75rem;
+.divider span {
+  padding: 0 12px;
+  white-space: nowrap;
 }
-
-.divider::after {
-  margin-left: 0.75rem;
-}
-
 /* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 768px) {
   .nav-links,
-  .nav-right {
-    display: none;
+  .profile-wrapper {
+    display: none; 
   }
 
   .hamburger {
     display: block;
   }
 
-  .container {
-    min-height: calc(100vh - clamp(150px, 10vw, 120px));
-    padding-top: clamp(1rem, 5vw, 2rem);
+  .desktop-only {
+    display: none;
   }
 
   .button-group {
@@ -487,69 +575,27 @@ h1, h2, h3, .title {
 
   .button {
     width: 55%;
+    max-width: 300px;
     padding: 1.2rem 2rem;
-  }
-
-  .login-container {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    padding: 1rem;
-    margin-top: 10vh;
-  }
-
-  .login-container h2 {
     font-size: 1.2rem;
   }
 
-  .login-container h2 span {
-    font-size: 2rem;
-  }
-
-  .login-form input {
-    font-size: 0.95rem;
-    padding: 0.75rem 1rem;
-  }
-
-  .login-button {
-    font-size: 1rem;
-    padding: 0.8rem;
-  }
-
+  .login-container,
   .register-container {
-    position: relative;
+    max-width: 420px;
+    padding: 1rem;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
     padding: 1rem;
-    margin-top: 10vh;
-  }
-
-  .register-container h2 {
-    font-size: 1.2rem;
-  }
-
-  .register-container h2 span {
-    font-size: 2rem;
+    top: 20%;
   }
 
   .name-row {
     flex-direction: column;
   }
-
-  .register-form input {
-    font-size: 0.95rem;
-    padding: 0.75rem 1rem;
-  }
-
-  .register-button {
-    font-size: 1rem;
-    padding: 0.8rem;
-  }
 }
 
-/* ---------------- BLOKOVÁNÍ SCROLLU PŘI MENU ---------------- */
 body.menu-open {
   overflow: hidden;
 }

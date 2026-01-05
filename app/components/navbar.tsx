@@ -1,12 +1,40 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import { useAuth } from '@/lib/useAuth'
+import { logoutUser } from '@/lib/auth'
 
 export default function Navbar() {
-  const [open, setOpen] = useState(false)
+  const { user, loading } = useAuth()
+  const [profileOpen, setProfileOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
-  return (<>
+  // Zavření dropdownu po kliknutí mimo
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setProfileOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  // Blokování scrollu při otevřeném menu
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.classList.add('menu-open')
+    } else {
+      document.body.classList.remove('menu-open')
+    }
+  }, [menuOpen])
+
+  if (loading) return null
+
+  return (
+    <>
       <nav className="navbar">
         <div className="nav-left">
           <img src="/naicon.svg" alt="Logo" width={32} height={32} />
@@ -23,36 +51,95 @@ export default function Navbar() {
         </div>
 
         <div className="nav-right">
-          <Link href="/prihlaseni">Přihlásit</Link>
-        </div>
+          {user ? (
+            <div className="profile-wrapper" ref={dropdownRef}>
+              <button
+                className="profile-btn"
+                onClick={() => setProfileOpen(!profileOpen)}
+              >
+                <img
+                  src={user.photoURL || '/avatar.jpg'}
+                  alt="Profil"
+                  className="profile-avatar"
+                />
+                <span className="profile-text">Můj profil</span>
+              </button>
 
-        {!open && (
-          <button className="hamburger" onClick={() => setOpen(true)}>
-            ☰
+              {profileOpen && (
+                <div className="profile-dropdown">
+                  <div className="profile-header">
+                    <img
+                      src={user.photoURL || '/avatar.jpg'}
+                      alt="Profil"
+                      className="profile-avatar-small"
+                    />
+                    <span className="profile-name">{user.displayName || user.email}</span>
+                  </div>
+
+                  <Link href="/profil" className="dropdown-item" onClick={() => setProfileOpen(false)}>Můj profil</Link>
+                  <Link href="/nastenka" className="dropdown-item" onClick={() => setProfileOpen(false)}>Nástěnka</Link>
+                  <Link href="/oblibene" className="dropdown-item" onClick={() => setProfileOpen(false)}>Oblíbené</Link>
+                  <Link href="/nastaveni" className="dropdown-item" onClick={() => setProfileOpen(false)}>Nastavení</Link>
+                  <button className="dropdown-item logout-btn" onClick={() => { logoutUser(); setProfileOpen(false) }}>Odhlásit se</button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link href="/prihlaseni" className="desktop-only">Přihlásit</Link>
+          )}
+
+          {/* Hamburger pro mobil */}
+          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
+            &#9776;
           </button>
-        )}
+        </div>
       </nav>
 
-      <div
-        className={`blur-overlay ${open ? 'active' : ''}`}
-        onClick={() => setOpen(false)}
-      ></div>
-
-      <div className={`slide-menu ${open ? 'open' : ''}`}>
-        <button className="close-btn" onClick={() => setOpen(false)}>
-          &times;
-        </button>
+      {/* Mobilní menu */}
+      <div className={`slide-menu ${menuOpen ? 'open' : ''}`}>
+        <button className="close-btn" onClick={() => setMenuOpen(false)}>&times;</button>
         <ul className="slide-links">
-          <li><Link href="/" onClick={() => setOpen(false)}>Domů</Link></li>
-          <li><Link href="/barvy" onClick={() => setOpen(false)}>Barvy</Link></li>
-          <li><Link href="/fonty" onClick={() => setOpen(false)}>Fonty</Link></li>
-          <li><Link href="/moodboard" onClick={() => setOpen(false)}>Moodboard</Link></li>
-          <li><Link href="/galerie" onClick={() => setOpen(false)}>Galerie</Link></li>
-
-          <li className="mobile-login">
-            <Link href="/prihlaseni" onClick={() => setOpen(false)}>Přihlášení</Link>
-          </li>
+          <li><Link href="/" onClick={() => setMenuOpen(false)}>Domů</Link></li>
+          <li><Link href="/barvy" onClick={() => setMenuOpen(false)}>Barvy</Link></li>
+          <li><Link href="/fonty" onClick={() => setMenuOpen(false)}>Fonty</Link></li>
+          <li><Link href="/moodboard" onClick={() => setMenuOpen(false)}>Moodboard</Link></li>
+          <li><Link href="/galerie" onClick={() => setMenuOpen(false)}>Galerie</Link></li>
         </ul>
+
+        {!user && (
+        <div className="mobile-profile">
+          <Link
+            href="/prihlaseni"
+            className="profile-menu-link"
+            onClick={() => setMenuOpen(false)}
+          >
+            Přihlásit se
+          </Link>
+        </div>
+        )}
+
+        {user && (
+          <div className="mobile-profile">
+            <Link
+              href="/profil"
+              className="profile-menu-link"
+              onClick={() => setMenuOpen(false)}
+            >
+              <img
+                src={user.photoURL || '/avatar.jpg'}
+                alt="Profil"
+                className="profile-avatar"
+              />
+              <span>Můj profil</span>
+            </Link>
+            <button
+              className="profile-menu-link logout-btn"
+              onClick={() => { logoutUser(); setMenuOpen(false) }}
+            >
+              Odhlásit se
+            </button>
+          </div>
+        )}
       </div>
     </>
   )
