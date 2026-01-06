@@ -38,6 +38,7 @@ export default function LoginForm() {
           placeholder="Email"
           required
           value={email}
+          autoComplete="on"
           onChange={e => setEmail(e.target.value)}
         />
 
@@ -46,6 +47,7 @@ export default function LoginForm() {
           placeholder="Tvoje heslo"
           required
           value={password}
+          autoComplete="on"
           onChange={e => setPassword(e.target.value)}
         />
 

@@ -20,7 +20,7 @@ export default function RegisterForm() {
 
     try {
       await registerUser(email, password)
-      router.push("/") // kamkoliv po registraci
+      router.push("/")
     } catch (err: any) {
   console.error(err)
   setError(err.message)

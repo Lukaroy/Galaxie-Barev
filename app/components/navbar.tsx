@@ -11,7 +11,6 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  // Zavření dropdownu po kliknutí mimo
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -22,7 +21,6 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Blokování scrollu při otevřeném menu
   useEffect(() => {
     if (menuOpen) {
       document.body.classList.add('menu-open')
@@ -88,14 +86,12 @@ export default function Navbar() {
             <Link href="/prihlaseni" className="desktop-only">Přihlásit</Link>
           )}
 
-          {/* Hamburger pro mobil */}
           <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
             &#9776;
           </button>
         </div>
       </nav>
 
-      {/* Mobilní menu */}
       <div className={`slide-menu ${menuOpen ? 'open' : ''}`}>
         <button className="close-btn" onClick={() => setMenuOpen(false)}>&times;</button>
         <ul className="slide-links">

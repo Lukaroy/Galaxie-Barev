@@ -236,12 +236,11 @@ h1, h2, h3, .title {
   color: #CFBEE4;
 }
 
-/* Mobilní profil dole */
 .mobile-profile {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-top: 25rem;
+  margin-top: 20rem;
   padding-top: 1rem;
   border-top: 1px solid rgba(255,255,255,0.2);
   align-items: center;
@@ -551,6 +550,100 @@ h1, h2, h3, .title {
   padding: 0 12px;
   white-space: nowrap;
 }
+
+/* ---------------- COLOR GENERATOR ---------------- */
+.color-gen {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius: 12px;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+}
+
+.color-gen .controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.color-gen .color-input span,
+.color-gen .scheme-select span {
+  display: block;
+  color: #CFBEE4;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.color-gen .color-row {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.color-gen input[type="color"] {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.color-gen .hex-input {
+  flex: 1;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  background: #3B364D;
+  color: white;
+  border: none;
+}
+
+.color-gen .scheme-select select {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  background: #3B364D;
+  color: white;
+  border: none;
+}
+
+.color-gen .controls-row {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.palette {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.swatch {
+  flex: 1;
+  min-width: 72px;
+  height: 64px;
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.swatch-label {
+  background: rgba(0,0,0,0.36);
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  margin-bottom: 0.4rem;
+}
+
 /* ---------------- RESPONSIVE ---------------- */
 @media (max-width: 768px) {
   .nav-links,
