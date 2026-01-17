@@ -1,19 +1,126 @@
+"use client"
+
+import { useRouter } from "next/navigation"
+import { motion } from "framer-motion"
+import { ArrowRight } from "lucide-react"
+import { useAuth } from "@/hooks/useAuth"
+
 export default function HomePage() {
-  return (
-    <div className="container">
-      <img src="/logo.svg" alt="Logo" width={100} height={100} />
+  const { user, loading } = useAuth()
+  const router = useRouter()
 
-      <h1 className="title">GALAXIE BAREV</h1>
-      <p className="subtitle">Designové studio</p>
-
-      <div className="button-group">
-        <button className="button primary">Začít tvořit</button>
-        <button className="button secondary">Zjistit více</button>
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <motion.div 
+          className="loader"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        />
+        <p>Načítám...</p>
       </div>
+    )
+  }
 
-    <p className="mototitle">Začni svou cestu designovou galaxií.
-    Nástroje, které promění tvé nápady a představy v dokonalý design.</p>
+  return (
+    <div className="home-container">
+      <motion.div 
+        className="hero-section"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <motion.img 
+          src="/logo.svg" 
+          alt="Logo" 
+          width={120} 
+          height={120}
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ 
+            duration: 0.8, 
+            type: "spring",
+            stiffness: 100,
+            damping: 15
+          }}
+        />
 
+        <motion.h1 
+          className="hero-title"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          GALAXIE BAREV
+        </motion.h1>
+        
+        <motion.p 
+          className="hero-subtitle"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          Designové studio
+        </motion.p>
+
+        <motion.div 
+          className="hero-description"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          <p>Tvořit dobrý design není snadné. A to je v pořádku.</p>
+          <p>Máme nástroje, které ti pomoužou dostat tvé nápady na další úroveň.</p>
+        </motion.div>
+
+        <motion.div 
+          className="cta-buttons"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+        >
+          {user ? (
+            <motion.button
+              className="cta-primary"
+              onClick={() => router.push("/barvy")}
+              whileHover={{ 
+                scale: 1.03, 
+                boxShadow: "0 12px 48px rgba(152, 114, 199, 0.45)",
+                transition: { duration: 0.2 }
+              }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Začít tvořit <ArrowRight size={20} />
+            </motion.button>
+          ) : (
+            <>
+              <motion.button
+                className="cta-primary"
+                onClick={() => router.push("/registrace")}
+                whileHover={{ 
+                  scale: 1.03, 
+                  boxShadow: "0 12px 48px rgba(152, 114, 199, 0.45)",
+                  transition: { duration: 0.2 }
+                }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Vytvořit účet
+              </motion.button>
+              <motion.button
+                className="cta-secondary"
+                onClick={() => router.push("/prihlaseni")}
+                whileHover={{ 
+                  scale: 1.03,
+                  transition: { duration: 0.2 }
+                }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Přihlásit se
+              </motion.button>
+            </>
+          )}
+        </motion.div>
+      </motion.div>
     </div>
   )
 }

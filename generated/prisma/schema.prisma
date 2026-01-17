@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  MODERATOR
+}
+
+model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  firstName String?   @db.VarChar(64)
+  lastName  String?   @db.VarChar(64)
+  userName  String    @unique @db.VarChar(32)
+  birthday  DateTime?
+  role      UserRole  @default(USER)
+
+  posts     Post[]
+  postLikes PostLike[]
+}
+
+model Font {
+  id       Int     @id @default(autoincrement())
+  name     String  @db.VarChar(64)
+  category String  @db.VarChar(32)
+  url      String  @db.Text
+  tips     String? @db.Text
+}
+
+model Palette {
+  id          Int      @id @default(autoincrement())
+  mainColor   String   @db.VarChar(7) // HEX formát #FFFFFF
+  mixinColors String[] // Vyžaduje PostgreSQL, jinak nutná tabulka PaletteColor
+  tags        String[] // Vyžaduje PostgreSQL, jinak nutná tabulka PaletteTag
+  description String?  @db.Text
+}
+
+model Attribute {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(32)
+  description String? @db.VarChar(255)
+  isActive    Boolean @default(true)
+
+  elementTypes  ElementAttribute[]
+  elementValues ElementValue[]
+}
+
+model ElementType {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(32)
+  description String? @db.VarChar(255)
+  isActive    Boolean @default(true)
+
+  elements   Element[]
+  attributes ElementAttribute[]
+}
+
+// Propojovací tabulka pro M:N vztah mezi Typem Elementu a Atributy
+model ElementAttribute {
+  elementTypeId Int
+  attributeId   Int
+
+  elementType ElementType @relation(fields: [elementTypeId], references: [id])
+  attribute   Attribute   @relation(fields: [attributeId], references: [id])
+
+  @@id([elementTypeId, attributeId])
+}
+
+model Element {
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(32)
+  coordsX  Int
+  coordsY  Int
+  opacity  Int    @default(100)
+  rotation Int    @default(0)
+  height   Int
+  width    Int
+  layer    Int    @default(0)
+
+  elementTypeId Int
+  moodboardId   Int
+
+  elementType ElementType    @relation(fields: [elementTypeId], references: [id])
+  moodboard   Moodboard      @relation(fields: [moodboardId], references: [id])
+  values      ElementValue[]
+}
+
+model ElementValue {
+  elementId   Int
+  attributeId Int
+  value       String @db.VarChar(255)
+
+  element   Element   @relation(fields: [elementId], references: [id])
+  attribute Attribute @relation(fields: [attributeId], references: [id])
+
+  @@id([elementId, attributeId])
+}
+
+model Moodboard {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+
+  userId   String // Firebase UID, bez foreign key pro jednodušší vývoj
+  elements Element[]
+  posts    Post[]
+}
+
+model Post {
+  id       Int    @id @default(autoincrement())
+  title    String @db.VarChar(64)
+  imageUrl String @db.Text // Místo Base64 ukládáme cestu k souboru
+
+  authorId    String
+  moodboardId Int
+
+  author    User       @relation(fields: [authorId], references: [id])
+  moodboard Moodboard  @relation(fields: [moodboardId], references: [id])
+  likes     PostLike[]
+}
+
+model PostLike {
+  id     Int    @id @default(autoincrement())
+  postId Int
+  userId String
+
+  post Post @relation(fields: [postId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([postId, userId]) // Jeden uživatel může dát lajk postu jen jednou
+}

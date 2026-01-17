@@ -1,0 +1,16 @@
+import { MetadataRoute } from 'next'
+
+export default function robots(): MetadataRoute.Robots {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://galaxie-barev.cz'
+  
+  return {
+    rules: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/api/', '/profil/', '/admin/'],
+      },
+    ],
+    sitemap: `${baseUrl}/sitemap.xml`,
+  }
+}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { useAuth } from '@/lib/useAuth'
+import { useAuth } from '@/hooks/useAuth'
 import { logoutUser } from '@/lib/auth'
 
 export default function Navbar() {
@@ -45,6 +45,7 @@ export default function Navbar() {
             <li><Link href="/fonty">Fonty</Link></li>
             <li><Link href="/moodboard">Moodboard</Link></li>
             <li><Link href="/galerie">Galerie</Link></li>
+            <li><Link href="/teorie">Teorie</Link></li>
           </ul>
         </div>
 
@@ -100,6 +101,7 @@ export default function Navbar() {
           <li><Link href="/fonty" onClick={() => setMenuOpen(false)}>Fonty</Link></li>
           <li><Link href="/moodboard" onClick={() => setMenuOpen(false)}>Moodboard</Link></li>
           <li><Link href="/galerie" onClick={() => setMenuOpen(false)}>Galerie</Link></li>
+          <li><Link href="/teorie" onClick={() => setMenuOpen(false)}>Teorie</Link></li>
         </ul>
 
         {!user && (
