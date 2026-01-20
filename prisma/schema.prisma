@@ -21,8 +21,8 @@ model User {
   birthday  DateTime?
   role      UserRole    @default(USER)
   
-  posts      Post[]
-  postLikes  PostLike[]
+  galleryPins     GalleryPin[]
+  galleryPinLikes GalleryPinLike[]
 }
 
 model Font {
@@ -39,6 +39,16 @@ model Palette {
   mixinColors String[] // Vyžaduje PostgreSQL, jinak nutná tabulka PaletteColor
   tags        String[] // Vyžaduje PostgreSQL, jinak nutná tabulka PaletteTag
   description String?  @db.Text
+}
+
+model Segment {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)   // Název článku
+  slug        String   @unique             // Unikátní identifikátor pro URL, např. "typografie-v-ui"
+  description String?  @db.Text           // Krátký úvod / obsah pro seznam článků
+  tags        String[]                     // Kategorie nebo štítky
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Attribute {
@@ -109,29 +119,27 @@ model Moodboard {
   
   userId    String    // Firebase UID, bez foreign key pro jednodušší vývoj
   elements  Element[]
-  posts     Post[]
 }
 
-model Post {
-  id          Int        @id @default(autoincrement())
-  title       String     @db.VarChar(64)
-  imageUrl    String     @db.Text // Místo Base64 ukládáme cestu k souboru
+model GalleryPin {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(128)
+  imageUrl    String    @db.Text
+  description String?   @db.Text
+  createdAt   DateTime  @default(now())
   
   authorId    String
-  moodboardId Int
-  
-  author      User       @relation(fields: [authorId], references: [id])
-  moodboard   Moodboard  @relation(fields: [moodboardId], references: [id])
-  likes       PostLike[]
+  author      User              @relation(fields: [authorId], references: [id])
+  likes       GalleryPinLike[]
 }
 
-model PostLike {
+model GalleryPinLike {
   id      Int    @id @default(autoincrement())
-  postId  Int
+  pinId   Int
   userId  String
   
-  post    Post   @relation(fields: [postId], references: [id])
-  user    User   @relation(fields: [userId], references: [id])
+  pin     GalleryPin @relation(fields: [pinId], references: [id], onDelete: Cascade)
+  user    User       @relation(fields: [userId], references: [id])
 
-  @@unique([postId, userId]) // Jeden uživatel může dát lajk postu jen jednou
+  @@unique([pinId, userId])
 }

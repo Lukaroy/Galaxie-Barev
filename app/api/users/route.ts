@@ -2,10 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth, requireAdmin } from '@/lib/authMiddleware';
 import { prisma } from '@/lib/prisma';
 
-/**
- * GET /api/users
- * Získá všechny uživatele (vyžaduje přihlášení)
- */
+
 export async function GET(request: NextRequest) {
   const authResult = await requireAuth(request);
   if (authResult instanceof NextResponse) return authResult;
@@ -28,10 +25,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-/**
- * POST /api/users
- * Vytvoří nového uživatele (pouze pro adminy)
- */
 export async function POST(request: NextRequest) {
   const authResult = await requireAdmin(request);
   if (authResult instanceof NextResponse) return authResult;

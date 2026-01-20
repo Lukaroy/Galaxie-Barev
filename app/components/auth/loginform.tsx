@@ -1,33 +1,40 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { loginUser } from "@/lib/auth"
 import { handleAuthError } from "@/lib/errorHandling"
 import Alert from "../alert"
 import SocialLoginButtons from "./socialLoginButtons"
 import Loading from "../loading"
+import { Eye, EyeOff } from "lucide-react"
+
 
 export default function LoginForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [touched, setTouched] = useState({ email: false, password: false })
 
-  // Jednoduchá validace emailu
+  useEffect(() => {
+    if (searchParams.get("registered") === "true") {
+      setSuccess("Registrace byla úspěšná! Nyní se můžeš přihlásit.")
+    }
+  }, [searchParams])
+
   const isEmailValid = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
   }
 
-  // Přihlášení pomocí emailu + hesla
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
     
-    // Validace před odesláním
     if (!email.trim()) {
       setError("Zadej svůj email")
       return
@@ -47,11 +54,9 @@ export default function LoginForm() {
 
     try {
       await loginUser(email, password)
-      // Přesměrování proběhne automaticky přes useAuth
       router.push("/")
     } catch (err: any) {
       const errorMsg = handleAuthError(err)
-      // Zlepšení chybových zpráv
       if (errorMsg.includes("user-not-found") || errorMsg.includes("wrong-password")) {
         setError("Neplatný email nebo heslo. Zkontroluj údaje a zkus to znovu.")
       } else if (errorMsg.includes("too-many-requests")) {
@@ -70,7 +75,7 @@ export default function LoginForm() {
   return (
     <div className="login-container">
       <h2>
-        AHOJ!
+        Ahoj!
         <span>Vítej zpátky!</span>
       </h2>
 
@@ -110,14 +115,15 @@ export default function LoginForm() {
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Skrýt heslo" : "Zobrazit heslo"}
           >
-            {showPassword ? "🙈" : "👁️"}
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
 
-        <a href="/reset-hesla" className="forgot-password">
+        <a href="/zapomenute-heslo" className="forgot-password">
           Zapomněl si heslo?
         </a>
 
+        {success && <Alert message={success} type="success" />}
         {error && <Alert message={error} />}
 
         <button type="submit" className="login-button">

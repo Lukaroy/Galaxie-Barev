@@ -146,6 +146,16 @@ exports.Prisma.PaletteScalarFieldEnum = {
   description: 'description'
 };
 
+exports.Prisma.SegmentScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  description: 'description',
+  tags: 'tags',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.AttributeScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -192,17 +202,18 @@ exports.Prisma.MoodboardScalarFieldEnum = {
   userId: 'userId'
 };
 
-exports.Prisma.PostScalarFieldEnum = {
+exports.Prisma.GalleryPinScalarFieldEnum = {
   id: 'id',
   title: 'title',
   imageUrl: 'imageUrl',
-  authorId: 'authorId',
-  moodboardId: 'moodboardId'
+  description: 'description',
+  createdAt: 'createdAt',
+  authorId: 'authorId'
 };
 
-exports.Prisma.PostLikeScalarFieldEnum = {
+exports.Prisma.GalleryPinLikeScalarFieldEnum = {
   id: 'id',
-  postId: 'postId',
+  pinId: 'pinId',
   userId: 'userId'
 };
 
@@ -222,22 +233,22 @@ exports.Prisma.NullsOrder = {
 };
 exports.UserRole = exports.$Enums.UserRole = {
   USER: 'USER',
-  ADMIN: 'ADMIN',
-  MODERATOR: 'MODERATOR'
+  ADMIN: 'ADMIN'
 };
 
 exports.Prisma.ModelName = {
   User: 'User',
   Font: 'Font',
   Palette: 'Palette',
+  Segment: 'Segment',
   Attribute: 'Attribute',
   ElementType: 'ElementType',
   ElementAttribute: 'ElementAttribute',
   Element: 'Element',
   ElementValue: 'ElementValue',
   Moodboard: 'Moodboard',
-  Post: 'Post',
-  PostLike: 'PostLike'
+  GalleryPin: 'GalleryPin',
+  GalleryPinLike: 'GalleryPinLike'
 };
 
 /**

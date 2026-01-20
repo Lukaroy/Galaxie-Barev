@@ -1,7 +1,3 @@
-/**
- * Error handling utility functions
- */
-
 export class AppError extends Error {
   constructor(
     message: string,

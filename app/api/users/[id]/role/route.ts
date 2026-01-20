@@ -2,17 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/authMiddleware'
 import { prisma } from '@/lib/prisma'
 
-/**
- * PATCH /api/users/[id]/role
- * Změní roli uživatele (pouze pro adminy)
- */
 export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
   const params = await context.params
   
-  // Pouze admin může měnit role
   const authResult = await requireAdmin(request)
   if (authResult instanceof NextResponse) return authResult
 
@@ -20,14 +15,12 @@ export async function PATCH(
     const body = await request.json()
     const { role } = body
 
-    // Validace role
-    if (!['USER', 'ADMIN', 'MODERATOR'].includes(role)) {
+    if (!['USER', 'ADMIN'].includes(role)) {
       return NextResponse.json({ 
-        error: 'Invalid role. Allowed: USER, ADMIN, MODERATOR' 
+        error: 'Invalid role. Allowed: USER, ADMIN' 
       }, { status: 400 })
     }
 
-    // Aktualizace role
     const user = await prisma.user.update({
       where: { id: params.id },
       data: { role },
@@ -60,10 +53,6 @@ export async function PATCH(
   }
 }
 
-/**
- * GET /api/users/[id]/role
- * Získá roli uživatele (pouze pro přihlášené)
- */
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }

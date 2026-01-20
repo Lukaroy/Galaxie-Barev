@@ -52,12 +52,10 @@ export async function PATCH(request: Request, context: any) {
   try {
     const data = await request.json();
     
-    // Sanitizace userName
     if (data.userName) {
       data.userName = data.userName.toLowerCase().replace(/[^a-z0-9_.-]/g, '_').slice(0, 32);
     }
     
-    // Kontrola unikátnosti userName
     if (data.userName) {
       const existingUser = await prisma.user.findUnique({
         where: { userName: data.userName }
@@ -69,7 +67,6 @@ export async function PATCH(request: Request, context: any) {
       }
     }
     
-    // Konverze birthday na Date pokud existuje
     if (data.birthday) {
       data.birthday = new Date(data.birthday);
     }

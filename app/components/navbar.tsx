@@ -43,7 +43,7 @@ export default function Navbar() {
             <li><Link href="/">Domů</Link></li>
             <li><Link href="/barvy">Barvy</Link></li>
             <li><Link href="/fonty">Fonty</Link></li>
-            <li><Link href="/moodboard">Moodboard</Link></li>
+            <li><Link href="/moodbords">Moodboard</Link></li>
             <li><Link href="/galerie">Galerie</Link></li>
             <li><Link href="/teorie">Teorie</Link></li>
           </ul>
@@ -56,22 +56,16 @@ export default function Navbar() {
                 className="profile-btn"
                 onClick={() => setProfileOpen(!profileOpen)}
               >
-                <img
-                  src={user.photoURL || '/avatar.jpg'}
-                  alt="Profil"
-                  className="profile-avatar"
-                />
+              <div className="profile-avatar-small">
+              </div>
                 <span className="profile-text">Můj profil</span>
               </button>
 
               {profileOpen && (
                 <div className="profile-dropdown">
                   <div className="profile-header">
-                    <img
-                      src={user.photoURL || '/avatar.jpg'}
-                      alt="Profil"
-                      className="profile-avatar-small"
-                    />
+                 <div className="profile-avatar-small">
+                </div>
                     <span className="profile-name">{user.displayName || user.email}</span>
                   </div>
 
@@ -99,9 +93,14 @@ export default function Navbar() {
           <li><Link href="/" onClick={() => setMenuOpen(false)}>Domů</Link></li>
           <li><Link href="/barvy" onClick={() => setMenuOpen(false)}>Barvy</Link></li>
           <li><Link href="/fonty" onClick={() => setMenuOpen(false)}>Fonty</Link></li>
-          <li><Link href="/moodboard" onClick={() => setMenuOpen(false)}>Moodboard</Link></li>
+          <li><Link href="/moodbords" onClick={() => setMenuOpen(false)}>Moodboard</Link></li>
           <li><Link href="/galerie" onClick={() => setMenuOpen(false)}>Galerie</Link></li>
           <li><Link href="/teorie" onClick={() => setMenuOpen(false)}>Teorie</Link></li>
+        </ul>
+        <ul className="down-links">
+          <li><Link href="/nastenka"onClick={() => setProfileOpen(false)}>Nástěnka</Link></li>
+          <li><Link href="/oblibene"onClick={() => setProfileOpen(false)}>Oblíbené</Link></li>
+          <li><Link href="/nastaveni"onClick={() => setProfileOpen(false)}>Nastavení</Link></li>
         </ul>
 
         {!user && (
@@ -123,11 +122,8 @@ export default function Navbar() {
               className="profile-menu-link"
               onClick={() => setMenuOpen(false)}
             >
-              <img
-                src={user.photoURL || '/avatar.jpg'}
-                alt="Profil"
-                className="profile-avatar"
-              />
+               <div className="profile-avatar">
+              </div>
               <span>Můj profil</span>
             </Link>
             <button

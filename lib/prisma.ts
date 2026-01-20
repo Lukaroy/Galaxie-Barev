@@ -10,3 +10,5 @@ const prismaInitOptions = process.env.PRISMA_ACCELERATE_URL
 export const prisma = globalForPrisma.prisma || new PrismaClient(prismaInitOptions)
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+
+export default prisma

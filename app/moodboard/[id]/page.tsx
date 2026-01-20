@@ -2,15 +2,18 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
-import { ArrowLeft, Square, Image as ImageIcon, Type, Circle, Minus, Download, Layers, MousePointer2 } from 'lucide-react'
+import { ArrowLeft, Square, Image as ImageIcon, Type, Circle, Trash2, Copy, Download, Layers, MousePointer2, ZoomIn, ZoomOut, Move, Minus } from 'lucide-react'
 import { auth } from '@/lib/firebase'
 
-interface CanvasItem {
+interface CanvasElement {
   id: number
   coordsX: number
   coordsY: number
   width: number
   height: number
+  rotation: number
+  opacity: number
+  layer: number
   elementType: {
     name: string
   }
@@ -20,12 +23,14 @@ interface CanvasItem {
     }
     value: string
   }>
+  isLocked?: boolean
+  isHidden?: boolean
 }
 
 interface Moodboard {
   id: number
   name: string
-  elements: CanvasItem[]
+  elements: CanvasElement[]
 }
 
 export default function MoodboardEditorPage() {
@@ -34,67 +39,83 @@ export default function MoodboardEditorPage() {
   const moodboardId = params.id as string
   
   const [moodboard, setMoodboard] = useState<Moodboard | null>(null)
-  const [activeTool, setActiveTool] = useState<'select' | 'rect' | 'circle' | 'line' | 'text' | 'image'>('select')
-  const [newColor, setNewColor] = useState('#9872C7')
-  const [draggedItem, setDraggedItem] = useState<number | null>(null)
-  const [selectedItem, setSelectedItem] = useState<number | null>(null)
-  const [selectedItems, setSelectedItems] = useState<number[]>([])
-  const [resizingItem, setResizingItem] = useState<number | null>(null)
+  const [activeTool, setActiveTool] = useState<'select' | 'rect' | 'circle' | 'text' | 'image'>('select')
+  const [selectedElements, setSelectedElements] = useState<number[]>([])
+  const [draggedElement, setDraggedElement] = useState<number | null>(null)
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
+  const [resizingElement, setResizingElement] = useState<{ id: number, handle: string } | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [zoom, setZoom] = useState(100)
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 })
+  const [isPanning, setIsPanning] = useState(false)
+  const [canvasBg, setCanvasBg] = useState('#1E1E1E')
+  const [showLayersPanel, setShowLayersPanel] = useState(true)
+  const [showPropertiesPanel, setShowPropertiesPanel] = useState(true)
   const [showColorPicker, setShowColorPicker] = useState(false)
+  const canvasRef = useRef<HTMLDivElement>(null)
+  const [history, setHistory] = useState<Moodboard[]>([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
+  const [selectedItem, setSelectedItem] = useState<number | null>(null)
+
+  // Modal states
+  const [showTextModal, setShowTextModal] = useState(false)
+  const [showImageModal, setShowImageModal] = useState(false)
   const [showTextInput, setShowTextInput] = useState(false)
   const [showImageInput, setShowImageInput] = useState(false)
-  const [showLayersPanel, setShowLayersPanel] = useState(true)
-  const [showExportModal, setShowExportModal] = useState(false)
-  const [showContextMenu, setShowContextMenu] = useState(false)
-  const [contextMenuPos, setContextMenuPos] = useState({ x: 0, y: 0 })
-  const [canvasBg, setCanvasBg] = useState('#252526')
   const [pendingText, setPendingText] = useState('')
   const [pendingImageUrl, setPendingImageUrl] = useState('')
+  const [pendingColor, setPendingColor] = useState('#9872C7')
+  const [pendingFontSize, setPendingFontSize] = useState(24)
   const [pendingPosition, setPendingPosition] = useState<{ x: number, y: number } | null>(null)
-  const [fontSize, setFontSize] = useState(16)
-  const [zoom, setZoom] = useState(100)
-  const [isPanning, setIsPanning] = useState(false)
-  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 })
-  const canvasRef = useRef<HTMLDivElement>(null)
+  const [newColor, setNewColor] = useState('#9872C7')
+  const [showExportModal, setShowExportModal] = useState(false)
 
   useEffect(() => {
     fetchMoodboard()
     
     // Keyboard shortcuts
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Delete selected items
-      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedItem) {
+      // Delete
+      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedElements.length > 0) {
         e.preventDefault()
-        deleteItem(selectedItem)
-        setSelectedItem(null)
+        deleteSelectedElements()
       }
       
       // Escape - deselect
       if (e.key === 'Escape') {
-        setSelectedItem(null)
-        setSelectedItems([])
-        setActiveTool('select')
-        setShowColorPicker(false)
-        setShowTextInput(false)
-        setShowImageInput(false)
-      }
-      
-      // V - select tool
-      if (e.key === 'v' && !e.ctrlKey && !e.metaKey) {
+        setSelectedElements([])
         setActiveTool('select')
       }
       
-      // R - rectangle
-      if (e.key === 'r' && !e.ctrlKey && !e.metaKey) {
-        setShowColorPicker(true)
-        setActiveTool('rect')
+      // Ctrl/Cmd + Z - Undo
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault()
+        undo()
       }
       
-      // T - text
-      if (e.key === 't' && !e.ctrlKey && !e.metaKey) {
-        setActiveTool('text')
+      // Ctrl/Cmd + Shift + Z - Redo
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') {
+        e.preventDefault()
+        redo()
       }
+      
+      // Ctrl/Cmd + C - Copy
+      if ((e.ctrlKey || e.metaKey) && e.key === 'c' && selectedElements.length > 0) {
+        e.preventDefault()
+        copySelectedElements()
+      }
+      
+      // Ctrl/Cmd + D - Duplicate
+      if ((e.ctrlKey || e.metaKey) && e.key === 'd' && selectedElements.length > 0) {
+        e.preventDefault()
+        duplicateSelectedElements()
+      }
+      
+      // Tool shortcuts
+      if (e.key === 'v') setActiveTool('select')
+      if (e.key === 'r') setActiveTool('rect')
+      if (e.key === 't') { setActiveTool('text'); setShowTextModal(true) }
+      if (e.key === 'i') { setActiveTool('image'); setShowImageModal(true) }
       
       // Zoom
       if ((e.ctrlKey || e.metaKey) && e.key === '0') {
@@ -113,7 +134,7 @@ export default function MoodboardEditorPage() {
     
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [moodboardId, selectedItem])
+  }, [moodboardId, selectedElements])
 
   const fetchMoodboard = async () => {
     try {
@@ -132,9 +153,53 @@ export default function MoodboardEditorPage() {
     }
   }
 
-  const getContent = (item: CanvasItem) => {
+  const getContent = (item: CanvasElement) => {
     const contentValue = item.values.find(v => v.attribute.name === 'content')
     return contentValue?.value || ''
+  }
+
+  const deleteSelectedElements = async () => {
+    if (selectedElements.length === 0 || !moodboard) return
+
+    try {
+      const userId = auth.currentUser?.uid
+      if (!userId) return
+
+      for (const elementId of selectedElements) {
+        await fetch(`/api/moodboards/${moodboardId}/elements/${elementId}?userId=${userId}`, {
+          method: 'DELETE'
+        })
+      }
+
+      await fetchMoodboard()
+      setSelectedElements([])
+    } catch (error) {
+      console.error('Error deleting elements:', error)
+    }
+  }
+
+  const copySelectedElements = () => {
+    if (selectedElements.length === 0 || !moodboard) return
+    // Copy logic here
+  }
+
+  const duplicateSelectedElements = async () => {
+    if (selectedElements.length === 0 || !moodboard) return
+    // Duplicate logic here
+  }
+
+  const undo = () => {
+    if (historyIndex > 0) {
+      setHistoryIndex(historyIndex - 1)
+      setMoodboard(history[historyIndex - 1])
+    }
+  }
+
+  const redo = () => {
+    if (historyIndex < history.length - 1) {
+      setHistoryIndex(historyIndex + 1)
+      setMoodboard(history[historyIndex + 1])
+    }
   }
 
   const addColor = async () => {

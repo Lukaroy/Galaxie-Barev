@@ -5,8 +5,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Download, Copy, Shuffle, History, Check, Palette, Eye, Lock, Unlock, RotateCw, Sun, Moon } from 'lucide-react'
 import type { ColorScheme, PaletteHistory } from '@/types'
 import { generateColorScheme, generateRandomColor, copyToClipboard, hexToHSL, hslToHex, type HSL } from '@/lib/colorUtils'
+import ProtectedRoute from '@/app/components/ProtectedRoute'
 
-export default function BarvyPage() {
+function BarvyPageContent() {
   const [baseColor, setBaseColor] = useState('#9872C7')
   const [scheme, setScheme] = useState<ColorScheme>('complementary')
   const [generatedColors, setGeneratedColors] = useState<string[]>([])
@@ -20,7 +21,6 @@ export default function BarvyPage() {
   const handleGenerateColors = useCallback(() => {
     const colors = generateColorScheme(baseColor, scheme)
     
-    // Pokud jsou nějaké barvy zamčené, zachovej je
     const finalColors = colors.map((color, idx) => 
       lockedColors.has(idx) && generatedColors[idx] ? generatedColors[idx] : color
     )
@@ -128,7 +128,6 @@ export default function BarvyPage() {
   }
 
   const handleWheelClick = (e: React.MouseEvent<SVGSVGElement>) => {
-    // Vyber přesnou barvu na pozici kliknutí
     const svg = e.currentTarget
     const rect = svg.getBoundingClientRect()
     const centerX = rect.width / 2
@@ -150,25 +149,20 @@ export default function BarvyPage() {
     setWheelAngle(h)
   }, [baseColor])
 
-  // Automaticky generovat barvy při změně baseColor nebo scheme
   useEffect(() => {
     if (baseColor && mounted) {
       const colors = generateColorScheme(baseColor, scheme)
       setGeneratedColors(colors)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [baseColor, scheme, mounted])
 
-  // Nastavit mounted a vygenerovat defaultní paletu
   useEffect(() => {
     setMounted(true)
     if (generatedColors.length === 0) {
       handleGenerateColors()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // Klavesové zkratky
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (e.key === ' ' && !e.repeat) {
@@ -191,7 +185,6 @@ export default function BarvyPage() {
     tetradic: 'Čtyři rovnoměrně vzdálené barvy'
   }
 
-  // Počkat na mount, aby se předešlo hydration erroru
   if (!mounted) {
     return null
   }
@@ -207,7 +200,6 @@ export default function BarvyPage() {
         </div>
 
         <div className="barvy-content">
-          {/* Generátor sekce */}
           <div className="generator-section">
             <div className="color-wheel-card">
               <svg 
@@ -318,7 +310,6 @@ export default function BarvyPage() {
             </a>
           </div>
 
-          {/* Paleta výsledek */}
           <div className="palette-section">
             {generatedColors.length > 0 && (
               <>
@@ -398,7 +389,6 @@ export default function BarvyPage() {
                   })}
                 </div>
 
-                {/* Náhled použití */}
                 {generatedColors.length >= 2 && (
                   <div className="usage-preview">
                     <h4>Náhled kontrastů</h4>
@@ -423,7 +413,6 @@ export default function BarvyPage() {
                   </div>
                 )}
 
-                {/* Historie */}
                 {history.length > 0 && (
                   <div className="history-section">
                     <h4><History size={16} /> Historie palet</h4>
@@ -452,5 +441,13 @@ export default function BarvyPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function BarvyPage() {
+  return (
+    <ProtectedRoute>
+      <BarvyPageContent />
+    </ProtectedRoute>
   )
 }

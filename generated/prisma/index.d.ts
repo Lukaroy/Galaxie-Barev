@@ -29,6 +29,11 @@ export type Font = $Result.DefaultSelection<Prisma.$FontPayload>
  */
 export type Palette = $Result.DefaultSelection<Prisma.$PalettePayload>
 /**
+ * Model Segment
+ * 
+ */
+export type Segment = $Result.DefaultSelection<Prisma.$SegmentPayload>
+/**
  * Model Attribute
  * 
  */
@@ -59,15 +64,15 @@ export type ElementValue = $Result.DefaultSelection<Prisma.$ElementValuePayload>
  */
 export type Moodboard = $Result.DefaultSelection<Prisma.$MoodboardPayload>
 /**
- * Model Post
+ * Model GalleryPin
  * 
  */
-export type Post = $Result.DefaultSelection<Prisma.$PostPayload>
+export type GalleryPin = $Result.DefaultSelection<Prisma.$GalleryPinPayload>
 /**
- * Model PostLike
+ * Model GalleryPinLike
  * 
  */
-export type PostLike = $Result.DefaultSelection<Prisma.$PostLikePayload>
+export type GalleryPinLike = $Result.DefaultSelection<Prisma.$GalleryPinLikePayload>
 
 /**
  * Enums
@@ -75,8 +80,7 @@ export type PostLike = $Result.DefaultSelection<Prisma.$PostLikePayload>
 export namespace $Enums {
   export const UserRole: {
   USER: 'USER',
-  ADMIN: 'ADMIN',
-  MODERATOR: 'MODERATOR'
+  ADMIN: 'ADMIN'
 };
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
@@ -235,6 +239,16 @@ export class PrismaClient<
   get palette(): Prisma.PaletteDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.segment`: Exposes CRUD operations for the **Segment** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Segments
+    * const segments = await prisma.segment.findMany()
+    * ```
+    */
+  get segment(): Prisma.SegmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.attribute`: Exposes CRUD operations for the **Attribute** model.
     * Example usage:
     * ```ts
@@ -295,24 +309,24 @@ export class PrismaClient<
   get moodboard(): Prisma.MoodboardDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.post`: Exposes CRUD operations for the **Post** model.
+   * `prisma.galleryPin`: Exposes CRUD operations for the **GalleryPin** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more Posts
-    * const posts = await prisma.post.findMany()
+    * // Fetch zero or more GalleryPins
+    * const galleryPins = await prisma.galleryPin.findMany()
     * ```
     */
-  get post(): Prisma.PostDelegate<ExtArgs, ClientOptions>;
+  get galleryPin(): Prisma.GalleryPinDelegate<ExtArgs, ClientOptions>;
 
   /**
-   * `prisma.postLike`: Exposes CRUD operations for the **PostLike** model.
+   * `prisma.galleryPinLike`: Exposes CRUD operations for the **GalleryPinLike** model.
     * Example usage:
     * ```ts
-    * // Fetch zero or more PostLikes
-    * const postLikes = await prisma.postLike.findMany()
+    * // Fetch zero or more GalleryPinLikes
+    * const galleryPinLikes = await prisma.galleryPinLike.findMany()
     * ```
     */
-  get postLike(): Prisma.PostLikeDelegate<ExtArgs, ClientOptions>;
+  get galleryPinLike(): Prisma.GalleryPinLikeDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -750,14 +764,15 @@ export namespace Prisma {
     User: 'User',
     Font: 'Font',
     Palette: 'Palette',
+    Segment: 'Segment',
     Attribute: 'Attribute',
     ElementType: 'ElementType',
     ElementAttribute: 'ElementAttribute',
     Element: 'Element',
     ElementValue: 'ElementValue',
     Moodboard: 'Moodboard',
-    Post: 'Post',
-    PostLike: 'PostLike'
+    GalleryPin: 'GalleryPin',
+    GalleryPinLike: 'GalleryPinLike'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -773,7 +788,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "font" | "palette" | "attribute" | "elementType" | "elementAttribute" | "element" | "elementValue" | "moodboard" | "post" | "postLike"
+      modelProps: "user" | "font" | "palette" | "segment" | "attribute" | "elementType" | "elementAttribute" | "element" | "elementValue" | "moodboard" | "galleryPin" | "galleryPinLike"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -996,6 +1011,80 @@ export namespace Prisma {
           count: {
             args: Prisma.PaletteCountArgs<ExtArgs>
             result: $Utils.Optional<PaletteCountAggregateOutputType> | number
+          }
+        }
+      }
+      Segment: {
+        payload: Prisma.$SegmentPayload<ExtArgs>
+        fields: Prisma.SegmentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SegmentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SegmentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SegmentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SegmentPayload>
+          }
+          findFirst: {
+            args: Prisma.SegmentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SegmentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SegmentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SegmentPayload>
+          }
+          findMany: {
+            args: Prisma.SegmentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SegmentPayload>[]
+          }
+          create: {
+            args: Prisma.SegmentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SegmentPayload>
+          }
+          createMany: {
+            args: Prisma.SegmentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SegmentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SegmentPayload>[]
+          }
+          delete: {
+            args: Prisma.SegmentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SegmentPayload>
+          }
+          update: {
+            args: Prisma.SegmentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SegmentPayload>
+          }
+          deleteMany: {
+            args: Prisma.SegmentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SegmentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SegmentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SegmentPayload>[]
+          }
+          upsert: {
+            args: Prisma.SegmentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SegmentPayload>
+          }
+          aggregate: {
+            args: Prisma.SegmentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSegment>
+          }
+          groupBy: {
+            args: Prisma.SegmentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SegmentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SegmentCountArgs<ExtArgs>
+            result: $Utils.Optional<SegmentCountAggregateOutputType> | number
           }
         }
       }
@@ -1443,151 +1532,151 @@ export namespace Prisma {
           }
         }
       }
-      Post: {
-        payload: Prisma.$PostPayload<ExtArgs>
-        fields: Prisma.PostFieldRefs
+      GalleryPin: {
+        payload: Prisma.$GalleryPinPayload<ExtArgs>
+        fields: Prisma.GalleryPinFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.PostFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload> | null
+            args: Prisma.GalleryPinFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinPayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.PostFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>
+            args: Prisma.GalleryPinFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinPayload>
           }
           findFirst: {
-            args: Prisma.PostFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload> | null
+            args: Prisma.GalleryPinFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinPayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.PostFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>
+            args: Prisma.GalleryPinFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinPayload>
           }
           findMany: {
-            args: Prisma.PostFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>[]
+            args: Prisma.GalleryPinFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinPayload>[]
           }
           create: {
-            args: Prisma.PostCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>
+            args: Prisma.GalleryPinCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinPayload>
           }
           createMany: {
-            args: Prisma.PostCreateManyArgs<ExtArgs>
+            args: Prisma.GalleryPinCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.PostCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>[]
+            args: Prisma.GalleryPinCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinPayload>[]
           }
           delete: {
-            args: Prisma.PostDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>
+            args: Prisma.GalleryPinDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinPayload>
           }
           update: {
-            args: Prisma.PostUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>
+            args: Prisma.GalleryPinUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinPayload>
           }
           deleteMany: {
-            args: Prisma.PostDeleteManyArgs<ExtArgs>
+            args: Prisma.GalleryPinDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.PostUpdateManyArgs<ExtArgs>
+            args: Prisma.GalleryPinUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.PostUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>[]
+            args: Prisma.GalleryPinUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinPayload>[]
           }
           upsert: {
-            args: Prisma.PostUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostPayload>
+            args: Prisma.GalleryPinUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinPayload>
           }
           aggregate: {
-            args: Prisma.PostAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregatePost>
+            args: Prisma.GalleryPinAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGalleryPin>
           }
           groupBy: {
-            args: Prisma.PostGroupByArgs<ExtArgs>
-            result: $Utils.Optional<PostGroupByOutputType>[]
+            args: Prisma.GalleryPinGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GalleryPinGroupByOutputType>[]
           }
           count: {
-            args: Prisma.PostCountArgs<ExtArgs>
-            result: $Utils.Optional<PostCountAggregateOutputType> | number
+            args: Prisma.GalleryPinCountArgs<ExtArgs>
+            result: $Utils.Optional<GalleryPinCountAggregateOutputType> | number
           }
         }
       }
-      PostLike: {
-        payload: Prisma.$PostLikePayload<ExtArgs>
-        fields: Prisma.PostLikeFieldRefs
+      GalleryPinLike: {
+        payload: Prisma.$GalleryPinLikePayload<ExtArgs>
+        fields: Prisma.GalleryPinLikeFieldRefs
         operations: {
           findUnique: {
-            args: Prisma.PostLikeFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostLikePayload> | null
+            args: Prisma.GalleryPinLikeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinLikePayload> | null
           }
           findUniqueOrThrow: {
-            args: Prisma.PostLikeFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostLikePayload>
+            args: Prisma.GalleryPinLikeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinLikePayload>
           }
           findFirst: {
-            args: Prisma.PostLikeFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostLikePayload> | null
+            args: Prisma.GalleryPinLikeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinLikePayload> | null
           }
           findFirstOrThrow: {
-            args: Prisma.PostLikeFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostLikePayload>
+            args: Prisma.GalleryPinLikeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinLikePayload>
           }
           findMany: {
-            args: Prisma.PostLikeFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostLikePayload>[]
+            args: Prisma.GalleryPinLikeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinLikePayload>[]
           }
           create: {
-            args: Prisma.PostLikeCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostLikePayload>
+            args: Prisma.GalleryPinLikeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinLikePayload>
           }
           createMany: {
-            args: Prisma.PostLikeCreateManyArgs<ExtArgs>
+            args: Prisma.GalleryPinLikeCreateManyArgs<ExtArgs>
             result: BatchPayload
           }
           createManyAndReturn: {
-            args: Prisma.PostLikeCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostLikePayload>[]
+            args: Prisma.GalleryPinLikeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinLikePayload>[]
           }
           delete: {
-            args: Prisma.PostLikeDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostLikePayload>
+            args: Prisma.GalleryPinLikeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinLikePayload>
           }
           update: {
-            args: Prisma.PostLikeUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostLikePayload>
+            args: Prisma.GalleryPinLikeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinLikePayload>
           }
           deleteMany: {
-            args: Prisma.PostLikeDeleteManyArgs<ExtArgs>
+            args: Prisma.GalleryPinLikeDeleteManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateMany: {
-            args: Prisma.PostLikeUpdateManyArgs<ExtArgs>
+            args: Prisma.GalleryPinLikeUpdateManyArgs<ExtArgs>
             result: BatchPayload
           }
           updateManyAndReturn: {
-            args: Prisma.PostLikeUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostLikePayload>[]
+            args: Prisma.GalleryPinLikeUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinLikePayload>[]
           }
           upsert: {
-            args: Prisma.PostLikeUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PostLikePayload>
+            args: Prisma.GalleryPinLikeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GalleryPinLikePayload>
           }
           aggregate: {
-            args: Prisma.PostLikeAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregatePostLike>
+            args: Prisma.GalleryPinLikeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGalleryPinLike>
           }
           groupBy: {
-            args: Prisma.PostLikeGroupByArgs<ExtArgs>
-            result: $Utils.Optional<PostLikeGroupByOutputType>[]
+            args: Prisma.GalleryPinLikeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GalleryPinLikeGroupByOutputType>[]
           }
           count: {
-            args: Prisma.PostLikeCountArgs<ExtArgs>
-            result: $Utils.Optional<PostLikeCountAggregateOutputType> | number
+            args: Prisma.GalleryPinLikeCountArgs<ExtArgs>
+            result: $Utils.Optional<GalleryPinLikeCountAggregateOutputType> | number
           }
         }
       }
@@ -1702,14 +1791,15 @@ export namespace Prisma {
     user?: UserOmit
     font?: FontOmit
     palette?: PaletteOmit
+    segment?: SegmentOmit
     attribute?: AttributeOmit
     elementType?: ElementTypeOmit
     elementAttribute?: ElementAttributeOmit
     element?: ElementOmit
     elementValue?: ElementValueOmit
     moodboard?: MoodboardOmit
-    post?: PostOmit
-    postLike?: PostLikeOmit
+    galleryPin?: GalleryPinOmit
+    galleryPinLike?: GalleryPinLikeOmit
   }
 
   /* Types for Logging */
@@ -1790,13 +1880,13 @@ export namespace Prisma {
    */
 
   export type UserCountOutputType = {
-    posts: number
-    postLikes: number
+    galleryPins: number
+    galleryPinLikes: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    posts?: boolean | UserCountOutputTypeCountPostsArgs
-    postLikes?: boolean | UserCountOutputTypeCountPostLikesArgs
+    galleryPins?: boolean | UserCountOutputTypeCountGalleryPinsArgs
+    galleryPinLikes?: boolean | UserCountOutputTypeCountGalleryPinLikesArgs
   }
 
   // Custom InputTypes
@@ -1813,15 +1903,15 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PostWhereInput
+  export type UserCountOutputTypeCountGalleryPinsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GalleryPinWhereInput
   }
 
   /**
    * UserCountOutputType without action
    */
-  export type UserCountOutputTypeCountPostLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PostLikeWhereInput
+  export type UserCountOutputTypeCountGalleryPinLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GalleryPinLikeWhereInput
   }
 
 
@@ -1942,12 +2032,10 @@ export namespace Prisma {
 
   export type MoodboardCountOutputType = {
     elements: number
-    posts: number
   }
 
   export type MoodboardCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     elements?: boolean | MoodboardCountOutputTypeCountElementsArgs
-    posts?: boolean | MoodboardCountOutputTypeCountPostsArgs
   }
 
   // Custom InputTypes
@@ -1968,42 +2056,35 @@ export namespace Prisma {
     where?: ElementWhereInput
   }
 
-  /**
-   * MoodboardCountOutputType without action
-   */
-  export type MoodboardCountOutputTypeCountPostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PostWhereInput
-  }
-
 
   /**
-   * Count Type PostCountOutputType
+   * Count Type GalleryPinCountOutputType
    */
 
-  export type PostCountOutputType = {
+  export type GalleryPinCountOutputType = {
     likes: number
   }
 
-  export type PostCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    likes?: boolean | PostCountOutputTypeCountLikesArgs
+  export type GalleryPinCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    likes?: boolean | GalleryPinCountOutputTypeCountLikesArgs
   }
 
   // Custom InputTypes
   /**
-   * PostCountOutputType without action
+   * GalleryPinCountOutputType without action
    */
-  export type PostCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostCountOutputType
+     * Select specific fields to fetch from the GalleryPinCountOutputType
      */
-    select?: PostCountOutputTypeSelect<ExtArgs> | null
+    select?: GalleryPinCountOutputTypeSelect<ExtArgs> | null
   }
 
   /**
-   * PostCountOutputType without action
+   * GalleryPinCountOutputType without action
    */
-  export type PostCountOutputTypeCountLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PostLikeWhereInput
+  export type GalleryPinCountOutputTypeCountLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GalleryPinLikeWhereInput
   }
 
 
@@ -2191,8 +2272,8 @@ export namespace Prisma {
     userName?: boolean
     birthday?: boolean
     role?: boolean
-    posts?: boolean | User$postsArgs<ExtArgs>
-    postLikes?: boolean | User$postLikesArgs<ExtArgs>
+    galleryPins?: boolean | User$galleryPinsArgs<ExtArgs>
+    galleryPinLikes?: boolean | User$galleryPinLikesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2228,8 +2309,8 @@ export namespace Prisma {
 
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "firstName" | "lastName" | "userName" | "birthday" | "role", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    posts?: boolean | User$postsArgs<ExtArgs>
-    postLikes?: boolean | User$postLikesArgs<ExtArgs>
+    galleryPins?: boolean | User$galleryPinsArgs<ExtArgs>
+    galleryPinLikes?: boolean | User$galleryPinLikesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2238,8 +2319,8 @@ export namespace Prisma {
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
     objects: {
-      posts: Prisma.$PostPayload<ExtArgs>[]
-      postLikes: Prisma.$PostLikePayload<ExtArgs>[]
+      galleryPins: Prisma.$GalleryPinPayload<ExtArgs>[]
+      galleryPinLikes: Prisma.$GalleryPinLikePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2643,8 +2724,8 @@ export namespace Prisma {
    */
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    posts<T extends User$postsArgs<ExtArgs> = {}>(args?: Subset<T, User$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    postLikes<T extends User$postLikesArgs<ExtArgs> = {}>(args?: Subset<T, User$postLikesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    galleryPins<T extends User$galleryPinsArgs<ExtArgs> = {}>(args?: Subset<T, User$galleryPinsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    galleryPinLikes<T extends User$galleryPinLikesArgs<ExtArgs> = {}>(args?: Subset<T, User$galleryPinLikesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3069,51 +3150,51 @@ export namespace Prisma {
   }
 
   /**
-   * User.posts
+   * User.galleryPins
    */
-  export type User$postsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$galleryPinsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: GalleryPinSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostInclude<ExtArgs> | null
-    where?: PostWhereInput
-    orderBy?: PostOrderByWithRelationInput | PostOrderByWithRelationInput[]
-    cursor?: PostWhereUniqueInput
+    include?: GalleryPinInclude<ExtArgs> | null
+    where?: GalleryPinWhereInput
+    orderBy?: GalleryPinOrderByWithRelationInput | GalleryPinOrderByWithRelationInput[]
+    cursor?: GalleryPinWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: PostScalarFieldEnum | PostScalarFieldEnum[]
+    distinct?: GalleryPinScalarFieldEnum | GalleryPinScalarFieldEnum[]
   }
 
   /**
-   * User.postLikes
+   * User.galleryPinLikes
    */
-  export type User$postLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type User$galleryPinLikesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelect<ExtArgs> | null
+    select?: GalleryPinLikeSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeInclude<ExtArgs> | null
-    where?: PostLikeWhereInput
-    orderBy?: PostLikeOrderByWithRelationInput | PostLikeOrderByWithRelationInput[]
-    cursor?: PostLikeWhereUniqueInput
+    include?: GalleryPinLikeInclude<ExtArgs> | null
+    where?: GalleryPinLikeWhereInput
+    orderBy?: GalleryPinLikeOrderByWithRelationInput | GalleryPinLikeOrderByWithRelationInput[]
+    cursor?: GalleryPinLikeWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: PostLikeScalarFieldEnum | PostLikeScalarFieldEnum[]
+    distinct?: GalleryPinLikeScalarFieldEnum | GalleryPinLikeScalarFieldEnum[]
   }
 
   /**
@@ -5182,6 +5263,1057 @@ export namespace Prisma {
      * Omit specific fields from the Palette
      */
     omit?: PaletteOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Segment
+   */
+
+  export type AggregateSegment = {
+    _count: SegmentCountAggregateOutputType | null
+    _avg: SegmentAvgAggregateOutputType | null
+    _sum: SegmentSumAggregateOutputType | null
+    _min: SegmentMinAggregateOutputType | null
+    _max: SegmentMaxAggregateOutputType | null
+  }
+
+  export type SegmentAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SegmentSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type SegmentMinAggregateOutputType = {
+    id: number | null
+    title: string | null
+    slug: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SegmentMaxAggregateOutputType = {
+    id: number | null
+    title: string | null
+    slug: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SegmentCountAggregateOutputType = {
+    id: number
+    title: number
+    slug: number
+    description: number
+    tags: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SegmentAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type SegmentSumAggregateInputType = {
+    id?: true
+  }
+
+  export type SegmentMinAggregateInputType = {
+    id?: true
+    title?: true
+    slug?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SegmentMaxAggregateInputType = {
+    id?: true
+    title?: true
+    slug?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SegmentCountAggregateInputType = {
+    id?: true
+    title?: true
+    slug?: true
+    description?: true
+    tags?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SegmentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Segment to aggregate.
+     */
+    where?: SegmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Segments to fetch.
+     */
+    orderBy?: SegmentOrderByWithRelationInput | SegmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SegmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Segments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Segments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Segments
+    **/
+    _count?: true | SegmentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SegmentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SegmentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SegmentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SegmentMaxAggregateInputType
+  }
+
+  export type GetSegmentAggregateType<T extends SegmentAggregateArgs> = {
+        [P in keyof T & keyof AggregateSegment]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSegment[P]>
+      : GetScalarType<T[P], AggregateSegment[P]>
+  }
+
+
+
+
+  export type SegmentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SegmentWhereInput
+    orderBy?: SegmentOrderByWithAggregationInput | SegmentOrderByWithAggregationInput[]
+    by: SegmentScalarFieldEnum[] | SegmentScalarFieldEnum
+    having?: SegmentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SegmentCountAggregateInputType | true
+    _avg?: SegmentAvgAggregateInputType
+    _sum?: SegmentSumAggregateInputType
+    _min?: SegmentMinAggregateInputType
+    _max?: SegmentMaxAggregateInputType
+  }
+
+  export type SegmentGroupByOutputType = {
+    id: number
+    title: string
+    slug: string
+    description: string | null
+    tags: string[]
+    createdAt: Date
+    updatedAt: Date
+    _count: SegmentCountAggregateOutputType | null
+    _avg: SegmentAvgAggregateOutputType | null
+    _sum: SegmentSumAggregateOutputType | null
+    _min: SegmentMinAggregateOutputType | null
+    _max: SegmentMaxAggregateOutputType | null
+  }
+
+  type GetSegmentGroupByPayload<T extends SegmentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SegmentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SegmentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SegmentGroupByOutputType[P]>
+            : GetScalarType<T[P], SegmentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SegmentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    slug?: boolean
+    description?: boolean
+    tags?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["segment"]>
+
+  export type SegmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    slug?: boolean
+    description?: boolean
+    tags?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["segment"]>
+
+  export type SegmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    slug?: boolean
+    description?: boolean
+    tags?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["segment"]>
+
+  export type SegmentSelectScalar = {
+    id?: boolean
+    title?: boolean
+    slug?: boolean
+    description?: boolean
+    tags?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SegmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "tags" | "createdAt" | "updatedAt", ExtArgs["result"]["segment"]>
+
+  export type $SegmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Segment"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      title: string
+      slug: string
+      description: string | null
+      tags: string[]
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["segment"]>
+    composites: {}
+  }
+
+  type SegmentGetPayload<S extends boolean | null | undefined | SegmentDefaultArgs> = $Result.GetResult<Prisma.$SegmentPayload, S>
+
+  type SegmentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SegmentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SegmentCountAggregateInputType | true
+    }
+
+  export interface SegmentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Segment'], meta: { name: 'Segment' } }
+    /**
+     * Find zero or one Segment that matches the filter.
+     * @param {SegmentFindUniqueArgs} args - Arguments to find a Segment
+     * @example
+     * // Get one Segment
+     * const segment = await prisma.segment.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SegmentFindUniqueArgs>(args: SelectSubset<T, SegmentFindUniqueArgs<ExtArgs>>): Prisma__SegmentClient<$Result.GetResult<Prisma.$SegmentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Segment that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SegmentFindUniqueOrThrowArgs} args - Arguments to find a Segment
+     * @example
+     * // Get one Segment
+     * const segment = await prisma.segment.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SegmentFindUniqueOrThrowArgs>(args: SelectSubset<T, SegmentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SegmentClient<$Result.GetResult<Prisma.$SegmentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Segment that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SegmentFindFirstArgs} args - Arguments to find a Segment
+     * @example
+     * // Get one Segment
+     * const segment = await prisma.segment.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SegmentFindFirstArgs>(args?: SelectSubset<T, SegmentFindFirstArgs<ExtArgs>>): Prisma__SegmentClient<$Result.GetResult<Prisma.$SegmentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Segment that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SegmentFindFirstOrThrowArgs} args - Arguments to find a Segment
+     * @example
+     * // Get one Segment
+     * const segment = await prisma.segment.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SegmentFindFirstOrThrowArgs>(args?: SelectSubset<T, SegmentFindFirstOrThrowArgs<ExtArgs>>): Prisma__SegmentClient<$Result.GetResult<Prisma.$SegmentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Segments that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SegmentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Segments
+     * const segments = await prisma.segment.findMany()
+     * 
+     * // Get first 10 Segments
+     * const segments = await prisma.segment.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const segmentWithIdOnly = await prisma.segment.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SegmentFindManyArgs>(args?: SelectSubset<T, SegmentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SegmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Segment.
+     * @param {SegmentCreateArgs} args - Arguments to create a Segment.
+     * @example
+     * // Create one Segment
+     * const Segment = await prisma.segment.create({
+     *   data: {
+     *     // ... data to create a Segment
+     *   }
+     * })
+     * 
+     */
+    create<T extends SegmentCreateArgs>(args: SelectSubset<T, SegmentCreateArgs<ExtArgs>>): Prisma__SegmentClient<$Result.GetResult<Prisma.$SegmentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Segments.
+     * @param {SegmentCreateManyArgs} args - Arguments to create many Segments.
+     * @example
+     * // Create many Segments
+     * const segment = await prisma.segment.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SegmentCreateManyArgs>(args?: SelectSubset<T, SegmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Segments and returns the data saved in the database.
+     * @param {SegmentCreateManyAndReturnArgs} args - Arguments to create many Segments.
+     * @example
+     * // Create many Segments
+     * const segment = await prisma.segment.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Segments and only return the `id`
+     * const segmentWithIdOnly = await prisma.segment.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SegmentCreateManyAndReturnArgs>(args?: SelectSubset<T, SegmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SegmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Segment.
+     * @param {SegmentDeleteArgs} args - Arguments to delete one Segment.
+     * @example
+     * // Delete one Segment
+     * const Segment = await prisma.segment.delete({
+     *   where: {
+     *     // ... filter to delete one Segment
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SegmentDeleteArgs>(args: SelectSubset<T, SegmentDeleteArgs<ExtArgs>>): Prisma__SegmentClient<$Result.GetResult<Prisma.$SegmentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Segment.
+     * @param {SegmentUpdateArgs} args - Arguments to update one Segment.
+     * @example
+     * // Update one Segment
+     * const segment = await prisma.segment.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SegmentUpdateArgs>(args: SelectSubset<T, SegmentUpdateArgs<ExtArgs>>): Prisma__SegmentClient<$Result.GetResult<Prisma.$SegmentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Segments.
+     * @param {SegmentDeleteManyArgs} args - Arguments to filter Segments to delete.
+     * @example
+     * // Delete a few Segments
+     * const { count } = await prisma.segment.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SegmentDeleteManyArgs>(args?: SelectSubset<T, SegmentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Segments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SegmentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Segments
+     * const segment = await prisma.segment.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SegmentUpdateManyArgs>(args: SelectSubset<T, SegmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Segments and returns the data updated in the database.
+     * @param {SegmentUpdateManyAndReturnArgs} args - Arguments to update many Segments.
+     * @example
+     * // Update many Segments
+     * const segment = await prisma.segment.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Segments and only return the `id`
+     * const segmentWithIdOnly = await prisma.segment.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SegmentUpdateManyAndReturnArgs>(args: SelectSubset<T, SegmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SegmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Segment.
+     * @param {SegmentUpsertArgs} args - Arguments to update or create a Segment.
+     * @example
+     * // Update or create a Segment
+     * const segment = await prisma.segment.upsert({
+     *   create: {
+     *     // ... data to create a Segment
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Segment we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SegmentUpsertArgs>(args: SelectSubset<T, SegmentUpsertArgs<ExtArgs>>): Prisma__SegmentClient<$Result.GetResult<Prisma.$SegmentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Segments.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SegmentCountArgs} args - Arguments to filter Segments to count.
+     * @example
+     * // Count the number of Segments
+     * const count = await prisma.segment.count({
+     *   where: {
+     *     // ... the filter for the Segments we want to count
+     *   }
+     * })
+    **/
+    count<T extends SegmentCountArgs>(
+      args?: Subset<T, SegmentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SegmentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Segment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SegmentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SegmentAggregateArgs>(args: Subset<T, SegmentAggregateArgs>): Prisma.PrismaPromise<GetSegmentAggregateType<T>>
+
+    /**
+     * Group by Segment.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SegmentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SegmentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SegmentGroupByArgs['orderBy'] }
+        : { orderBy?: SegmentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SegmentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSegmentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Segment model
+   */
+  readonly fields: SegmentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Segment.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SegmentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Segment model
+   */
+  interface SegmentFieldRefs {
+    readonly id: FieldRef<"Segment", 'Int'>
+    readonly title: FieldRef<"Segment", 'String'>
+    readonly slug: FieldRef<"Segment", 'String'>
+    readonly description: FieldRef<"Segment", 'String'>
+    readonly tags: FieldRef<"Segment", 'String[]'>
+    readonly createdAt: FieldRef<"Segment", 'DateTime'>
+    readonly updatedAt: FieldRef<"Segment", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Segment findUnique
+   */
+  export type SegmentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Segment
+     */
+    select?: SegmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Segment
+     */
+    omit?: SegmentOmit<ExtArgs> | null
+    /**
+     * Filter, which Segment to fetch.
+     */
+    where: SegmentWhereUniqueInput
+  }
+
+  /**
+   * Segment findUniqueOrThrow
+   */
+  export type SegmentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Segment
+     */
+    select?: SegmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Segment
+     */
+    omit?: SegmentOmit<ExtArgs> | null
+    /**
+     * Filter, which Segment to fetch.
+     */
+    where: SegmentWhereUniqueInput
+  }
+
+  /**
+   * Segment findFirst
+   */
+  export type SegmentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Segment
+     */
+    select?: SegmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Segment
+     */
+    omit?: SegmentOmit<ExtArgs> | null
+    /**
+     * Filter, which Segment to fetch.
+     */
+    where?: SegmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Segments to fetch.
+     */
+    orderBy?: SegmentOrderByWithRelationInput | SegmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Segments.
+     */
+    cursor?: SegmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Segments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Segments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Segments.
+     */
+    distinct?: SegmentScalarFieldEnum | SegmentScalarFieldEnum[]
+  }
+
+  /**
+   * Segment findFirstOrThrow
+   */
+  export type SegmentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Segment
+     */
+    select?: SegmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Segment
+     */
+    omit?: SegmentOmit<ExtArgs> | null
+    /**
+     * Filter, which Segment to fetch.
+     */
+    where?: SegmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Segments to fetch.
+     */
+    orderBy?: SegmentOrderByWithRelationInput | SegmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Segments.
+     */
+    cursor?: SegmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Segments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Segments.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Segments.
+     */
+    distinct?: SegmentScalarFieldEnum | SegmentScalarFieldEnum[]
+  }
+
+  /**
+   * Segment findMany
+   */
+  export type SegmentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Segment
+     */
+    select?: SegmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Segment
+     */
+    omit?: SegmentOmit<ExtArgs> | null
+    /**
+     * Filter, which Segments to fetch.
+     */
+    where?: SegmentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Segments to fetch.
+     */
+    orderBy?: SegmentOrderByWithRelationInput | SegmentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Segments.
+     */
+    cursor?: SegmentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Segments from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Segments.
+     */
+    skip?: number
+    distinct?: SegmentScalarFieldEnum | SegmentScalarFieldEnum[]
+  }
+
+  /**
+   * Segment create
+   */
+  export type SegmentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Segment
+     */
+    select?: SegmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Segment
+     */
+    omit?: SegmentOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Segment.
+     */
+    data: XOR<SegmentCreateInput, SegmentUncheckedCreateInput>
+  }
+
+  /**
+   * Segment createMany
+   */
+  export type SegmentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Segments.
+     */
+    data: SegmentCreateManyInput | SegmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Segment createManyAndReturn
+   */
+  export type SegmentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Segment
+     */
+    select?: SegmentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Segment
+     */
+    omit?: SegmentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Segments.
+     */
+    data: SegmentCreateManyInput | SegmentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Segment update
+   */
+  export type SegmentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Segment
+     */
+    select?: SegmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Segment
+     */
+    omit?: SegmentOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Segment.
+     */
+    data: XOR<SegmentUpdateInput, SegmentUncheckedUpdateInput>
+    /**
+     * Choose, which Segment to update.
+     */
+    where: SegmentWhereUniqueInput
+  }
+
+  /**
+   * Segment updateMany
+   */
+  export type SegmentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Segments.
+     */
+    data: XOR<SegmentUpdateManyMutationInput, SegmentUncheckedUpdateManyInput>
+    /**
+     * Filter which Segments to update
+     */
+    where?: SegmentWhereInput
+    /**
+     * Limit how many Segments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Segment updateManyAndReturn
+   */
+  export type SegmentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Segment
+     */
+    select?: SegmentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Segment
+     */
+    omit?: SegmentOmit<ExtArgs> | null
+    /**
+     * The data used to update Segments.
+     */
+    data: XOR<SegmentUpdateManyMutationInput, SegmentUncheckedUpdateManyInput>
+    /**
+     * Filter which Segments to update
+     */
+    where?: SegmentWhereInput
+    /**
+     * Limit how many Segments to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Segment upsert
+   */
+  export type SegmentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Segment
+     */
+    select?: SegmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Segment
+     */
+    omit?: SegmentOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Segment to update in case it exists.
+     */
+    where: SegmentWhereUniqueInput
+    /**
+     * In case the Segment found by the `where` argument doesn't exist, create a new Segment with this data.
+     */
+    create: XOR<SegmentCreateInput, SegmentUncheckedCreateInput>
+    /**
+     * In case the Segment was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SegmentUpdateInput, SegmentUncheckedUpdateInput>
+  }
+
+  /**
+   * Segment delete
+   */
+  export type SegmentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Segment
+     */
+    select?: SegmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Segment
+     */
+    omit?: SegmentOmit<ExtArgs> | null
+    /**
+     * Filter which Segment to delete.
+     */
+    where: SegmentWhereUniqueInput
+  }
+
+  /**
+   * Segment deleteMany
+   */
+  export type SegmentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Segments to delete
+     */
+    where?: SegmentWhereInput
+    /**
+     * Limit how many Segments to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Segment without action
+   */
+  export type SegmentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Segment
+     */
+    select?: SegmentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Segment
+     */
+    omit?: SegmentOmit<ExtArgs> | null
   }
 
 
@@ -11001,7 +12133,6 @@ export namespace Prisma {
     createdAt?: boolean
     userId?: boolean
     elements?: boolean | Moodboard$elementsArgs<ExtArgs>
-    posts?: boolean | Moodboard$postsArgs<ExtArgs>
     _count?: boolean | MoodboardCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["moodboard"]>
 
@@ -11029,7 +12160,6 @@ export namespace Prisma {
   export type MoodboardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "userId", ExtArgs["result"]["moodboard"]>
   export type MoodboardInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     elements?: boolean | Moodboard$elementsArgs<ExtArgs>
-    posts?: boolean | Moodboard$postsArgs<ExtArgs>
     _count?: boolean | MoodboardCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MoodboardIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -11039,7 +12169,6 @@ export namespace Prisma {
     name: "Moodboard"
     objects: {
       elements: Prisma.$ElementPayload<ExtArgs>[]
-      posts: Prisma.$PostPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -11441,7 +12570,6 @@ export namespace Prisma {
   export interface Prisma__MoodboardClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     elements<T extends Moodboard$elementsArgs<ExtArgs> = {}>(args?: Subset<T, Moodboard$elementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ElementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    posts<T extends Moodboard$postsArgs<ExtArgs> = {}>(args?: Subset<T, Moodboard$postsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11887,30 +13015,6 @@ export namespace Prisma {
   }
 
   /**
-   * Moodboard.posts
-   */
-  export type Moodboard$postsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Post
-     */
-    select?: PostSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Post
-     */
-    omit?: PostOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: PostInclude<ExtArgs> | null
-    where?: PostWhereInput
-    orderBy?: PostOrderByWithRelationInput | PostOrderByWithRelationInput[]
-    cursor?: PostWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: PostScalarFieldEnum | PostScalarFieldEnum[]
-  }
-
-  /**
    * Moodboard without action
    */
   export type MoodboardDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11930,400 +13034,401 @@ export namespace Prisma {
 
 
   /**
-   * Model Post
+   * Model GalleryPin
    */
 
-  export type AggregatePost = {
-    _count: PostCountAggregateOutputType | null
-    _avg: PostAvgAggregateOutputType | null
-    _sum: PostSumAggregateOutputType | null
-    _min: PostMinAggregateOutputType | null
-    _max: PostMaxAggregateOutputType | null
+  export type AggregateGalleryPin = {
+    _count: GalleryPinCountAggregateOutputType | null
+    _avg: GalleryPinAvgAggregateOutputType | null
+    _sum: GalleryPinSumAggregateOutputType | null
+    _min: GalleryPinMinAggregateOutputType | null
+    _max: GalleryPinMaxAggregateOutputType | null
   }
 
-  export type PostAvgAggregateOutputType = {
+  export type GalleryPinAvgAggregateOutputType = {
     id: number | null
-    moodboardId: number | null
   }
 
-  export type PostSumAggregateOutputType = {
+  export type GalleryPinSumAggregateOutputType = {
     id: number | null
-    moodboardId: number | null
   }
 
-  export type PostMinAggregateOutputType = {
+  export type GalleryPinMinAggregateOutputType = {
     id: number | null
     title: string | null
     imageUrl: string | null
+    description: string | null
+    createdAt: Date | null
     authorId: string | null
-    moodboardId: number | null
   }
 
-  export type PostMaxAggregateOutputType = {
+  export type GalleryPinMaxAggregateOutputType = {
     id: number | null
     title: string | null
     imageUrl: string | null
+    description: string | null
+    createdAt: Date | null
     authorId: string | null
-    moodboardId: number | null
   }
 
-  export type PostCountAggregateOutputType = {
+  export type GalleryPinCountAggregateOutputType = {
     id: number
     title: number
     imageUrl: number
+    description: number
+    createdAt: number
     authorId: number
-    moodboardId: number
     _all: number
   }
 
 
-  export type PostAvgAggregateInputType = {
+  export type GalleryPinAvgAggregateInputType = {
     id?: true
-    moodboardId?: true
   }
 
-  export type PostSumAggregateInputType = {
+  export type GalleryPinSumAggregateInputType = {
     id?: true
-    moodboardId?: true
   }
 
-  export type PostMinAggregateInputType = {
+  export type GalleryPinMinAggregateInputType = {
     id?: true
     title?: true
     imageUrl?: true
+    description?: true
+    createdAt?: true
     authorId?: true
-    moodboardId?: true
   }
 
-  export type PostMaxAggregateInputType = {
+  export type GalleryPinMaxAggregateInputType = {
     id?: true
     title?: true
     imageUrl?: true
+    description?: true
+    createdAt?: true
     authorId?: true
-    moodboardId?: true
   }
 
-  export type PostCountAggregateInputType = {
+  export type GalleryPinCountAggregateInputType = {
     id?: true
     title?: true
     imageUrl?: true
+    description?: true
+    createdAt?: true
     authorId?: true
-    moodboardId?: true
     _all?: true
   }
 
-  export type PostAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Post to aggregate.
+     * Filter which GalleryPin to aggregate.
      */
-    where?: PostWhereInput
+    where?: GalleryPinWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Posts to fetch.
+     * Determine the order of GalleryPins to fetch.
      */
-    orderBy?: PostOrderByWithRelationInput | PostOrderByWithRelationInput[]
+    orderBy?: GalleryPinOrderByWithRelationInput | GalleryPinOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: PostWhereUniqueInput
+    cursor?: GalleryPinWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Posts from the position of the cursor.
+     * Take `±n` GalleryPins from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Posts.
+     * Skip the first `n` GalleryPins.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned Posts
+     * Count returned GalleryPins
     **/
-    _count?: true | PostCountAggregateInputType
+    _count?: true | GalleryPinCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: PostAvgAggregateInputType
+    _avg?: GalleryPinAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: PostSumAggregateInputType
+    _sum?: GalleryPinSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: PostMinAggregateInputType
+    _min?: GalleryPinMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: PostMaxAggregateInputType
+    _max?: GalleryPinMaxAggregateInputType
   }
 
-  export type GetPostAggregateType<T extends PostAggregateArgs> = {
-        [P in keyof T & keyof AggregatePost]: P extends '_count' | 'count'
+  export type GetGalleryPinAggregateType<T extends GalleryPinAggregateArgs> = {
+        [P in keyof T & keyof AggregateGalleryPin]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregatePost[P]>
-      : GetScalarType<T[P], AggregatePost[P]>
+        : GetScalarType<T[P], AggregateGalleryPin[P]>
+      : GetScalarType<T[P], AggregateGalleryPin[P]>
   }
 
 
 
 
-  export type PostGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PostWhereInput
-    orderBy?: PostOrderByWithAggregationInput | PostOrderByWithAggregationInput[]
-    by: PostScalarFieldEnum[] | PostScalarFieldEnum
-    having?: PostScalarWhereWithAggregatesInput
+  export type GalleryPinGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GalleryPinWhereInput
+    orderBy?: GalleryPinOrderByWithAggregationInput | GalleryPinOrderByWithAggregationInput[]
+    by: GalleryPinScalarFieldEnum[] | GalleryPinScalarFieldEnum
+    having?: GalleryPinScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: PostCountAggregateInputType | true
-    _avg?: PostAvgAggregateInputType
-    _sum?: PostSumAggregateInputType
-    _min?: PostMinAggregateInputType
-    _max?: PostMaxAggregateInputType
+    _count?: GalleryPinCountAggregateInputType | true
+    _avg?: GalleryPinAvgAggregateInputType
+    _sum?: GalleryPinSumAggregateInputType
+    _min?: GalleryPinMinAggregateInputType
+    _max?: GalleryPinMaxAggregateInputType
   }
 
-  export type PostGroupByOutputType = {
+  export type GalleryPinGroupByOutputType = {
     id: number
     title: string
     imageUrl: string
+    description: string | null
+    createdAt: Date
     authorId: string
-    moodboardId: number
-    _count: PostCountAggregateOutputType | null
-    _avg: PostAvgAggregateOutputType | null
-    _sum: PostSumAggregateOutputType | null
-    _min: PostMinAggregateOutputType | null
-    _max: PostMaxAggregateOutputType | null
+    _count: GalleryPinCountAggregateOutputType | null
+    _avg: GalleryPinAvgAggregateOutputType | null
+    _sum: GalleryPinSumAggregateOutputType | null
+    _min: GalleryPinMinAggregateOutputType | null
+    _max: GalleryPinMaxAggregateOutputType | null
   }
 
-  type GetPostGroupByPayload<T extends PostGroupByArgs> = Prisma.PrismaPromise<
+  type GetGalleryPinGroupByPayload<T extends GalleryPinGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<PostGroupByOutputType, T['by']> &
+      PickEnumerable<GalleryPinGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof PostGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof GalleryPinGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], PostGroupByOutputType[P]>
-            : GetScalarType<T[P], PostGroupByOutputType[P]>
+              : GetScalarType<T[P], GalleryPinGroupByOutputType[P]>
+            : GetScalarType<T[P], GalleryPinGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type PostSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type GalleryPinSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
     imageUrl?: boolean
+    description?: boolean
+    createdAt?: boolean
     authorId?: boolean
-    moodboardId?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
-    moodboard?: boolean | MoodboardDefaultArgs<ExtArgs>
-    likes?: boolean | Post$likesArgs<ExtArgs>
-    _count?: boolean | PostCountOutputTypeDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["post"]>
+    likes?: boolean | GalleryPin$likesArgs<ExtArgs>
+    _count?: boolean | GalleryPinCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["galleryPin"]>
 
-  export type PostSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type GalleryPinSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
     imageUrl?: boolean
+    description?: boolean
+    createdAt?: boolean
     authorId?: boolean
-    moodboardId?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
-    moodboard?: boolean | MoodboardDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["post"]>
+  }, ExtArgs["result"]["galleryPin"]>
 
-  export type PostSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type GalleryPinSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     title?: boolean
     imageUrl?: boolean
+    description?: boolean
+    createdAt?: boolean
     authorId?: boolean
-    moodboardId?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
-    moodboard?: boolean | MoodboardDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["post"]>
+  }, ExtArgs["result"]["galleryPin"]>
 
-  export type PostSelectScalar = {
+  export type GalleryPinSelectScalar = {
     id?: boolean
     title?: boolean
     imageUrl?: boolean
+    description?: boolean
+    createdAt?: boolean
     authorId?: boolean
-    moodboardId?: boolean
   }
 
-  export type PostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "imageUrl" | "authorId" | "moodboardId", ExtArgs["result"]["post"]>
-  export type PostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "imageUrl" | "description" | "createdAt" | "authorId", ExtArgs["result"]["galleryPin"]>
+  export type GalleryPinInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     author?: boolean | UserDefaultArgs<ExtArgs>
-    moodboard?: boolean | MoodboardDefaultArgs<ExtArgs>
-    likes?: boolean | Post$likesArgs<ExtArgs>
-    _count?: boolean | PostCountOutputTypeDefaultArgs<ExtArgs>
+    likes?: boolean | GalleryPin$likesArgs<ExtArgs>
+    _count?: boolean | GalleryPinCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type PostIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     author?: boolean | UserDefaultArgs<ExtArgs>
-    moodboard?: boolean | MoodboardDefaultArgs<ExtArgs>
   }
-  export type PostIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     author?: boolean | UserDefaultArgs<ExtArgs>
-    moodboard?: boolean | MoodboardDefaultArgs<ExtArgs>
   }
 
-  export type $PostPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Post"
+  export type $GalleryPinPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GalleryPin"
     objects: {
       author: Prisma.$UserPayload<ExtArgs>
-      moodboard: Prisma.$MoodboardPayload<ExtArgs>
-      likes: Prisma.$PostLikePayload<ExtArgs>[]
+      likes: Prisma.$GalleryPinLikePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       title: string
       imageUrl: string
+      description: string | null
+      createdAt: Date
       authorId: string
-      moodboardId: number
-    }, ExtArgs["result"]["post"]>
+    }, ExtArgs["result"]["galleryPin"]>
     composites: {}
   }
 
-  type PostGetPayload<S extends boolean | null | undefined | PostDefaultArgs> = $Result.GetResult<Prisma.$PostPayload, S>
+  type GalleryPinGetPayload<S extends boolean | null | undefined | GalleryPinDefaultArgs> = $Result.GetResult<Prisma.$GalleryPinPayload, S>
 
-  type PostCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<PostFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: PostCountAggregateInputType | true
+  type GalleryPinCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GalleryPinFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GalleryPinCountAggregateInputType | true
     }
 
-  export interface PostDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Post'], meta: { name: 'Post' } }
+  export interface GalleryPinDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GalleryPin'], meta: { name: 'GalleryPin' } }
     /**
-     * Find zero or one Post that matches the filter.
-     * @param {PostFindUniqueArgs} args - Arguments to find a Post
+     * Find zero or one GalleryPin that matches the filter.
+     * @param {GalleryPinFindUniqueArgs} args - Arguments to find a GalleryPin
      * @example
-     * // Get one Post
-     * const post = await prisma.post.findUnique({
+     * // Get one GalleryPin
+     * const galleryPin = await prisma.galleryPin.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends PostFindUniqueArgs>(args: SelectSubset<T, PostFindUniqueArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends GalleryPinFindUniqueArgs>(args: SelectSubset<T, GalleryPinFindUniqueArgs<ExtArgs>>): Prisma__GalleryPinClient<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one Post that matches the filter or throw an error with `error.code='P2025'`
+     * Find one GalleryPin that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {PostFindUniqueOrThrowArgs} args - Arguments to find a Post
+     * @param {GalleryPinFindUniqueOrThrowArgs} args - Arguments to find a GalleryPin
      * @example
-     * // Get one Post
-     * const post = await prisma.post.findUniqueOrThrow({
+     * // Get one GalleryPin
+     * const galleryPin = await prisma.galleryPin.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends PostFindUniqueOrThrowArgs>(args: SelectSubset<T, PostFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends GalleryPinFindUniqueOrThrowArgs>(args: SelectSubset<T, GalleryPinFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GalleryPinClient<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Post that matches the filter.
+     * Find the first GalleryPin that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostFindFirstArgs} args - Arguments to find a Post
+     * @param {GalleryPinFindFirstArgs} args - Arguments to find a GalleryPin
      * @example
-     * // Get one Post
-     * const post = await prisma.post.findFirst({
+     * // Get one GalleryPin
+     * const galleryPin = await prisma.galleryPin.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends PostFindFirstArgs>(args?: SelectSubset<T, PostFindFirstArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends GalleryPinFindFirstArgs>(args?: SelectSubset<T, GalleryPinFindFirstArgs<ExtArgs>>): Prisma__GalleryPinClient<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first Post that matches the filter or
+     * Find the first GalleryPin that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostFindFirstOrThrowArgs} args - Arguments to find a Post
+     * @param {GalleryPinFindFirstOrThrowArgs} args - Arguments to find a GalleryPin
      * @example
-     * // Get one Post
-     * const post = await prisma.post.findFirstOrThrow({
+     * // Get one GalleryPin
+     * const galleryPin = await prisma.galleryPin.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends PostFindFirstOrThrowArgs>(args?: SelectSubset<T, PostFindFirstOrThrowArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends GalleryPinFindFirstOrThrowArgs>(args?: SelectSubset<T, GalleryPinFindFirstOrThrowArgs<ExtArgs>>): Prisma__GalleryPinClient<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more Posts that matches the filter.
+     * Find zero or more GalleryPins that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {GalleryPinFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all Posts
-     * const posts = await prisma.post.findMany()
+     * // Get all GalleryPins
+     * const galleryPins = await prisma.galleryPin.findMany()
      * 
-     * // Get first 10 Posts
-     * const posts = await prisma.post.findMany({ take: 10 })
+     * // Get first 10 GalleryPins
+     * const galleryPins = await prisma.galleryPin.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const postWithIdOnly = await prisma.post.findMany({ select: { id: true } })
+     * const galleryPinWithIdOnly = await prisma.galleryPin.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends PostFindManyArgs>(args?: SelectSubset<T, PostFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends GalleryPinFindManyArgs>(args?: SelectSubset<T, GalleryPinFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a Post.
-     * @param {PostCreateArgs} args - Arguments to create a Post.
+     * Create a GalleryPin.
+     * @param {GalleryPinCreateArgs} args - Arguments to create a GalleryPin.
      * @example
-     * // Create one Post
-     * const Post = await prisma.post.create({
+     * // Create one GalleryPin
+     * const GalleryPin = await prisma.galleryPin.create({
      *   data: {
-     *     // ... data to create a Post
+     *     // ... data to create a GalleryPin
      *   }
      * })
      * 
      */
-    create<T extends PostCreateArgs>(args: SelectSubset<T, PostCreateArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends GalleryPinCreateArgs>(args: SelectSubset<T, GalleryPinCreateArgs<ExtArgs>>): Prisma__GalleryPinClient<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many Posts.
-     * @param {PostCreateManyArgs} args - Arguments to create many Posts.
+     * Create many GalleryPins.
+     * @param {GalleryPinCreateManyArgs} args - Arguments to create many GalleryPins.
      * @example
-     * // Create many Posts
-     * const post = await prisma.post.createMany({
+     * // Create many GalleryPins
+     * const galleryPin = await prisma.galleryPin.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends PostCreateManyArgs>(args?: SelectSubset<T, PostCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends GalleryPinCreateManyArgs>(args?: SelectSubset<T, GalleryPinCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many Posts and returns the data saved in the database.
-     * @param {PostCreateManyAndReturnArgs} args - Arguments to create many Posts.
+     * Create many GalleryPins and returns the data saved in the database.
+     * @param {GalleryPinCreateManyAndReturnArgs} args - Arguments to create many GalleryPins.
      * @example
-     * // Create many Posts
-     * const post = await prisma.post.createManyAndReturn({
+     * // Create many GalleryPins
+     * const galleryPin = await prisma.galleryPin.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many Posts and only return the `id`
-     * const postWithIdOnly = await prisma.post.createManyAndReturn({
+     * // Create many GalleryPins and only return the `id`
+     * const galleryPinWithIdOnly = await prisma.galleryPin.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -12333,28 +13438,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends PostCreateManyAndReturnArgs>(args?: SelectSubset<T, PostCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends GalleryPinCreateManyAndReturnArgs>(args?: SelectSubset<T, GalleryPinCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a Post.
-     * @param {PostDeleteArgs} args - Arguments to delete one Post.
+     * Delete a GalleryPin.
+     * @param {GalleryPinDeleteArgs} args - Arguments to delete one GalleryPin.
      * @example
-     * // Delete one Post
-     * const Post = await prisma.post.delete({
+     * // Delete one GalleryPin
+     * const GalleryPin = await prisma.galleryPin.delete({
      *   where: {
-     *     // ... filter to delete one Post
+     *     // ... filter to delete one GalleryPin
      *   }
      * })
      * 
      */
-    delete<T extends PostDeleteArgs>(args: SelectSubset<T, PostDeleteArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends GalleryPinDeleteArgs>(args: SelectSubset<T, GalleryPinDeleteArgs<ExtArgs>>): Prisma__GalleryPinClient<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one Post.
-     * @param {PostUpdateArgs} args - Arguments to update one Post.
+     * Update one GalleryPin.
+     * @param {GalleryPinUpdateArgs} args - Arguments to update one GalleryPin.
      * @example
-     * // Update one Post
-     * const post = await prisma.post.update({
+     * // Update one GalleryPin
+     * const galleryPin = await prisma.galleryPin.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -12364,30 +13469,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends PostUpdateArgs>(args: SelectSubset<T, PostUpdateArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends GalleryPinUpdateArgs>(args: SelectSubset<T, GalleryPinUpdateArgs<ExtArgs>>): Prisma__GalleryPinClient<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more Posts.
-     * @param {PostDeleteManyArgs} args - Arguments to filter Posts to delete.
+     * Delete zero or more GalleryPins.
+     * @param {GalleryPinDeleteManyArgs} args - Arguments to filter GalleryPins to delete.
      * @example
-     * // Delete a few Posts
-     * const { count } = await prisma.post.deleteMany({
+     * // Delete a few GalleryPins
+     * const { count } = await prisma.galleryPin.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends PostDeleteManyArgs>(args?: SelectSubset<T, PostDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends GalleryPinDeleteManyArgs>(args?: SelectSubset<T, GalleryPinDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Posts.
+     * Update zero or more GalleryPins.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {GalleryPinUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many Posts
-     * const post = await prisma.post.updateMany({
+     * // Update many GalleryPins
+     * const galleryPin = await prisma.galleryPin.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -12397,14 +13502,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends PostUpdateManyArgs>(args: SelectSubset<T, PostUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends GalleryPinUpdateManyArgs>(args: SelectSubset<T, GalleryPinUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more Posts and returns the data updated in the database.
-     * @param {PostUpdateManyAndReturnArgs} args - Arguments to update many Posts.
+     * Update zero or more GalleryPins and returns the data updated in the database.
+     * @param {GalleryPinUpdateManyAndReturnArgs} args - Arguments to update many GalleryPins.
      * @example
-     * // Update many Posts
-     * const post = await prisma.post.updateManyAndReturn({
+     * // Update many GalleryPins
+     * const galleryPin = await prisma.galleryPin.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -12413,8 +13518,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more Posts and only return the `id`
-     * const postWithIdOnly = await prisma.post.updateManyAndReturn({
+     * // Update zero or more GalleryPins and only return the `id`
+     * const galleryPinWithIdOnly = await prisma.galleryPin.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -12427,56 +13532,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends PostUpdateManyAndReturnArgs>(args: SelectSubset<T, PostUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends GalleryPinUpdateManyAndReturnArgs>(args: SelectSubset<T, GalleryPinUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one Post.
-     * @param {PostUpsertArgs} args - Arguments to update or create a Post.
+     * Create or update one GalleryPin.
+     * @param {GalleryPinUpsertArgs} args - Arguments to update or create a GalleryPin.
      * @example
-     * // Update or create a Post
-     * const post = await prisma.post.upsert({
+     * // Update or create a GalleryPin
+     * const galleryPin = await prisma.galleryPin.upsert({
      *   create: {
-     *     // ... data to create a Post
+     *     // ... data to create a GalleryPin
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the Post we want to update
+     *     // ... the filter for the GalleryPin we want to update
      *   }
      * })
      */
-    upsert<T extends PostUpsertArgs>(args: SelectSubset<T, PostUpsertArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends GalleryPinUpsertArgs>(args: SelectSubset<T, GalleryPinUpsertArgs<ExtArgs>>): Prisma__GalleryPinClient<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of Posts.
+     * Count the number of GalleryPins.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostCountArgs} args - Arguments to filter Posts to count.
+     * @param {GalleryPinCountArgs} args - Arguments to filter GalleryPins to count.
      * @example
-     * // Count the number of Posts
-     * const count = await prisma.post.count({
+     * // Count the number of GalleryPins
+     * const count = await prisma.galleryPin.count({
      *   where: {
-     *     // ... the filter for the Posts we want to count
+     *     // ... the filter for the GalleryPins we want to count
      *   }
      * })
     **/
-    count<T extends PostCountArgs>(
-      args?: Subset<T, PostCountArgs>,
+    count<T extends GalleryPinCountArgs>(
+      args?: Subset<T, GalleryPinCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], PostCountAggregateOutputType>
+          : GetScalarType<T['select'], GalleryPinCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a Post.
+     * Allows you to perform aggregations operations on a GalleryPin.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {GalleryPinAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -12496,13 +13601,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends PostAggregateArgs>(args: Subset<T, PostAggregateArgs>): Prisma.PrismaPromise<GetPostAggregateType<T>>
+    aggregate<T extends GalleryPinAggregateArgs>(args: Subset<T, GalleryPinAggregateArgs>): Prisma.PrismaPromise<GetGalleryPinAggregateType<T>>
 
     /**
-     * Group by Post.
+     * Group by GalleryPin.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostGroupByArgs} args - Group by arguments.
+     * @param {GalleryPinGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -12517,14 +13622,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends PostGroupByArgs,
+      T extends GalleryPinGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: PostGroupByArgs['orderBy'] }
-        : { orderBy?: PostGroupByArgs['orderBy'] },
+        ? { orderBy: GalleryPinGroupByArgs['orderBy'] }
+        : { orderBy?: GalleryPinGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -12573,24 +13678,23 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, PostGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPostGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, GalleryPinGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGalleryPinGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the Post model
+   * Fields of the GalleryPin model
    */
-  readonly fields: PostFieldRefs;
+  readonly fields: GalleryPinFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for Post.
+   * The delegate class that acts as a "Promise-like" for GalleryPin.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__PostClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__GalleryPinClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     author<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    moodboard<T extends MoodboardDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MoodboardDefaultArgs<ExtArgs>>): Prisma__MoodboardClient<$Result.GetResult<Prisma.$MoodboardPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    likes<T extends Post$likesArgs<ExtArgs> = {}>(args?: Subset<T, Post$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    likes<T extends GalleryPin$likesArgs<ExtArgs> = {}>(args?: Subset<T, GalleryPin$likesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12617,818 +13721,819 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the Post model
+   * Fields of the GalleryPin model
    */
-  interface PostFieldRefs {
-    readonly id: FieldRef<"Post", 'Int'>
-    readonly title: FieldRef<"Post", 'String'>
-    readonly imageUrl: FieldRef<"Post", 'String'>
-    readonly authorId: FieldRef<"Post", 'String'>
-    readonly moodboardId: FieldRef<"Post", 'Int'>
+  interface GalleryPinFieldRefs {
+    readonly id: FieldRef<"GalleryPin", 'Int'>
+    readonly title: FieldRef<"GalleryPin", 'String'>
+    readonly imageUrl: FieldRef<"GalleryPin", 'String'>
+    readonly description: FieldRef<"GalleryPin", 'String'>
+    readonly createdAt: FieldRef<"GalleryPin", 'DateTime'>
+    readonly authorId: FieldRef<"GalleryPin", 'String'>
   }
     
 
   // Custom InputTypes
   /**
-   * Post findUnique
+   * GalleryPin findUnique
    */
-  export type PostFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: GalleryPinSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostInclude<ExtArgs> | null
+    include?: GalleryPinInclude<ExtArgs> | null
     /**
-     * Filter, which Post to fetch.
+     * Filter, which GalleryPin to fetch.
      */
-    where: PostWhereUniqueInput
+    where: GalleryPinWhereUniqueInput
   }
 
   /**
-   * Post findUniqueOrThrow
+   * GalleryPin findUniqueOrThrow
    */
-  export type PostFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: GalleryPinSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostInclude<ExtArgs> | null
+    include?: GalleryPinInclude<ExtArgs> | null
     /**
-     * Filter, which Post to fetch.
+     * Filter, which GalleryPin to fetch.
      */
-    where: PostWhereUniqueInput
+    where: GalleryPinWhereUniqueInput
   }
 
   /**
-   * Post findFirst
+   * GalleryPin findFirst
    */
-  export type PostFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: GalleryPinSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostInclude<ExtArgs> | null
+    include?: GalleryPinInclude<ExtArgs> | null
     /**
-     * Filter, which Post to fetch.
+     * Filter, which GalleryPin to fetch.
      */
-    where?: PostWhereInput
+    where?: GalleryPinWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Posts to fetch.
+     * Determine the order of GalleryPins to fetch.
      */
-    orderBy?: PostOrderByWithRelationInput | PostOrderByWithRelationInput[]
+    orderBy?: GalleryPinOrderByWithRelationInput | GalleryPinOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Posts.
+     * Sets the position for searching for GalleryPins.
      */
-    cursor?: PostWhereUniqueInput
+    cursor?: GalleryPinWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Posts from the position of the cursor.
+     * Take `±n` GalleryPins from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Posts.
+     * Skip the first `n` GalleryPins.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Posts.
+     * Filter by unique combinations of GalleryPins.
      */
-    distinct?: PostScalarFieldEnum | PostScalarFieldEnum[]
+    distinct?: GalleryPinScalarFieldEnum | GalleryPinScalarFieldEnum[]
   }
 
   /**
-   * Post findFirstOrThrow
+   * GalleryPin findFirstOrThrow
    */
-  export type PostFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: GalleryPinSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostInclude<ExtArgs> | null
+    include?: GalleryPinInclude<ExtArgs> | null
     /**
-     * Filter, which Post to fetch.
+     * Filter, which GalleryPin to fetch.
      */
-    where?: PostWhereInput
+    where?: GalleryPinWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Posts to fetch.
+     * Determine the order of GalleryPins to fetch.
      */
-    orderBy?: PostOrderByWithRelationInput | PostOrderByWithRelationInput[]
+    orderBy?: GalleryPinOrderByWithRelationInput | GalleryPinOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for Posts.
+     * Sets the position for searching for GalleryPins.
      */
-    cursor?: PostWhereUniqueInput
+    cursor?: GalleryPinWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Posts from the position of the cursor.
+     * Take `±n` GalleryPins from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Posts.
+     * Skip the first `n` GalleryPins.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of Posts.
+     * Filter by unique combinations of GalleryPins.
      */
-    distinct?: PostScalarFieldEnum | PostScalarFieldEnum[]
+    distinct?: GalleryPinScalarFieldEnum | GalleryPinScalarFieldEnum[]
   }
 
   /**
-   * Post findMany
+   * GalleryPin findMany
    */
-  export type PostFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: GalleryPinSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostInclude<ExtArgs> | null
+    include?: GalleryPinInclude<ExtArgs> | null
     /**
-     * Filter, which Posts to fetch.
+     * Filter, which GalleryPins to fetch.
      */
-    where?: PostWhereInput
+    where?: GalleryPinWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of Posts to fetch.
+     * Determine the order of GalleryPins to fetch.
      */
-    orderBy?: PostOrderByWithRelationInput | PostOrderByWithRelationInput[]
+    orderBy?: GalleryPinOrderByWithRelationInput | GalleryPinOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing Posts.
+     * Sets the position for listing GalleryPins.
      */
-    cursor?: PostWhereUniqueInput
+    cursor?: GalleryPinWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` Posts from the position of the cursor.
+     * Take `±n` GalleryPins from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` Posts.
+     * Skip the first `n` GalleryPins.
      */
     skip?: number
-    distinct?: PostScalarFieldEnum | PostScalarFieldEnum[]
+    distinct?: GalleryPinScalarFieldEnum | GalleryPinScalarFieldEnum[]
   }
 
   /**
-   * Post create
+   * GalleryPin create
    */
-  export type PostCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: GalleryPinSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostInclude<ExtArgs> | null
+    include?: GalleryPinInclude<ExtArgs> | null
     /**
-     * The data needed to create a Post.
+     * The data needed to create a GalleryPin.
      */
-    data: XOR<PostCreateInput, PostUncheckedCreateInput>
+    data: XOR<GalleryPinCreateInput, GalleryPinUncheckedCreateInput>
   }
 
   /**
-   * Post createMany
+   * GalleryPin createMany
    */
-  export type PostCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many Posts.
+     * The data used to create many GalleryPins.
      */
-    data: PostCreateManyInput | PostCreateManyInput[]
+    data: GalleryPinCreateManyInput | GalleryPinCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * Post createManyAndReturn
+   * GalleryPin createManyAndReturn
    */
-  export type PostCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelectCreateManyAndReturn<ExtArgs> | null
+    select?: GalleryPinSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
-     * The data used to create many Posts.
+     * The data used to create many GalleryPins.
      */
-    data: PostCreateManyInput | PostCreateManyInput[]
+    data: GalleryPinCreateManyInput | GalleryPinCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: GalleryPinIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * Post update
+   * GalleryPin update
    */
-  export type PostUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: GalleryPinSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostInclude<ExtArgs> | null
+    include?: GalleryPinInclude<ExtArgs> | null
     /**
-     * The data needed to update a Post.
+     * The data needed to update a GalleryPin.
      */
-    data: XOR<PostUpdateInput, PostUncheckedUpdateInput>
+    data: XOR<GalleryPinUpdateInput, GalleryPinUncheckedUpdateInput>
     /**
-     * Choose, which Post to update.
+     * Choose, which GalleryPin to update.
      */
-    where: PostWhereUniqueInput
+    where: GalleryPinWhereUniqueInput
   }
 
   /**
-   * Post updateMany
+   * GalleryPin updateMany
    */
-  export type PostUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update Posts.
+     * The data used to update GalleryPins.
      */
-    data: XOR<PostUpdateManyMutationInput, PostUncheckedUpdateManyInput>
+    data: XOR<GalleryPinUpdateManyMutationInput, GalleryPinUncheckedUpdateManyInput>
     /**
-     * Filter which Posts to update
+     * Filter which GalleryPins to update
      */
-    where?: PostWhereInput
+    where?: GalleryPinWhereInput
     /**
-     * Limit how many Posts to update.
+     * Limit how many GalleryPins to update.
      */
     limit?: number
   }
 
   /**
-   * Post updateManyAndReturn
+   * GalleryPin updateManyAndReturn
    */
-  export type PostUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: GalleryPinSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
-     * The data used to update Posts.
+     * The data used to update GalleryPins.
      */
-    data: XOR<PostUpdateManyMutationInput, PostUncheckedUpdateManyInput>
+    data: XOR<GalleryPinUpdateManyMutationInput, GalleryPinUncheckedUpdateManyInput>
     /**
-     * Filter which Posts to update
+     * Filter which GalleryPins to update
      */
-    where?: PostWhereInput
+    where?: GalleryPinWhereInput
     /**
-     * Limit how many Posts to update.
+     * Limit how many GalleryPins to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: GalleryPinIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * Post upsert
+   * GalleryPin upsert
    */
-  export type PostUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: GalleryPinSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostInclude<ExtArgs> | null
+    include?: GalleryPinInclude<ExtArgs> | null
     /**
-     * The filter to search for the Post to update in case it exists.
+     * The filter to search for the GalleryPin to update in case it exists.
      */
-    where: PostWhereUniqueInput
+    where: GalleryPinWhereUniqueInput
     /**
-     * In case the Post found by the `where` argument doesn't exist, create a new Post with this data.
+     * In case the GalleryPin found by the `where` argument doesn't exist, create a new GalleryPin with this data.
      */
-    create: XOR<PostCreateInput, PostUncheckedCreateInput>
+    create: XOR<GalleryPinCreateInput, GalleryPinUncheckedCreateInput>
     /**
-     * In case the Post was found with the provided `where` argument, update it with this data.
+     * In case the GalleryPin was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<PostUpdateInput, PostUncheckedUpdateInput>
+    update: XOR<GalleryPinUpdateInput, GalleryPinUncheckedUpdateInput>
   }
 
   /**
-   * Post delete
+   * GalleryPin delete
    */
-  export type PostDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: GalleryPinSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostInclude<ExtArgs> | null
+    include?: GalleryPinInclude<ExtArgs> | null
     /**
-     * Filter which Post to delete.
+     * Filter which GalleryPin to delete.
      */
-    where: PostWhereUniqueInput
+    where: GalleryPinWhereUniqueInput
   }
 
   /**
-   * Post deleteMany
+   * GalleryPin deleteMany
    */
-  export type PostDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which Posts to delete
+     * Filter which GalleryPins to delete
      */
-    where?: PostWhereInput
+    where?: GalleryPinWhereInput
     /**
-     * Limit how many Posts to delete.
+     * Limit how many GalleryPins to delete.
      */
     limit?: number
   }
 
   /**
-   * Post.likes
+   * GalleryPin.likes
    */
-  export type Post$likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPin$likesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelect<ExtArgs> | null
+    select?: GalleryPinLikeSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeInclude<ExtArgs> | null
-    where?: PostLikeWhereInput
-    orderBy?: PostLikeOrderByWithRelationInput | PostLikeOrderByWithRelationInput[]
-    cursor?: PostLikeWhereUniqueInput
+    include?: GalleryPinLikeInclude<ExtArgs> | null
+    where?: GalleryPinLikeWhereInput
+    orderBy?: GalleryPinLikeOrderByWithRelationInput | GalleryPinLikeOrderByWithRelationInput[]
+    cursor?: GalleryPinLikeWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: PostLikeScalarFieldEnum | PostLikeScalarFieldEnum[]
+    distinct?: GalleryPinLikeScalarFieldEnum | GalleryPinLikeScalarFieldEnum[]
   }
 
   /**
-   * Post without action
+   * GalleryPin without action
    */
-  export type PostDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the Post
+     * Select specific fields to fetch from the GalleryPin
      */
-    select?: PostSelect<ExtArgs> | null
+    select?: GalleryPinSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the Post
+     * Omit specific fields from the GalleryPin
      */
-    omit?: PostOmit<ExtArgs> | null
+    omit?: GalleryPinOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostInclude<ExtArgs> | null
+    include?: GalleryPinInclude<ExtArgs> | null
   }
 
 
   /**
-   * Model PostLike
+   * Model GalleryPinLike
    */
 
-  export type AggregatePostLike = {
-    _count: PostLikeCountAggregateOutputType | null
-    _avg: PostLikeAvgAggregateOutputType | null
-    _sum: PostLikeSumAggregateOutputType | null
-    _min: PostLikeMinAggregateOutputType | null
-    _max: PostLikeMaxAggregateOutputType | null
+  export type AggregateGalleryPinLike = {
+    _count: GalleryPinLikeCountAggregateOutputType | null
+    _avg: GalleryPinLikeAvgAggregateOutputType | null
+    _sum: GalleryPinLikeSumAggregateOutputType | null
+    _min: GalleryPinLikeMinAggregateOutputType | null
+    _max: GalleryPinLikeMaxAggregateOutputType | null
   }
 
-  export type PostLikeAvgAggregateOutputType = {
+  export type GalleryPinLikeAvgAggregateOutputType = {
     id: number | null
-    postId: number | null
+    pinId: number | null
   }
 
-  export type PostLikeSumAggregateOutputType = {
+  export type GalleryPinLikeSumAggregateOutputType = {
     id: number | null
-    postId: number | null
+    pinId: number | null
   }
 
-  export type PostLikeMinAggregateOutputType = {
+  export type GalleryPinLikeMinAggregateOutputType = {
     id: number | null
-    postId: number | null
+    pinId: number | null
     userId: string | null
   }
 
-  export type PostLikeMaxAggregateOutputType = {
+  export type GalleryPinLikeMaxAggregateOutputType = {
     id: number | null
-    postId: number | null
+    pinId: number | null
     userId: string | null
   }
 
-  export type PostLikeCountAggregateOutputType = {
+  export type GalleryPinLikeCountAggregateOutputType = {
     id: number
-    postId: number
+    pinId: number
     userId: number
     _all: number
   }
 
 
-  export type PostLikeAvgAggregateInputType = {
+  export type GalleryPinLikeAvgAggregateInputType = {
     id?: true
-    postId?: true
+    pinId?: true
   }
 
-  export type PostLikeSumAggregateInputType = {
+  export type GalleryPinLikeSumAggregateInputType = {
     id?: true
-    postId?: true
+    pinId?: true
   }
 
-  export type PostLikeMinAggregateInputType = {
+  export type GalleryPinLikeMinAggregateInputType = {
     id?: true
-    postId?: true
+    pinId?: true
     userId?: true
   }
 
-  export type PostLikeMaxAggregateInputType = {
+  export type GalleryPinLikeMaxAggregateInputType = {
     id?: true
-    postId?: true
+    pinId?: true
     userId?: true
   }
 
-  export type PostLikeCountAggregateInputType = {
+  export type GalleryPinLikeCountAggregateInputType = {
     id?: true
-    postId?: true
+    pinId?: true
     userId?: true
     _all?: true
   }
 
-  export type PostLikeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which PostLike to aggregate.
+     * Filter which GalleryPinLike to aggregate.
      */
-    where?: PostLikeWhereInput
+    where?: GalleryPinLikeWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of PostLikes to fetch.
+     * Determine the order of GalleryPinLikes to fetch.
      */
-    orderBy?: PostLikeOrderByWithRelationInput | PostLikeOrderByWithRelationInput[]
+    orderBy?: GalleryPinLikeOrderByWithRelationInput | GalleryPinLikeOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
      * Sets the start position
      */
-    cursor?: PostLikeWhereUniqueInput
+    cursor?: GalleryPinLikeWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` PostLikes from the position of the cursor.
+     * Take `±n` GalleryPinLikes from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` PostLikes.
+     * Skip the first `n` GalleryPinLikes.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
-     * Count returned PostLikes
+     * Count returned GalleryPinLikes
     **/
-    _count?: true | PostLikeCountAggregateInputType
+    _count?: true | GalleryPinLikeCountAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to average
     **/
-    _avg?: PostLikeAvgAggregateInputType
+    _avg?: GalleryPinLikeAvgAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to sum
     **/
-    _sum?: PostLikeSumAggregateInputType
+    _sum?: GalleryPinLikeSumAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the minimum value
     **/
-    _min?: PostLikeMinAggregateInputType
+    _min?: GalleryPinLikeMinAggregateInputType
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
      * Select which fields to find the maximum value
     **/
-    _max?: PostLikeMaxAggregateInputType
+    _max?: GalleryPinLikeMaxAggregateInputType
   }
 
-  export type GetPostLikeAggregateType<T extends PostLikeAggregateArgs> = {
-        [P in keyof T & keyof AggregatePostLike]: P extends '_count' | 'count'
+  export type GetGalleryPinLikeAggregateType<T extends GalleryPinLikeAggregateArgs> = {
+        [P in keyof T & keyof AggregateGalleryPinLike]: P extends '_count' | 'count'
       ? T[P] extends true
         ? number
-        : GetScalarType<T[P], AggregatePostLike[P]>
-      : GetScalarType<T[P], AggregatePostLike[P]>
+        : GetScalarType<T[P], AggregateGalleryPinLike[P]>
+      : GetScalarType<T[P], AggregateGalleryPinLike[P]>
   }
 
 
 
 
-  export type PostLikeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PostLikeWhereInput
-    orderBy?: PostLikeOrderByWithAggregationInput | PostLikeOrderByWithAggregationInput[]
-    by: PostLikeScalarFieldEnum[] | PostLikeScalarFieldEnum
-    having?: PostLikeScalarWhereWithAggregatesInput
+  export type GalleryPinLikeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GalleryPinLikeWhereInput
+    orderBy?: GalleryPinLikeOrderByWithAggregationInput | GalleryPinLikeOrderByWithAggregationInput[]
+    by: GalleryPinLikeScalarFieldEnum[] | GalleryPinLikeScalarFieldEnum
+    having?: GalleryPinLikeScalarWhereWithAggregatesInput
     take?: number
     skip?: number
-    _count?: PostLikeCountAggregateInputType | true
-    _avg?: PostLikeAvgAggregateInputType
-    _sum?: PostLikeSumAggregateInputType
-    _min?: PostLikeMinAggregateInputType
-    _max?: PostLikeMaxAggregateInputType
+    _count?: GalleryPinLikeCountAggregateInputType | true
+    _avg?: GalleryPinLikeAvgAggregateInputType
+    _sum?: GalleryPinLikeSumAggregateInputType
+    _min?: GalleryPinLikeMinAggregateInputType
+    _max?: GalleryPinLikeMaxAggregateInputType
   }
 
-  export type PostLikeGroupByOutputType = {
+  export type GalleryPinLikeGroupByOutputType = {
     id: number
-    postId: number
+    pinId: number
     userId: string
-    _count: PostLikeCountAggregateOutputType | null
-    _avg: PostLikeAvgAggregateOutputType | null
-    _sum: PostLikeSumAggregateOutputType | null
-    _min: PostLikeMinAggregateOutputType | null
-    _max: PostLikeMaxAggregateOutputType | null
+    _count: GalleryPinLikeCountAggregateOutputType | null
+    _avg: GalleryPinLikeAvgAggregateOutputType | null
+    _sum: GalleryPinLikeSumAggregateOutputType | null
+    _min: GalleryPinLikeMinAggregateOutputType | null
+    _max: GalleryPinLikeMaxAggregateOutputType | null
   }
 
-  type GetPostLikeGroupByPayload<T extends PostLikeGroupByArgs> = Prisma.PrismaPromise<
+  type GetGalleryPinLikeGroupByPayload<T extends GalleryPinLikeGroupByArgs> = Prisma.PrismaPromise<
     Array<
-      PickEnumerable<PostLikeGroupByOutputType, T['by']> &
+      PickEnumerable<GalleryPinLikeGroupByOutputType, T['by']> &
         {
-          [P in ((keyof T) & (keyof PostLikeGroupByOutputType))]: P extends '_count'
+          [P in ((keyof T) & (keyof GalleryPinLikeGroupByOutputType))]: P extends '_count'
             ? T[P] extends boolean
               ? number
-              : GetScalarType<T[P], PostLikeGroupByOutputType[P]>
-            : GetScalarType<T[P], PostLikeGroupByOutputType[P]>
+              : GetScalarType<T[P], GalleryPinLikeGroupByOutputType[P]>
+            : GetScalarType<T[P], GalleryPinLikeGroupByOutputType[P]>
         }
       >
     >
 
 
-  export type PostLikeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type GalleryPinLikeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    postId?: boolean
+    pinId?: boolean
     userId?: boolean
-    post?: boolean | PostDefaultArgs<ExtArgs>
+    pin?: boolean | GalleryPinDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["postLike"]>
+  }, ExtArgs["result"]["galleryPinLike"]>
 
-  export type PostLikeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type GalleryPinLikeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    postId?: boolean
+    pinId?: boolean
     userId?: boolean
-    post?: boolean | PostDefaultArgs<ExtArgs>
+    pin?: boolean | GalleryPinDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["postLike"]>
+  }, ExtArgs["result"]["galleryPinLike"]>
 
-  export type PostLikeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+  export type GalleryPinLikeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    postId?: boolean
+    pinId?: boolean
     userId?: boolean
-    post?: boolean | PostDefaultArgs<ExtArgs>
+    pin?: boolean | GalleryPinDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
-  }, ExtArgs["result"]["postLike"]>
+  }, ExtArgs["result"]["galleryPinLike"]>
 
-  export type PostLikeSelectScalar = {
+  export type GalleryPinLikeSelectScalar = {
     id?: boolean
-    postId?: boolean
+    pinId?: boolean
     userId?: boolean
   }
 
-  export type PostLikeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "postId" | "userId", ExtArgs["result"]["postLike"]>
-  export type PostLikeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    post?: boolean | PostDefaultArgs<ExtArgs>
+  export type GalleryPinLikeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "pinId" | "userId", ExtArgs["result"]["galleryPinLike"]>
+  export type GalleryPinLikeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pin?: boolean | GalleryPinDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-  export type PostLikeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    post?: boolean | PostDefaultArgs<ExtArgs>
+  export type GalleryPinLikeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pin?: boolean | GalleryPinDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
-  export type PostLikeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    post?: boolean | PostDefaultArgs<ExtArgs>
+  export type GalleryPinLikeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pin?: boolean | GalleryPinDefaultArgs<ExtArgs>
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
 
-  export type $PostLikePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "PostLike"
+  export type $GalleryPinLikePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GalleryPinLike"
     objects: {
-      post: Prisma.$PostPayload<ExtArgs>
+      pin: Prisma.$GalleryPinPayload<ExtArgs>
       user: Prisma.$UserPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      postId: number
+      pinId: number
       userId: string
-    }, ExtArgs["result"]["postLike"]>
+    }, ExtArgs["result"]["galleryPinLike"]>
     composites: {}
   }
 
-  type PostLikeGetPayload<S extends boolean | null | undefined | PostLikeDefaultArgs> = $Result.GetResult<Prisma.$PostLikePayload, S>
+  type GalleryPinLikeGetPayload<S extends boolean | null | undefined | GalleryPinLikeDefaultArgs> = $Result.GetResult<Prisma.$GalleryPinLikePayload, S>
 
-  type PostLikeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<PostLikeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: PostLikeCountAggregateInputType | true
+  type GalleryPinLikeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GalleryPinLikeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GalleryPinLikeCountAggregateInputType | true
     }
 
-  export interface PostLikeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PostLike'], meta: { name: 'PostLike' } }
+  export interface GalleryPinLikeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GalleryPinLike'], meta: { name: 'GalleryPinLike' } }
     /**
-     * Find zero or one PostLike that matches the filter.
-     * @param {PostLikeFindUniqueArgs} args - Arguments to find a PostLike
+     * Find zero or one GalleryPinLike that matches the filter.
+     * @param {GalleryPinLikeFindUniqueArgs} args - Arguments to find a GalleryPinLike
      * @example
-     * // Get one PostLike
-     * const postLike = await prisma.postLike.findUnique({
+     * // Get one GalleryPinLike
+     * const galleryPinLike = await prisma.galleryPinLike.findUnique({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUnique<T extends PostLikeFindUniqueArgs>(args: SelectSubset<T, PostLikeFindUniqueArgs<ExtArgs>>): Prisma__PostLikeClient<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findUnique<T extends GalleryPinLikeFindUniqueArgs>(args: SelectSubset<T, GalleryPinLikeFindUniqueArgs<ExtArgs>>): Prisma__GalleryPinLikeClient<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find one PostLike that matches the filter or throw an error with `error.code='P2025'`
+     * Find one GalleryPinLike that matches the filter or throw an error with `error.code='P2025'`
      * if no matches were found.
-     * @param {PostLikeFindUniqueOrThrowArgs} args - Arguments to find a PostLike
+     * @param {GalleryPinLikeFindUniqueOrThrowArgs} args - Arguments to find a GalleryPinLike
      * @example
-     * // Get one PostLike
-     * const postLike = await prisma.postLike.findUniqueOrThrow({
+     * // Get one GalleryPinLike
+     * const galleryPinLike = await prisma.galleryPinLike.findUniqueOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findUniqueOrThrow<T extends PostLikeFindUniqueOrThrowArgs>(args: SelectSubset<T, PostLikeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PostLikeClient<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findUniqueOrThrow<T extends GalleryPinLikeFindUniqueOrThrowArgs>(args: SelectSubset<T, GalleryPinLikeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GalleryPinLikeClient<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first PostLike that matches the filter.
+     * Find the first GalleryPinLike that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostLikeFindFirstArgs} args - Arguments to find a PostLike
+     * @param {GalleryPinLikeFindFirstArgs} args - Arguments to find a GalleryPinLike
      * @example
-     * // Get one PostLike
-     * const postLike = await prisma.postLike.findFirst({
+     * // Get one GalleryPinLike
+     * const galleryPinLike = await prisma.galleryPinLike.findFirst({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirst<T extends PostLikeFindFirstArgs>(args?: SelectSubset<T, PostLikeFindFirstArgs<ExtArgs>>): Prisma__PostLikeClient<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    findFirst<T extends GalleryPinLikeFindFirstArgs>(args?: SelectSubset<T, GalleryPinLikeFindFirstArgs<ExtArgs>>): Prisma__GalleryPinLikeClient<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find the first PostLike that matches the filter or
+     * Find the first GalleryPinLike that matches the filter or
      * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostLikeFindFirstOrThrowArgs} args - Arguments to find a PostLike
+     * @param {GalleryPinLikeFindFirstOrThrowArgs} args - Arguments to find a GalleryPinLike
      * @example
-     * // Get one PostLike
-     * const postLike = await prisma.postLike.findFirstOrThrow({
+     * // Get one GalleryPinLike
+     * const galleryPinLike = await prisma.galleryPinLike.findFirstOrThrow({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      */
-    findFirstOrThrow<T extends PostLikeFindFirstOrThrowArgs>(args?: SelectSubset<T, PostLikeFindFirstOrThrowArgs<ExtArgs>>): Prisma__PostLikeClient<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    findFirstOrThrow<T extends GalleryPinLikeFindFirstOrThrowArgs>(args?: SelectSubset<T, GalleryPinLikeFindFirstOrThrowArgs<ExtArgs>>): Prisma__GalleryPinLikeClient<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Find zero or more PostLikes that matches the filter.
+     * Find zero or more GalleryPinLikes that matches the filter.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostLikeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @param {GalleryPinLikeFindManyArgs} args - Arguments to filter and select certain fields only.
      * @example
-     * // Get all PostLikes
-     * const postLikes = await prisma.postLike.findMany()
+     * // Get all GalleryPinLikes
+     * const galleryPinLikes = await prisma.galleryPinLike.findMany()
      * 
-     * // Get first 10 PostLikes
-     * const postLikes = await prisma.postLike.findMany({ take: 10 })
+     * // Get first 10 GalleryPinLikes
+     * const galleryPinLikes = await prisma.galleryPinLike.findMany({ take: 10 })
      * 
      * // Only select the `id`
-     * const postLikeWithIdOnly = await prisma.postLike.findMany({ select: { id: true } })
+     * const galleryPinLikeWithIdOnly = await prisma.galleryPinLike.findMany({ select: { id: true } })
      * 
      */
-    findMany<T extends PostLikeFindManyArgs>(args?: SelectSubset<T, PostLikeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+    findMany<T extends GalleryPinLikeFindManyArgs>(args?: SelectSubset<T, GalleryPinLikeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
     /**
-     * Create a PostLike.
-     * @param {PostLikeCreateArgs} args - Arguments to create a PostLike.
+     * Create a GalleryPinLike.
+     * @param {GalleryPinLikeCreateArgs} args - Arguments to create a GalleryPinLike.
      * @example
-     * // Create one PostLike
-     * const PostLike = await prisma.postLike.create({
+     * // Create one GalleryPinLike
+     * const GalleryPinLike = await prisma.galleryPinLike.create({
      *   data: {
-     *     // ... data to create a PostLike
+     *     // ... data to create a GalleryPinLike
      *   }
      * })
      * 
      */
-    create<T extends PostLikeCreateArgs>(args: SelectSubset<T, PostLikeCreateArgs<ExtArgs>>): Prisma__PostLikeClient<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    create<T extends GalleryPinLikeCreateArgs>(args: SelectSubset<T, GalleryPinLikeCreateArgs<ExtArgs>>): Prisma__GalleryPinLikeClient<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Create many PostLikes.
-     * @param {PostLikeCreateManyArgs} args - Arguments to create many PostLikes.
+     * Create many GalleryPinLikes.
+     * @param {GalleryPinLikeCreateManyArgs} args - Arguments to create many GalleryPinLikes.
      * @example
-     * // Create many PostLikes
-     * const postLike = await prisma.postLike.createMany({
+     * // Create many GalleryPinLikes
+     * const galleryPinLike = await prisma.galleryPinLike.createMany({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      *     
      */
-    createMany<T extends PostLikeCreateManyArgs>(args?: SelectSubset<T, PostLikeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    createMany<T extends GalleryPinLikeCreateManyArgs>(args?: SelectSubset<T, GalleryPinLikeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Create many PostLikes and returns the data saved in the database.
-     * @param {PostLikeCreateManyAndReturnArgs} args - Arguments to create many PostLikes.
+     * Create many GalleryPinLikes and returns the data saved in the database.
+     * @param {GalleryPinLikeCreateManyAndReturnArgs} args - Arguments to create many GalleryPinLikes.
      * @example
-     * // Create many PostLikes
-     * const postLike = await prisma.postLike.createManyAndReturn({
+     * // Create many GalleryPinLikes
+     * const galleryPinLike = await prisma.galleryPinLike.createManyAndReturn({
      *   data: [
      *     // ... provide data here
      *   ]
      * })
      * 
-     * // Create many PostLikes and only return the `id`
-     * const postLikeWithIdOnly = await prisma.postLike.createManyAndReturn({
+     * // Create many GalleryPinLikes and only return the `id`
+     * const galleryPinLikeWithIdOnly = await prisma.galleryPinLike.createManyAndReturn({
      *   select: { id: true },
      *   data: [
      *     // ... provide data here
@@ -13438,28 +14543,28 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    createManyAndReturn<T extends PostLikeCreateManyAndReturnArgs>(args?: SelectSubset<T, PostLikeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+    createManyAndReturn<T extends GalleryPinLikeCreateManyAndReturnArgs>(args?: SelectSubset<T, GalleryPinLikeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Delete a PostLike.
-     * @param {PostLikeDeleteArgs} args - Arguments to delete one PostLike.
+     * Delete a GalleryPinLike.
+     * @param {GalleryPinLikeDeleteArgs} args - Arguments to delete one GalleryPinLike.
      * @example
-     * // Delete one PostLike
-     * const PostLike = await prisma.postLike.delete({
+     * // Delete one GalleryPinLike
+     * const GalleryPinLike = await prisma.galleryPinLike.delete({
      *   where: {
-     *     // ... filter to delete one PostLike
+     *     // ... filter to delete one GalleryPinLike
      *   }
      * })
      * 
      */
-    delete<T extends PostLikeDeleteArgs>(args: SelectSubset<T, PostLikeDeleteArgs<ExtArgs>>): Prisma__PostLikeClient<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    delete<T extends GalleryPinLikeDeleteArgs>(args: SelectSubset<T, GalleryPinLikeDeleteArgs<ExtArgs>>): Prisma__GalleryPinLikeClient<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Update one PostLike.
-     * @param {PostLikeUpdateArgs} args - Arguments to update one PostLike.
+     * Update one GalleryPinLike.
+     * @param {GalleryPinLikeUpdateArgs} args - Arguments to update one GalleryPinLike.
      * @example
-     * // Update one PostLike
-     * const postLike = await prisma.postLike.update({
+     * // Update one GalleryPinLike
+     * const galleryPinLike = await prisma.galleryPinLike.update({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -13469,30 +14574,30 @@ export namespace Prisma {
      * })
      * 
      */
-    update<T extends PostLikeUpdateArgs>(args: SelectSubset<T, PostLikeUpdateArgs<ExtArgs>>): Prisma__PostLikeClient<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    update<T extends GalleryPinLikeUpdateArgs>(args: SelectSubset<T, GalleryPinLikeUpdateArgs<ExtArgs>>): Prisma__GalleryPinLikeClient<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
     /**
-     * Delete zero or more PostLikes.
-     * @param {PostLikeDeleteManyArgs} args - Arguments to filter PostLikes to delete.
+     * Delete zero or more GalleryPinLikes.
+     * @param {GalleryPinLikeDeleteManyArgs} args - Arguments to filter GalleryPinLikes to delete.
      * @example
-     * // Delete a few PostLikes
-     * const { count } = await prisma.postLike.deleteMany({
+     * // Delete a few GalleryPinLikes
+     * const { count } = await prisma.galleryPinLike.deleteMany({
      *   where: {
      *     // ... provide filter here
      *   }
      * })
      * 
      */
-    deleteMany<T extends PostLikeDeleteManyArgs>(args?: SelectSubset<T, PostLikeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    deleteMany<T extends GalleryPinLikeDeleteManyArgs>(args?: SelectSubset<T, GalleryPinLikeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more PostLikes.
+     * Update zero or more GalleryPinLikes.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostLikeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @param {GalleryPinLikeUpdateManyArgs} args - Arguments to update one or more rows.
      * @example
-     * // Update many PostLikes
-     * const postLike = await prisma.postLike.updateMany({
+     * // Update many GalleryPinLikes
+     * const galleryPinLike = await prisma.galleryPinLike.updateMany({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -13502,14 +14607,14 @@ export namespace Prisma {
      * })
      * 
      */
-    updateMany<T extends PostLikeUpdateManyArgs>(args: SelectSubset<T, PostLikeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+    updateMany<T extends GalleryPinLikeUpdateManyArgs>(args: SelectSubset<T, GalleryPinLikeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
 
     /**
-     * Update zero or more PostLikes and returns the data updated in the database.
-     * @param {PostLikeUpdateManyAndReturnArgs} args - Arguments to update many PostLikes.
+     * Update zero or more GalleryPinLikes and returns the data updated in the database.
+     * @param {GalleryPinLikeUpdateManyAndReturnArgs} args - Arguments to update many GalleryPinLikes.
      * @example
-     * // Update many PostLikes
-     * const postLike = await prisma.postLike.updateManyAndReturn({
+     * // Update many GalleryPinLikes
+     * const galleryPinLike = await prisma.galleryPinLike.updateManyAndReturn({
      *   where: {
      *     // ... provide filter here
      *   },
@@ -13518,8 +14623,8 @@ export namespace Prisma {
      *   ]
      * })
      * 
-     * // Update zero or more PostLikes and only return the `id`
-     * const postLikeWithIdOnly = await prisma.postLike.updateManyAndReturn({
+     * // Update zero or more GalleryPinLikes and only return the `id`
+     * const galleryPinLikeWithIdOnly = await prisma.galleryPinLike.updateManyAndReturn({
      *   select: { id: true },
      *   where: {
      *     // ... provide filter here
@@ -13532,56 +14637,56 @@ export namespace Prisma {
      * Read more here: https://pris.ly/d/null-undefined
      * 
      */
-    updateManyAndReturn<T extends PostLikeUpdateManyAndReturnArgs>(args: SelectSubset<T, PostLikeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+    updateManyAndReturn<T extends GalleryPinLikeUpdateManyAndReturnArgs>(args: SelectSubset<T, GalleryPinLikeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
     /**
-     * Create or update one PostLike.
-     * @param {PostLikeUpsertArgs} args - Arguments to update or create a PostLike.
+     * Create or update one GalleryPinLike.
+     * @param {GalleryPinLikeUpsertArgs} args - Arguments to update or create a GalleryPinLike.
      * @example
-     * // Update or create a PostLike
-     * const postLike = await prisma.postLike.upsert({
+     * // Update or create a GalleryPinLike
+     * const galleryPinLike = await prisma.galleryPinLike.upsert({
      *   create: {
-     *     // ... data to create a PostLike
+     *     // ... data to create a GalleryPinLike
      *   },
      *   update: {
      *     // ... in case it already exists, update
      *   },
      *   where: {
-     *     // ... the filter for the PostLike we want to update
+     *     // ... the filter for the GalleryPinLike we want to update
      *   }
      * })
      */
-    upsert<T extends PostLikeUpsertArgs>(args: SelectSubset<T, PostLikeUpsertArgs<ExtArgs>>): Prisma__PostLikeClient<$Result.GetResult<Prisma.$PostLikePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+    upsert<T extends GalleryPinLikeUpsertArgs>(args: SelectSubset<T, GalleryPinLikeUpsertArgs<ExtArgs>>): Prisma__GalleryPinLikeClient<$Result.GetResult<Prisma.$GalleryPinLikePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
     /**
-     * Count the number of PostLikes.
+     * Count the number of GalleryPinLikes.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostLikeCountArgs} args - Arguments to filter PostLikes to count.
+     * @param {GalleryPinLikeCountArgs} args - Arguments to filter GalleryPinLikes to count.
      * @example
-     * // Count the number of PostLikes
-     * const count = await prisma.postLike.count({
+     * // Count the number of GalleryPinLikes
+     * const count = await prisma.galleryPinLike.count({
      *   where: {
-     *     // ... the filter for the PostLikes we want to count
+     *     // ... the filter for the GalleryPinLikes we want to count
      *   }
      * })
     **/
-    count<T extends PostLikeCountArgs>(
-      args?: Subset<T, PostLikeCountArgs>,
+    count<T extends GalleryPinLikeCountArgs>(
+      args?: Subset<T, GalleryPinLikeCountArgs>,
     ): Prisma.PrismaPromise<
       T extends $Utils.Record<'select', any>
         ? T['select'] extends true
           ? number
-          : GetScalarType<T['select'], PostLikeCountAggregateOutputType>
+          : GetScalarType<T['select'], GalleryPinLikeCountAggregateOutputType>
         : number
     >
 
     /**
-     * Allows you to perform aggregations operations on a PostLike.
+     * Allows you to perform aggregations operations on a GalleryPinLike.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostLikeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @param {GalleryPinLikeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
      * @example
      * // Ordered by age ascending
      * // Where email contains prisma.io
@@ -13601,13 +14706,13 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends PostLikeAggregateArgs>(args: Subset<T, PostLikeAggregateArgs>): Prisma.PrismaPromise<GetPostLikeAggregateType<T>>
+    aggregate<T extends GalleryPinLikeAggregateArgs>(args: Subset<T, GalleryPinLikeAggregateArgs>): Prisma.PrismaPromise<GetGalleryPinLikeAggregateType<T>>
 
     /**
-     * Group by PostLike.
+     * Group by GalleryPinLike.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
-     * @param {PostLikeGroupByArgs} args - Group by arguments.
+     * @param {GalleryPinLikeGroupByArgs} args - Group by arguments.
      * @example
      * // Group by city, order by createdAt, get count
      * const result = await prisma.user.groupBy({
@@ -13622,14 +14727,14 @@ export namespace Prisma {
      * 
     **/
     groupBy<
-      T extends PostLikeGroupByArgs,
+      T extends GalleryPinLikeGroupByArgs,
       HasSelectOrTake extends Or<
         Extends<'skip', Keys<T>>,
         Extends<'take', Keys<T>>
       >,
       OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: PostLikeGroupByArgs['orderBy'] }
-        : { orderBy?: PostLikeGroupByArgs['orderBy'] },
+        ? { orderBy: GalleryPinLikeGroupByArgs['orderBy'] }
+        : { orderBy?: GalleryPinLikeGroupByArgs['orderBy'] },
       OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
       ByFields extends MaybeTupleToUnion<T['by']>,
       ByValid extends Has<ByFields, OrderFields>,
@@ -13678,22 +14783,22 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, PostLikeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPostLikeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, GalleryPinLikeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGalleryPinLikeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
   /**
-   * Fields of the PostLike model
+   * Fields of the GalleryPinLike model
    */
-  readonly fields: PostLikeFieldRefs;
+  readonly fields: GalleryPinLikeFieldRefs;
   }
 
   /**
-   * The delegate class that acts as a "Promise-like" for PostLike.
+   * The delegate class that acts as a "Promise-like" for GalleryPinLike.
    * Why is this prefixed with `Prisma__`?
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export interface Prisma__PostLikeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+  export interface Prisma__GalleryPinLikeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    post<T extends PostDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PostDefaultArgs<ExtArgs>>): Prisma__PostClient<$Result.GetResult<Prisma.$PostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    pin<T extends GalleryPinDefaultArgs<ExtArgs> = {}>(args?: Subset<T, GalleryPinDefaultArgs<ExtArgs>>): Prisma__GalleryPinClient<$Result.GetResult<Prisma.$GalleryPinPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -13721,423 +14826,423 @@ export namespace Prisma {
 
 
   /**
-   * Fields of the PostLike model
+   * Fields of the GalleryPinLike model
    */
-  interface PostLikeFieldRefs {
-    readonly id: FieldRef<"PostLike", 'Int'>
-    readonly postId: FieldRef<"PostLike", 'Int'>
-    readonly userId: FieldRef<"PostLike", 'String'>
+  interface GalleryPinLikeFieldRefs {
+    readonly id: FieldRef<"GalleryPinLike", 'Int'>
+    readonly pinId: FieldRef<"GalleryPinLike", 'Int'>
+    readonly userId: FieldRef<"GalleryPinLike", 'String'>
   }
     
 
   // Custom InputTypes
   /**
-   * PostLike findUnique
+   * GalleryPinLike findUnique
    */
-  export type PostLikeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelect<ExtArgs> | null
+    select?: GalleryPinLikeSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeInclude<ExtArgs> | null
+    include?: GalleryPinLikeInclude<ExtArgs> | null
     /**
-     * Filter, which PostLike to fetch.
+     * Filter, which GalleryPinLike to fetch.
      */
-    where: PostLikeWhereUniqueInput
+    where: GalleryPinLikeWhereUniqueInput
   }
 
   /**
-   * PostLike findUniqueOrThrow
+   * GalleryPinLike findUniqueOrThrow
    */
-  export type PostLikeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelect<ExtArgs> | null
+    select?: GalleryPinLikeSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeInclude<ExtArgs> | null
+    include?: GalleryPinLikeInclude<ExtArgs> | null
     /**
-     * Filter, which PostLike to fetch.
+     * Filter, which GalleryPinLike to fetch.
      */
-    where: PostLikeWhereUniqueInput
+    where: GalleryPinLikeWhereUniqueInput
   }
 
   /**
-   * PostLike findFirst
+   * GalleryPinLike findFirst
    */
-  export type PostLikeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelect<ExtArgs> | null
+    select?: GalleryPinLikeSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeInclude<ExtArgs> | null
+    include?: GalleryPinLikeInclude<ExtArgs> | null
     /**
-     * Filter, which PostLike to fetch.
+     * Filter, which GalleryPinLike to fetch.
      */
-    where?: PostLikeWhereInput
+    where?: GalleryPinLikeWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of PostLikes to fetch.
+     * Determine the order of GalleryPinLikes to fetch.
      */
-    orderBy?: PostLikeOrderByWithRelationInput | PostLikeOrderByWithRelationInput[]
+    orderBy?: GalleryPinLikeOrderByWithRelationInput | GalleryPinLikeOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for PostLikes.
+     * Sets the position for searching for GalleryPinLikes.
      */
-    cursor?: PostLikeWhereUniqueInput
+    cursor?: GalleryPinLikeWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` PostLikes from the position of the cursor.
+     * Take `±n` GalleryPinLikes from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` PostLikes.
+     * Skip the first `n` GalleryPinLikes.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of PostLikes.
+     * Filter by unique combinations of GalleryPinLikes.
      */
-    distinct?: PostLikeScalarFieldEnum | PostLikeScalarFieldEnum[]
+    distinct?: GalleryPinLikeScalarFieldEnum | GalleryPinLikeScalarFieldEnum[]
   }
 
   /**
-   * PostLike findFirstOrThrow
+   * GalleryPinLike findFirstOrThrow
    */
-  export type PostLikeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelect<ExtArgs> | null
+    select?: GalleryPinLikeSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeInclude<ExtArgs> | null
+    include?: GalleryPinLikeInclude<ExtArgs> | null
     /**
-     * Filter, which PostLike to fetch.
+     * Filter, which GalleryPinLike to fetch.
      */
-    where?: PostLikeWhereInput
+    where?: GalleryPinLikeWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of PostLikes to fetch.
+     * Determine the order of GalleryPinLikes to fetch.
      */
-    orderBy?: PostLikeOrderByWithRelationInput | PostLikeOrderByWithRelationInput[]
+    orderBy?: GalleryPinLikeOrderByWithRelationInput | GalleryPinLikeOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for searching for PostLikes.
+     * Sets the position for searching for GalleryPinLikes.
      */
-    cursor?: PostLikeWhereUniqueInput
+    cursor?: GalleryPinLikeWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` PostLikes from the position of the cursor.
+     * Take `±n` GalleryPinLikes from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` PostLikes.
+     * Skip the first `n` GalleryPinLikes.
      */
     skip?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
      * 
-     * Filter by unique combinations of PostLikes.
+     * Filter by unique combinations of GalleryPinLikes.
      */
-    distinct?: PostLikeScalarFieldEnum | PostLikeScalarFieldEnum[]
+    distinct?: GalleryPinLikeScalarFieldEnum | GalleryPinLikeScalarFieldEnum[]
   }
 
   /**
-   * PostLike findMany
+   * GalleryPinLike findMany
    */
-  export type PostLikeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelect<ExtArgs> | null
+    select?: GalleryPinLikeSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeInclude<ExtArgs> | null
+    include?: GalleryPinLikeInclude<ExtArgs> | null
     /**
-     * Filter, which PostLikes to fetch.
+     * Filter, which GalleryPinLikes to fetch.
      */
-    where?: PostLikeWhereInput
+    where?: GalleryPinLikeWhereInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
      * 
-     * Determine the order of PostLikes to fetch.
+     * Determine the order of GalleryPinLikes to fetch.
      */
-    orderBy?: PostLikeOrderByWithRelationInput | PostLikeOrderByWithRelationInput[]
+    orderBy?: GalleryPinLikeOrderByWithRelationInput | GalleryPinLikeOrderByWithRelationInput[]
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
      * 
-     * Sets the position for listing PostLikes.
+     * Sets the position for listing GalleryPinLikes.
      */
-    cursor?: PostLikeWhereUniqueInput
+    cursor?: GalleryPinLikeWhereUniqueInput
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Take `±n` PostLikes from the position of the cursor.
+     * Take `±n` GalleryPinLikes from the position of the cursor.
      */
     take?: number
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
      * 
-     * Skip the first `n` PostLikes.
+     * Skip the first `n` GalleryPinLikes.
      */
     skip?: number
-    distinct?: PostLikeScalarFieldEnum | PostLikeScalarFieldEnum[]
+    distinct?: GalleryPinLikeScalarFieldEnum | GalleryPinLikeScalarFieldEnum[]
   }
 
   /**
-   * PostLike create
+   * GalleryPinLike create
    */
-  export type PostLikeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelect<ExtArgs> | null
+    select?: GalleryPinLikeSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeInclude<ExtArgs> | null
+    include?: GalleryPinLikeInclude<ExtArgs> | null
     /**
-     * The data needed to create a PostLike.
+     * The data needed to create a GalleryPinLike.
      */
-    data: XOR<PostLikeCreateInput, PostLikeUncheckedCreateInput>
+    data: XOR<GalleryPinLikeCreateInput, GalleryPinLikeUncheckedCreateInput>
   }
 
   /**
-   * PostLike createMany
+   * GalleryPinLike createMany
    */
-  export type PostLikeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to create many PostLikes.
+     * The data used to create many GalleryPinLikes.
      */
-    data: PostLikeCreateManyInput | PostLikeCreateManyInput[]
+    data: GalleryPinLikeCreateManyInput | GalleryPinLikeCreateManyInput[]
     skipDuplicates?: boolean
   }
 
   /**
-   * PostLike createManyAndReturn
+   * GalleryPinLike createManyAndReturn
    */
-  export type PostLikeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelectCreateManyAndReturn<ExtArgs> | null
+    select?: GalleryPinLikeSelectCreateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
-     * The data used to create many PostLikes.
+     * The data used to create many GalleryPinLikes.
      */
-    data: PostLikeCreateManyInput | PostLikeCreateManyInput[]
+    data: GalleryPinLikeCreateManyInput | GalleryPinLikeCreateManyInput[]
     skipDuplicates?: boolean
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeIncludeCreateManyAndReturn<ExtArgs> | null
+    include?: GalleryPinLikeIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * PostLike update
+   * GalleryPinLike update
    */
-  export type PostLikeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelect<ExtArgs> | null
+    select?: GalleryPinLikeSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeInclude<ExtArgs> | null
+    include?: GalleryPinLikeInclude<ExtArgs> | null
     /**
-     * The data needed to update a PostLike.
+     * The data needed to update a GalleryPinLike.
      */
-    data: XOR<PostLikeUpdateInput, PostLikeUncheckedUpdateInput>
+    data: XOR<GalleryPinLikeUpdateInput, GalleryPinLikeUncheckedUpdateInput>
     /**
-     * Choose, which PostLike to update.
+     * Choose, which GalleryPinLike to update.
      */
-    where: PostLikeWhereUniqueInput
+    where: GalleryPinLikeWhereUniqueInput
   }
 
   /**
-   * PostLike updateMany
+   * GalleryPinLike updateMany
    */
-  export type PostLikeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * The data used to update PostLikes.
+     * The data used to update GalleryPinLikes.
      */
-    data: XOR<PostLikeUpdateManyMutationInput, PostLikeUncheckedUpdateManyInput>
+    data: XOR<GalleryPinLikeUpdateManyMutationInput, GalleryPinLikeUncheckedUpdateManyInput>
     /**
-     * Filter which PostLikes to update
+     * Filter which GalleryPinLikes to update
      */
-    where?: PostLikeWhereInput
+    where?: GalleryPinLikeWhereInput
     /**
-     * Limit how many PostLikes to update.
+     * Limit how many GalleryPinLikes to update.
      */
     limit?: number
   }
 
   /**
-   * PostLike updateManyAndReturn
+   * GalleryPinLike updateManyAndReturn
    */
-  export type PostLikeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelectUpdateManyAndReturn<ExtArgs> | null
+    select?: GalleryPinLikeSelectUpdateManyAndReturn<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
-     * The data used to update PostLikes.
+     * The data used to update GalleryPinLikes.
      */
-    data: XOR<PostLikeUpdateManyMutationInput, PostLikeUncheckedUpdateManyInput>
+    data: XOR<GalleryPinLikeUpdateManyMutationInput, GalleryPinLikeUncheckedUpdateManyInput>
     /**
-     * Filter which PostLikes to update
+     * Filter which GalleryPinLikes to update
      */
-    where?: PostLikeWhereInput
+    where?: GalleryPinLikeWhereInput
     /**
-     * Limit how many PostLikes to update.
+     * Limit how many GalleryPinLikes to update.
      */
     limit?: number
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeIncludeUpdateManyAndReturn<ExtArgs> | null
+    include?: GalleryPinLikeIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
-   * PostLike upsert
+   * GalleryPinLike upsert
    */
-  export type PostLikeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelect<ExtArgs> | null
+    select?: GalleryPinLikeSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeInclude<ExtArgs> | null
+    include?: GalleryPinLikeInclude<ExtArgs> | null
     /**
-     * The filter to search for the PostLike to update in case it exists.
+     * The filter to search for the GalleryPinLike to update in case it exists.
      */
-    where: PostLikeWhereUniqueInput
+    where: GalleryPinLikeWhereUniqueInput
     /**
-     * In case the PostLike found by the `where` argument doesn't exist, create a new PostLike with this data.
+     * In case the GalleryPinLike found by the `where` argument doesn't exist, create a new GalleryPinLike with this data.
      */
-    create: XOR<PostLikeCreateInput, PostLikeUncheckedCreateInput>
+    create: XOR<GalleryPinLikeCreateInput, GalleryPinLikeUncheckedCreateInput>
     /**
-     * In case the PostLike was found with the provided `where` argument, update it with this data.
+     * In case the GalleryPinLike was found with the provided `where` argument, update it with this data.
      */
-    update: XOR<PostLikeUpdateInput, PostLikeUncheckedUpdateInput>
+    update: XOR<GalleryPinLikeUpdateInput, GalleryPinLikeUncheckedUpdateInput>
   }
 
   /**
-   * PostLike delete
+   * GalleryPinLike delete
    */
-  export type PostLikeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelect<ExtArgs> | null
+    select?: GalleryPinLikeSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeInclude<ExtArgs> | null
+    include?: GalleryPinLikeInclude<ExtArgs> | null
     /**
-     * Filter which PostLike to delete.
+     * Filter which GalleryPinLike to delete.
      */
-    where: PostLikeWhereUniqueInput
+    where: GalleryPinLikeWhereUniqueInput
   }
 
   /**
-   * PostLike deleteMany
+   * GalleryPinLike deleteMany
    */
-  export type PostLikeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Filter which PostLikes to delete
+     * Filter which GalleryPinLikes to delete
      */
-    where?: PostLikeWhereInput
+    where?: GalleryPinLikeWhereInput
     /**
-     * Limit how many PostLikes to delete.
+     * Limit how many GalleryPinLikes to delete.
      */
     limit?: number
   }
 
   /**
-   * PostLike without action
+   * GalleryPinLike without action
    */
-  export type PostLikeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type GalleryPinLikeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the PostLike
+     * Select specific fields to fetch from the GalleryPinLike
      */
-    select?: PostLikeSelect<ExtArgs> | null
+    select?: GalleryPinLikeSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the PostLike
+     * Omit specific fields from the GalleryPinLike
      */
-    omit?: PostLikeOmit<ExtArgs> | null
+    omit?: GalleryPinLikeOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: PostLikeInclude<ExtArgs> | null
+    include?: GalleryPinLikeInclude<ExtArgs> | null
   }
 
 
@@ -14188,6 +15293,19 @@ export namespace Prisma {
   };
 
   export type PaletteScalarFieldEnum = (typeof PaletteScalarFieldEnum)[keyof typeof PaletteScalarFieldEnum]
+
+
+  export const SegmentScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    slug: 'slug',
+    description: 'description',
+    tags: 'tags',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SegmentScalarFieldEnum = (typeof SegmentScalarFieldEnum)[keyof typeof SegmentScalarFieldEnum]
 
 
   export const AttributeScalarFieldEnum: {
@@ -14254,24 +15372,25 @@ export namespace Prisma {
   export type MoodboardScalarFieldEnum = (typeof MoodboardScalarFieldEnum)[keyof typeof MoodboardScalarFieldEnum]
 
 
-  export const PostScalarFieldEnum: {
+  export const GalleryPinScalarFieldEnum: {
     id: 'id',
     title: 'title',
     imageUrl: 'imageUrl',
-    authorId: 'authorId',
-    moodboardId: 'moodboardId'
+    description: 'description',
+    createdAt: 'createdAt',
+    authorId: 'authorId'
   };
 
-  export type PostScalarFieldEnum = (typeof PostScalarFieldEnum)[keyof typeof PostScalarFieldEnum]
+  export type GalleryPinScalarFieldEnum = (typeof GalleryPinScalarFieldEnum)[keyof typeof GalleryPinScalarFieldEnum]
 
 
-  export const PostLikeScalarFieldEnum: {
+  export const GalleryPinLikeScalarFieldEnum: {
     id: 'id',
-    postId: 'postId',
+    pinId: 'pinId',
     userId: 'userId'
   };
 
-  export type PostLikeScalarFieldEnum = (typeof PostLikeScalarFieldEnum)[keyof typeof PostLikeScalarFieldEnum]
+  export type GalleryPinLikeScalarFieldEnum = (typeof GalleryPinLikeScalarFieldEnum)[keyof typeof GalleryPinLikeScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -14394,8 +15513,8 @@ export namespace Prisma {
     userName?: StringFilter<"User"> | string
     birthday?: DateTimeNullableFilter<"User"> | Date | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    posts?: PostListRelationFilter
-    postLikes?: PostLikeListRelationFilter
+    galleryPins?: GalleryPinListRelationFilter
+    galleryPinLikes?: GalleryPinLikeListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -14406,8 +15525,8 @@ export namespace Prisma {
     userName?: SortOrder
     birthday?: SortOrderInput | SortOrder
     role?: SortOrder
-    posts?: PostOrderByRelationAggregateInput
-    postLikes?: PostLikeOrderByRelationAggregateInput
+    galleryPins?: GalleryPinOrderByRelationAggregateInput
+    galleryPinLikes?: GalleryPinLikeOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -14421,8 +15540,8 @@ export namespace Prisma {
     lastName?: StringNullableFilter<"User"> | string | null
     birthday?: DateTimeNullableFilter<"User"> | Date | string | null
     role?: EnumUserRoleFilter<"User"> | $Enums.UserRole
-    posts?: PostListRelationFilter
-    postLikes?: PostLikeListRelationFilter
+    galleryPins?: GalleryPinListRelationFilter
+    galleryPinLikes?: GalleryPinLikeListRelationFilter
   }, "id" | "email" | "userName">
 
   export type UserOrderByWithAggregationInput = {
@@ -14557,6 +15676,70 @@ export namespace Prisma {
     mixinColors?: StringNullableListFilter<"Palette">
     tags?: StringNullableListFilter<"Palette">
     description?: StringNullableWithAggregatesFilter<"Palette"> | string | null
+  }
+
+  export type SegmentWhereInput = {
+    AND?: SegmentWhereInput | SegmentWhereInput[]
+    OR?: SegmentWhereInput[]
+    NOT?: SegmentWhereInput | SegmentWhereInput[]
+    id?: IntFilter<"Segment"> | number
+    title?: StringFilter<"Segment"> | string
+    slug?: StringFilter<"Segment"> | string
+    description?: StringNullableFilter<"Segment"> | string | null
+    tags?: StringNullableListFilter<"Segment">
+    createdAt?: DateTimeFilter<"Segment"> | Date | string
+    updatedAt?: DateTimeFilter<"Segment"> | Date | string
+  }
+
+  export type SegmentOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    slug?: SortOrder
+    description?: SortOrderInput | SortOrder
+    tags?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SegmentWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    slug?: string
+    AND?: SegmentWhereInput | SegmentWhereInput[]
+    OR?: SegmentWhereInput[]
+    NOT?: SegmentWhereInput | SegmentWhereInput[]
+    title?: StringFilter<"Segment"> | string
+    description?: StringNullableFilter<"Segment"> | string | null
+    tags?: StringNullableListFilter<"Segment">
+    createdAt?: DateTimeFilter<"Segment"> | Date | string
+    updatedAt?: DateTimeFilter<"Segment"> | Date | string
+  }, "id" | "slug">
+
+  export type SegmentOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    slug?: SortOrder
+    description?: SortOrderInput | SortOrder
+    tags?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SegmentCountOrderByAggregateInput
+    _avg?: SegmentAvgOrderByAggregateInput
+    _max?: SegmentMaxOrderByAggregateInput
+    _min?: SegmentMinOrderByAggregateInput
+    _sum?: SegmentSumOrderByAggregateInput
+  }
+
+  export type SegmentScalarWhereWithAggregatesInput = {
+    AND?: SegmentScalarWhereWithAggregatesInput | SegmentScalarWhereWithAggregatesInput[]
+    OR?: SegmentScalarWhereWithAggregatesInput[]
+    NOT?: SegmentScalarWhereWithAggregatesInput | SegmentScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Segment"> | number
+    title?: StringWithAggregatesFilter<"Segment"> | string
+    slug?: StringWithAggregatesFilter<"Segment"> | string
+    description?: StringNullableWithAggregatesFilter<"Segment"> | string | null
+    tags?: StringNullableListFilter<"Segment">
+    createdAt?: DateTimeWithAggregatesFilter<"Segment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Segment"> | Date | string
   }
 
   export type AttributeWhereInput = {
@@ -14868,7 +16051,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Moodboard"> | Date | string
     userId?: StringFilter<"Moodboard"> | string
     elements?: ElementListRelationFilter
-    posts?: PostListRelationFilter
   }
 
   export type MoodboardOrderByWithRelationInput = {
@@ -14877,7 +16059,6 @@ export namespace Prisma {
     createdAt?: SortOrder
     userId?: SortOrder
     elements?: ElementOrderByRelationAggregateInput
-    posts?: PostOrderByRelationAggregateInput
   }
 
   export type MoodboardWhereUniqueInput = Prisma.AtLeast<{
@@ -14889,7 +16070,6 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Moodboard"> | Date | string
     userId?: StringFilter<"Moodboard"> | string
     elements?: ElementListRelationFilter
-    posts?: PostListRelationFilter
   }, "id">
 
   export type MoodboardOrderByWithAggregationInput = {
@@ -14914,118 +16094,120 @@ export namespace Prisma {
     userId?: StringWithAggregatesFilter<"Moodboard"> | string
   }
 
-  export type PostWhereInput = {
-    AND?: PostWhereInput | PostWhereInput[]
-    OR?: PostWhereInput[]
-    NOT?: PostWhereInput | PostWhereInput[]
-    id?: IntFilter<"Post"> | number
-    title?: StringFilter<"Post"> | string
-    imageUrl?: StringFilter<"Post"> | string
-    authorId?: StringFilter<"Post"> | string
-    moodboardId?: IntFilter<"Post"> | number
+  export type GalleryPinWhereInput = {
+    AND?: GalleryPinWhereInput | GalleryPinWhereInput[]
+    OR?: GalleryPinWhereInput[]
+    NOT?: GalleryPinWhereInput | GalleryPinWhereInput[]
+    id?: IntFilter<"GalleryPin"> | number
+    title?: StringFilter<"GalleryPin"> | string
+    imageUrl?: StringFilter<"GalleryPin"> | string
+    description?: StringNullableFilter<"GalleryPin"> | string | null
+    createdAt?: DateTimeFilter<"GalleryPin"> | Date | string
+    authorId?: StringFilter<"GalleryPin"> | string
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
-    moodboard?: XOR<MoodboardScalarRelationFilter, MoodboardWhereInput>
-    likes?: PostLikeListRelationFilter
+    likes?: GalleryPinLikeListRelationFilter
   }
 
-  export type PostOrderByWithRelationInput = {
+  export type GalleryPinOrderByWithRelationInput = {
     id?: SortOrder
     title?: SortOrder
     imageUrl?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     authorId?: SortOrder
-    moodboardId?: SortOrder
     author?: UserOrderByWithRelationInput
-    moodboard?: MoodboardOrderByWithRelationInput
-    likes?: PostLikeOrderByRelationAggregateInput
+    likes?: GalleryPinLikeOrderByRelationAggregateInput
   }
 
-  export type PostWhereUniqueInput = Prisma.AtLeast<{
+  export type GalleryPinWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    AND?: PostWhereInput | PostWhereInput[]
-    OR?: PostWhereInput[]
-    NOT?: PostWhereInput | PostWhereInput[]
-    title?: StringFilter<"Post"> | string
-    imageUrl?: StringFilter<"Post"> | string
-    authorId?: StringFilter<"Post"> | string
-    moodboardId?: IntFilter<"Post"> | number
+    AND?: GalleryPinWhereInput | GalleryPinWhereInput[]
+    OR?: GalleryPinWhereInput[]
+    NOT?: GalleryPinWhereInput | GalleryPinWhereInput[]
+    title?: StringFilter<"GalleryPin"> | string
+    imageUrl?: StringFilter<"GalleryPin"> | string
+    description?: StringNullableFilter<"GalleryPin"> | string | null
+    createdAt?: DateTimeFilter<"GalleryPin"> | Date | string
+    authorId?: StringFilter<"GalleryPin"> | string
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
-    moodboard?: XOR<MoodboardScalarRelationFilter, MoodboardWhereInput>
-    likes?: PostLikeListRelationFilter
+    likes?: GalleryPinLikeListRelationFilter
   }, "id">
 
-  export type PostOrderByWithAggregationInput = {
+  export type GalleryPinOrderByWithAggregationInput = {
     id?: SortOrder
     title?: SortOrder
     imageUrl?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
     authorId?: SortOrder
-    moodboardId?: SortOrder
-    _count?: PostCountOrderByAggregateInput
-    _avg?: PostAvgOrderByAggregateInput
-    _max?: PostMaxOrderByAggregateInput
-    _min?: PostMinOrderByAggregateInput
-    _sum?: PostSumOrderByAggregateInput
+    _count?: GalleryPinCountOrderByAggregateInput
+    _avg?: GalleryPinAvgOrderByAggregateInput
+    _max?: GalleryPinMaxOrderByAggregateInput
+    _min?: GalleryPinMinOrderByAggregateInput
+    _sum?: GalleryPinSumOrderByAggregateInput
   }
 
-  export type PostScalarWhereWithAggregatesInput = {
-    AND?: PostScalarWhereWithAggregatesInput | PostScalarWhereWithAggregatesInput[]
-    OR?: PostScalarWhereWithAggregatesInput[]
-    NOT?: PostScalarWhereWithAggregatesInput | PostScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Post"> | number
-    title?: StringWithAggregatesFilter<"Post"> | string
-    imageUrl?: StringWithAggregatesFilter<"Post"> | string
-    authorId?: StringWithAggregatesFilter<"Post"> | string
-    moodboardId?: IntWithAggregatesFilter<"Post"> | number
+  export type GalleryPinScalarWhereWithAggregatesInput = {
+    AND?: GalleryPinScalarWhereWithAggregatesInput | GalleryPinScalarWhereWithAggregatesInput[]
+    OR?: GalleryPinScalarWhereWithAggregatesInput[]
+    NOT?: GalleryPinScalarWhereWithAggregatesInput | GalleryPinScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"GalleryPin"> | number
+    title?: StringWithAggregatesFilter<"GalleryPin"> | string
+    imageUrl?: StringWithAggregatesFilter<"GalleryPin"> | string
+    description?: StringNullableWithAggregatesFilter<"GalleryPin"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"GalleryPin"> | Date | string
+    authorId?: StringWithAggregatesFilter<"GalleryPin"> | string
   }
 
-  export type PostLikeWhereInput = {
-    AND?: PostLikeWhereInput | PostLikeWhereInput[]
-    OR?: PostLikeWhereInput[]
-    NOT?: PostLikeWhereInput | PostLikeWhereInput[]
-    id?: IntFilter<"PostLike"> | number
-    postId?: IntFilter<"PostLike"> | number
-    userId?: StringFilter<"PostLike"> | string
-    post?: XOR<PostScalarRelationFilter, PostWhereInput>
+  export type GalleryPinLikeWhereInput = {
+    AND?: GalleryPinLikeWhereInput | GalleryPinLikeWhereInput[]
+    OR?: GalleryPinLikeWhereInput[]
+    NOT?: GalleryPinLikeWhereInput | GalleryPinLikeWhereInput[]
+    id?: IntFilter<"GalleryPinLike"> | number
+    pinId?: IntFilter<"GalleryPinLike"> | number
+    userId?: StringFilter<"GalleryPinLike"> | string
+    pin?: XOR<GalleryPinScalarRelationFilter, GalleryPinWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
   }
 
-  export type PostLikeOrderByWithRelationInput = {
+  export type GalleryPinLikeOrderByWithRelationInput = {
     id?: SortOrder
-    postId?: SortOrder
+    pinId?: SortOrder
     userId?: SortOrder
-    post?: PostOrderByWithRelationInput
+    pin?: GalleryPinOrderByWithRelationInput
     user?: UserOrderByWithRelationInput
   }
 
-  export type PostLikeWhereUniqueInput = Prisma.AtLeast<{
+  export type GalleryPinLikeWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    postId_userId?: PostLikePostIdUserIdCompoundUniqueInput
-    AND?: PostLikeWhereInput | PostLikeWhereInput[]
-    OR?: PostLikeWhereInput[]
-    NOT?: PostLikeWhereInput | PostLikeWhereInput[]
-    postId?: IntFilter<"PostLike"> | number
-    userId?: StringFilter<"PostLike"> | string
-    post?: XOR<PostScalarRelationFilter, PostWhereInput>
+    pinId_userId?: GalleryPinLikePinIdUserIdCompoundUniqueInput
+    AND?: GalleryPinLikeWhereInput | GalleryPinLikeWhereInput[]
+    OR?: GalleryPinLikeWhereInput[]
+    NOT?: GalleryPinLikeWhereInput | GalleryPinLikeWhereInput[]
+    pinId?: IntFilter<"GalleryPinLike"> | number
+    userId?: StringFilter<"GalleryPinLike"> | string
+    pin?: XOR<GalleryPinScalarRelationFilter, GalleryPinWhereInput>
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
-  }, "id" | "postId_userId">
+  }, "id" | "pinId_userId">
 
-  export type PostLikeOrderByWithAggregationInput = {
+  export type GalleryPinLikeOrderByWithAggregationInput = {
     id?: SortOrder
-    postId?: SortOrder
+    pinId?: SortOrder
     userId?: SortOrder
-    _count?: PostLikeCountOrderByAggregateInput
-    _avg?: PostLikeAvgOrderByAggregateInput
-    _max?: PostLikeMaxOrderByAggregateInput
-    _min?: PostLikeMinOrderByAggregateInput
-    _sum?: PostLikeSumOrderByAggregateInput
+    _count?: GalleryPinLikeCountOrderByAggregateInput
+    _avg?: GalleryPinLikeAvgOrderByAggregateInput
+    _max?: GalleryPinLikeMaxOrderByAggregateInput
+    _min?: GalleryPinLikeMinOrderByAggregateInput
+    _sum?: GalleryPinLikeSumOrderByAggregateInput
   }
 
-  export type PostLikeScalarWhereWithAggregatesInput = {
-    AND?: PostLikeScalarWhereWithAggregatesInput | PostLikeScalarWhereWithAggregatesInput[]
-    OR?: PostLikeScalarWhereWithAggregatesInput[]
-    NOT?: PostLikeScalarWhereWithAggregatesInput | PostLikeScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"PostLike"> | number
-    postId?: IntWithAggregatesFilter<"PostLike"> | number
-    userId?: StringWithAggregatesFilter<"PostLike"> | string
+  export type GalleryPinLikeScalarWhereWithAggregatesInput = {
+    AND?: GalleryPinLikeScalarWhereWithAggregatesInput | GalleryPinLikeScalarWhereWithAggregatesInput[]
+    OR?: GalleryPinLikeScalarWhereWithAggregatesInput[]
+    NOT?: GalleryPinLikeScalarWhereWithAggregatesInput | GalleryPinLikeScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"GalleryPinLike"> | number
+    pinId?: IntWithAggregatesFilter<"GalleryPinLike"> | number
+    userId?: StringWithAggregatesFilter<"GalleryPinLike"> | string
   }
 
   export type UserCreateInput = {
@@ -15036,8 +16218,8 @@ export namespace Prisma {
     userName: string
     birthday?: Date | string | null
     role?: $Enums.UserRole
-    posts?: PostCreateNestedManyWithoutAuthorInput
-    postLikes?: PostLikeCreateNestedManyWithoutUserInput
+    galleryPins?: GalleryPinCreateNestedManyWithoutAuthorInput
+    galleryPinLikes?: GalleryPinLikeCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -15048,8 +16230,8 @@ export namespace Prisma {
     userName: string
     birthday?: Date | string | null
     role?: $Enums.UserRole
-    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
-    postLikes?: PostLikeUncheckedCreateNestedManyWithoutUserInput
+    galleryPins?: GalleryPinUncheckedCreateNestedManyWithoutAuthorInput
+    galleryPinLikes?: GalleryPinLikeUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -15060,8 +16242,8 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    posts?: PostUpdateManyWithoutAuthorNestedInput
-    postLikes?: PostLikeUpdateManyWithoutUserNestedInput
+    galleryPins?: GalleryPinUpdateManyWithoutAuthorNestedInput
+    galleryPinLikes?: GalleryPinLikeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -15072,8 +16254,8 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
-    postLikes?: PostLikeUncheckedUpdateManyWithoutUserNestedInput
+    galleryPins?: GalleryPinUncheckedUpdateManyWithoutAuthorNestedInput
+    galleryPinLikes?: GalleryPinLikeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -15210,6 +16392,73 @@ export namespace Prisma {
     mixinColors?: PaletteUpdatemixinColorsInput | string[]
     tags?: PaletteUpdatetagsInput | string[]
     description?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SegmentCreateInput = {
+    title: string
+    slug: string
+    description?: string | null
+    tags?: SegmentCreatetagsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SegmentUncheckedCreateInput = {
+    id?: number
+    title: string
+    slug: string
+    description?: string | null
+    tags?: SegmentCreatetagsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SegmentUpdateInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: SegmentUpdatetagsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SegmentUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: SegmentUpdatetagsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SegmentCreateManyInput = {
+    id?: number
+    title: string
+    slug: string
+    description?: string | null
+    tags?: SegmentCreatetagsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SegmentUpdateManyMutationInput = {
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: SegmentUpdatetagsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SegmentUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: SegmentUpdatetagsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AttributeCreateInput = {
@@ -15496,7 +16745,6 @@ export namespace Prisma {
     createdAt?: Date | string
     userId: string
     elements?: ElementCreateNestedManyWithoutMoodboardInput
-    posts?: PostCreateNestedManyWithoutMoodboardInput
   }
 
   export type MoodboardUncheckedCreateInput = {
@@ -15505,7 +16753,6 @@ export namespace Prisma {
     createdAt?: Date | string
     userId: string
     elements?: ElementUncheckedCreateNestedManyWithoutMoodboardInput
-    posts?: PostUncheckedCreateNestedManyWithoutMoodboardInput
   }
 
   export type MoodboardUpdateInput = {
@@ -15513,7 +16760,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
     elements?: ElementUpdateManyWithoutMoodboardNestedInput
-    posts?: PostUpdateManyWithoutMoodboardNestedInput
   }
 
   export type MoodboardUncheckedUpdateInput = {
@@ -15522,7 +16768,6 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
     elements?: ElementUncheckedUpdateManyWithoutMoodboardNestedInput
-    posts?: PostUncheckedUpdateManyWithoutMoodboardNestedInput
   }
 
   export type MoodboardCreateManyInput = {
@@ -15545,96 +16790,104 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type PostCreateInput = {
+  export type GalleryPinCreateInput = {
     title: string
     imageUrl: string
-    author: UserCreateNestedOneWithoutPostsInput
-    moodboard: MoodboardCreateNestedOneWithoutPostsInput
-    likes?: PostLikeCreateNestedManyWithoutPostInput
+    description?: string | null
+    createdAt?: Date | string
+    author: UserCreateNestedOneWithoutGalleryPinsInput
+    likes?: GalleryPinLikeCreateNestedManyWithoutPinInput
   }
 
-  export type PostUncheckedCreateInput = {
+  export type GalleryPinUncheckedCreateInput = {
     id?: number
     title: string
     imageUrl: string
+    description?: string | null
+    createdAt?: Date | string
     authorId: string
-    moodboardId: number
-    likes?: PostLikeUncheckedCreateNestedManyWithoutPostInput
+    likes?: GalleryPinLikeUncheckedCreateNestedManyWithoutPinInput
   }
 
-  export type PostUpdateInput = {
+  export type GalleryPinUpdateInput = {
     title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
-    author?: UserUpdateOneRequiredWithoutPostsNestedInput
-    moodboard?: MoodboardUpdateOneRequiredWithoutPostsNestedInput
-    likes?: PostLikeUpdateManyWithoutPostNestedInput
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    author?: UserUpdateOneRequiredWithoutGalleryPinsNestedInput
+    likes?: GalleryPinLikeUpdateManyWithoutPinNestedInput
   }
 
-  export type PostUncheckedUpdateInput = {
+  export type GalleryPinUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     authorId?: StringFieldUpdateOperationsInput | string
-    moodboardId?: IntFieldUpdateOperationsInput | number
-    likes?: PostLikeUncheckedUpdateManyWithoutPostNestedInput
+    likes?: GalleryPinLikeUncheckedUpdateManyWithoutPinNestedInput
   }
 
-  export type PostCreateManyInput = {
+  export type GalleryPinCreateManyInput = {
     id?: number
     title: string
     imageUrl: string
+    description?: string | null
+    createdAt?: Date | string
     authorId: string
-    moodboardId: number
   }
 
-  export type PostUpdateManyMutationInput = {
+  export type GalleryPinUpdateManyMutationInput = {
     title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PostUncheckedUpdateManyInput = {
+  export type GalleryPinUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     authorId?: StringFieldUpdateOperationsInput | string
-    moodboardId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type PostLikeCreateInput = {
-    post: PostCreateNestedOneWithoutLikesInput
-    user: UserCreateNestedOneWithoutPostLikesInput
+  export type GalleryPinLikeCreateInput = {
+    pin: GalleryPinCreateNestedOneWithoutLikesInput
+    user: UserCreateNestedOneWithoutGalleryPinLikesInput
   }
 
-  export type PostLikeUncheckedCreateInput = {
+  export type GalleryPinLikeUncheckedCreateInput = {
     id?: number
-    postId: number
+    pinId: number
     userId: string
   }
 
-  export type PostLikeUpdateInput = {
-    post?: PostUpdateOneRequiredWithoutLikesNestedInput
-    user?: UserUpdateOneRequiredWithoutPostLikesNestedInput
+  export type GalleryPinLikeUpdateInput = {
+    pin?: GalleryPinUpdateOneRequiredWithoutLikesNestedInput
+    user?: UserUpdateOneRequiredWithoutGalleryPinLikesNestedInput
   }
 
-  export type PostLikeUncheckedUpdateInput = {
+  export type GalleryPinLikeUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    postId?: IntFieldUpdateOperationsInput | number
+    pinId?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type PostLikeCreateManyInput = {
+  export type GalleryPinLikeCreateManyInput = {
     id?: number
-    postId: number
+    pinId: number
     userId: string
   }
 
-  export type PostLikeUpdateManyMutationInput = {
+  export type GalleryPinLikeUpdateManyMutationInput = {
 
   }
 
-  export type PostLikeUncheckedUpdateManyInput = {
+  export type GalleryPinLikeUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    postId?: IntFieldUpdateOperationsInput | number
+    pinId?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -15686,16 +16939,16 @@ export namespace Prisma {
     not?: NestedEnumUserRoleFilter<$PrismaModel> | $Enums.UserRole
   }
 
-  export type PostListRelationFilter = {
-    every?: PostWhereInput
-    some?: PostWhereInput
-    none?: PostWhereInput
+  export type GalleryPinListRelationFilter = {
+    every?: GalleryPinWhereInput
+    some?: GalleryPinWhereInput
+    none?: GalleryPinWhereInput
   }
 
-  export type PostLikeListRelationFilter = {
-    every?: PostLikeWhereInput
-    some?: PostLikeWhereInput
-    none?: PostLikeWhereInput
+  export type GalleryPinLikeListRelationFilter = {
+    every?: GalleryPinLikeWhereInput
+    some?: GalleryPinLikeWhereInput
+    none?: GalleryPinLikeWhereInput
   }
 
   export type SortOrderInput = {
@@ -15703,11 +16956,11 @@ export namespace Prisma {
     nulls?: NullsOrder
   }
 
-  export type PostOrderByRelationAggregateInput = {
+  export type GalleryPinOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type PostLikeOrderByRelationAggregateInput = {
+  export type GalleryPinLikeOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -15894,6 +17147,67 @@ export namespace Prisma {
 
   export type PaletteSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type SegmentCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    slug?: SortOrder
+    description?: SortOrder
+    tags?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SegmentAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type SegmentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    slug?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SegmentMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    slug?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SegmentSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -16148,17 +17462,6 @@ export namespace Prisma {
     attributeId?: SortOrder
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type MoodboardCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -16188,123 +17491,110 @@ export namespace Prisma {
     id?: SortOrder
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
   }
 
-  export type PostCountOrderByAggregateInput = {
+  export type GalleryPinCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     imageUrl?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
     authorId?: SortOrder
-    moodboardId?: SortOrder
   }
 
-  export type PostAvgOrderByAggregateInput = {
+  export type GalleryPinAvgOrderByAggregateInput = {
     id?: SortOrder
-    moodboardId?: SortOrder
   }
 
-  export type PostMaxOrderByAggregateInput = {
+  export type GalleryPinMaxOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     imageUrl?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
     authorId?: SortOrder
-    moodboardId?: SortOrder
   }
 
-  export type PostMinOrderByAggregateInput = {
+  export type GalleryPinMinOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
     imageUrl?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
     authorId?: SortOrder
-    moodboardId?: SortOrder
   }
 
-  export type PostSumOrderByAggregateInput = {
+  export type GalleryPinSumOrderByAggregateInput = {
     id?: SortOrder
-    moodboardId?: SortOrder
   }
 
-  export type PostScalarRelationFilter = {
-    is?: PostWhereInput
-    isNot?: PostWhereInput
+  export type GalleryPinScalarRelationFilter = {
+    is?: GalleryPinWhereInput
+    isNot?: GalleryPinWhereInput
   }
 
-  export type PostLikePostIdUserIdCompoundUniqueInput = {
-    postId: number
+  export type GalleryPinLikePinIdUserIdCompoundUniqueInput = {
+    pinId: number
     userId: string
   }
 
-  export type PostLikeCountOrderByAggregateInput = {
+  export type GalleryPinLikeCountOrderByAggregateInput = {
     id?: SortOrder
-    postId?: SortOrder
+    pinId?: SortOrder
     userId?: SortOrder
   }
 
-  export type PostLikeAvgOrderByAggregateInput = {
+  export type GalleryPinLikeAvgOrderByAggregateInput = {
     id?: SortOrder
-    postId?: SortOrder
+    pinId?: SortOrder
   }
 
-  export type PostLikeMaxOrderByAggregateInput = {
+  export type GalleryPinLikeMaxOrderByAggregateInput = {
     id?: SortOrder
-    postId?: SortOrder
+    pinId?: SortOrder
     userId?: SortOrder
   }
 
-  export type PostLikeMinOrderByAggregateInput = {
+  export type GalleryPinLikeMinOrderByAggregateInput = {
     id?: SortOrder
-    postId?: SortOrder
+    pinId?: SortOrder
     userId?: SortOrder
   }
 
-  export type PostLikeSumOrderByAggregateInput = {
+  export type GalleryPinLikeSumOrderByAggregateInput = {
     id?: SortOrder
-    postId?: SortOrder
+    pinId?: SortOrder
   }
 
-  export type PostCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<PostCreateWithoutAuthorInput, PostUncheckedCreateWithoutAuthorInput> | PostCreateWithoutAuthorInput[] | PostUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: PostCreateOrConnectWithoutAuthorInput | PostCreateOrConnectWithoutAuthorInput[]
-    createMany?: PostCreateManyAuthorInputEnvelope
-    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+  export type GalleryPinCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<GalleryPinCreateWithoutAuthorInput, GalleryPinUncheckedCreateWithoutAuthorInput> | GalleryPinCreateWithoutAuthorInput[] | GalleryPinUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: GalleryPinCreateOrConnectWithoutAuthorInput | GalleryPinCreateOrConnectWithoutAuthorInput[]
+    createMany?: GalleryPinCreateManyAuthorInputEnvelope
+    connect?: GalleryPinWhereUniqueInput | GalleryPinWhereUniqueInput[]
   }
 
-  export type PostLikeCreateNestedManyWithoutUserInput = {
-    create?: XOR<PostLikeCreateWithoutUserInput, PostLikeUncheckedCreateWithoutUserInput> | PostLikeCreateWithoutUserInput[] | PostLikeUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: PostLikeCreateOrConnectWithoutUserInput | PostLikeCreateOrConnectWithoutUserInput[]
-    createMany?: PostLikeCreateManyUserInputEnvelope
-    connect?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
+  export type GalleryPinLikeCreateNestedManyWithoutUserInput = {
+    create?: XOR<GalleryPinLikeCreateWithoutUserInput, GalleryPinLikeUncheckedCreateWithoutUserInput> | GalleryPinLikeCreateWithoutUserInput[] | GalleryPinLikeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GalleryPinLikeCreateOrConnectWithoutUserInput | GalleryPinLikeCreateOrConnectWithoutUserInput[]
+    createMany?: GalleryPinLikeCreateManyUserInputEnvelope
+    connect?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
   }
 
-  export type PostUncheckedCreateNestedManyWithoutAuthorInput = {
-    create?: XOR<PostCreateWithoutAuthorInput, PostUncheckedCreateWithoutAuthorInput> | PostCreateWithoutAuthorInput[] | PostUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: PostCreateOrConnectWithoutAuthorInput | PostCreateOrConnectWithoutAuthorInput[]
-    createMany?: PostCreateManyAuthorInputEnvelope
-    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
+  export type GalleryPinUncheckedCreateNestedManyWithoutAuthorInput = {
+    create?: XOR<GalleryPinCreateWithoutAuthorInput, GalleryPinUncheckedCreateWithoutAuthorInput> | GalleryPinCreateWithoutAuthorInput[] | GalleryPinUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: GalleryPinCreateOrConnectWithoutAuthorInput | GalleryPinCreateOrConnectWithoutAuthorInput[]
+    createMany?: GalleryPinCreateManyAuthorInputEnvelope
+    connect?: GalleryPinWhereUniqueInput | GalleryPinWhereUniqueInput[]
   }
 
-  export type PostLikeUncheckedCreateNestedManyWithoutUserInput = {
-    create?: XOR<PostLikeCreateWithoutUserInput, PostLikeUncheckedCreateWithoutUserInput> | PostLikeCreateWithoutUserInput[] | PostLikeUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: PostLikeCreateOrConnectWithoutUserInput | PostLikeCreateOrConnectWithoutUserInput[]
-    createMany?: PostLikeCreateManyUserInputEnvelope
-    connect?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
+  export type GalleryPinLikeUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<GalleryPinLikeCreateWithoutUserInput, GalleryPinLikeUncheckedCreateWithoutUserInput> | GalleryPinLikeCreateWithoutUserInput[] | GalleryPinLikeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GalleryPinLikeCreateOrConnectWithoutUserInput | GalleryPinLikeCreateOrConnectWithoutUserInput[]
+    createMany?: GalleryPinLikeCreateManyUserInputEnvelope
+    connect?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -16323,60 +17613,60 @@ export namespace Prisma {
     set?: $Enums.UserRole
   }
 
-  export type PostUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<PostCreateWithoutAuthorInput, PostUncheckedCreateWithoutAuthorInput> | PostCreateWithoutAuthorInput[] | PostUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: PostCreateOrConnectWithoutAuthorInput | PostCreateOrConnectWithoutAuthorInput[]
-    upsert?: PostUpsertWithWhereUniqueWithoutAuthorInput | PostUpsertWithWhereUniqueWithoutAuthorInput[]
-    createMany?: PostCreateManyAuthorInputEnvelope
-    set?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    disconnect?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    delete?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    update?: PostUpdateWithWhereUniqueWithoutAuthorInput | PostUpdateWithWhereUniqueWithoutAuthorInput[]
-    updateMany?: PostUpdateManyWithWhereWithoutAuthorInput | PostUpdateManyWithWhereWithoutAuthorInput[]
-    deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
+  export type GalleryPinUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<GalleryPinCreateWithoutAuthorInput, GalleryPinUncheckedCreateWithoutAuthorInput> | GalleryPinCreateWithoutAuthorInput[] | GalleryPinUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: GalleryPinCreateOrConnectWithoutAuthorInput | GalleryPinCreateOrConnectWithoutAuthorInput[]
+    upsert?: GalleryPinUpsertWithWhereUniqueWithoutAuthorInput | GalleryPinUpsertWithWhereUniqueWithoutAuthorInput[]
+    createMany?: GalleryPinCreateManyAuthorInputEnvelope
+    set?: GalleryPinWhereUniqueInput | GalleryPinWhereUniqueInput[]
+    disconnect?: GalleryPinWhereUniqueInput | GalleryPinWhereUniqueInput[]
+    delete?: GalleryPinWhereUniqueInput | GalleryPinWhereUniqueInput[]
+    connect?: GalleryPinWhereUniqueInput | GalleryPinWhereUniqueInput[]
+    update?: GalleryPinUpdateWithWhereUniqueWithoutAuthorInput | GalleryPinUpdateWithWhereUniqueWithoutAuthorInput[]
+    updateMany?: GalleryPinUpdateManyWithWhereWithoutAuthorInput | GalleryPinUpdateManyWithWhereWithoutAuthorInput[]
+    deleteMany?: GalleryPinScalarWhereInput | GalleryPinScalarWhereInput[]
   }
 
-  export type PostLikeUpdateManyWithoutUserNestedInput = {
-    create?: XOR<PostLikeCreateWithoutUserInput, PostLikeUncheckedCreateWithoutUserInput> | PostLikeCreateWithoutUserInput[] | PostLikeUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: PostLikeCreateOrConnectWithoutUserInput | PostLikeCreateOrConnectWithoutUserInput[]
-    upsert?: PostLikeUpsertWithWhereUniqueWithoutUserInput | PostLikeUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: PostLikeCreateManyUserInputEnvelope
-    set?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    disconnect?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    delete?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    connect?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    update?: PostLikeUpdateWithWhereUniqueWithoutUserInput | PostLikeUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: PostLikeUpdateManyWithWhereWithoutUserInput | PostLikeUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: PostLikeScalarWhereInput | PostLikeScalarWhereInput[]
+  export type GalleryPinLikeUpdateManyWithoutUserNestedInput = {
+    create?: XOR<GalleryPinLikeCreateWithoutUserInput, GalleryPinLikeUncheckedCreateWithoutUserInput> | GalleryPinLikeCreateWithoutUserInput[] | GalleryPinLikeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GalleryPinLikeCreateOrConnectWithoutUserInput | GalleryPinLikeCreateOrConnectWithoutUserInput[]
+    upsert?: GalleryPinLikeUpsertWithWhereUniqueWithoutUserInput | GalleryPinLikeUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: GalleryPinLikeCreateManyUserInputEnvelope
+    set?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    disconnect?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    delete?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    connect?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    update?: GalleryPinLikeUpdateWithWhereUniqueWithoutUserInput | GalleryPinLikeUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: GalleryPinLikeUpdateManyWithWhereWithoutUserInput | GalleryPinLikeUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: GalleryPinLikeScalarWhereInput | GalleryPinLikeScalarWhereInput[]
   }
 
-  export type PostUncheckedUpdateManyWithoutAuthorNestedInput = {
-    create?: XOR<PostCreateWithoutAuthorInput, PostUncheckedCreateWithoutAuthorInput> | PostCreateWithoutAuthorInput[] | PostUncheckedCreateWithoutAuthorInput[]
-    connectOrCreate?: PostCreateOrConnectWithoutAuthorInput | PostCreateOrConnectWithoutAuthorInput[]
-    upsert?: PostUpsertWithWhereUniqueWithoutAuthorInput | PostUpsertWithWhereUniqueWithoutAuthorInput[]
-    createMany?: PostCreateManyAuthorInputEnvelope
-    set?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    disconnect?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    delete?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    update?: PostUpdateWithWhereUniqueWithoutAuthorInput | PostUpdateWithWhereUniqueWithoutAuthorInput[]
-    updateMany?: PostUpdateManyWithWhereWithoutAuthorInput | PostUpdateManyWithWhereWithoutAuthorInput[]
-    deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
+  export type GalleryPinUncheckedUpdateManyWithoutAuthorNestedInput = {
+    create?: XOR<GalleryPinCreateWithoutAuthorInput, GalleryPinUncheckedCreateWithoutAuthorInput> | GalleryPinCreateWithoutAuthorInput[] | GalleryPinUncheckedCreateWithoutAuthorInput[]
+    connectOrCreate?: GalleryPinCreateOrConnectWithoutAuthorInput | GalleryPinCreateOrConnectWithoutAuthorInput[]
+    upsert?: GalleryPinUpsertWithWhereUniqueWithoutAuthorInput | GalleryPinUpsertWithWhereUniqueWithoutAuthorInput[]
+    createMany?: GalleryPinCreateManyAuthorInputEnvelope
+    set?: GalleryPinWhereUniqueInput | GalleryPinWhereUniqueInput[]
+    disconnect?: GalleryPinWhereUniqueInput | GalleryPinWhereUniqueInput[]
+    delete?: GalleryPinWhereUniqueInput | GalleryPinWhereUniqueInput[]
+    connect?: GalleryPinWhereUniqueInput | GalleryPinWhereUniqueInput[]
+    update?: GalleryPinUpdateWithWhereUniqueWithoutAuthorInput | GalleryPinUpdateWithWhereUniqueWithoutAuthorInput[]
+    updateMany?: GalleryPinUpdateManyWithWhereWithoutAuthorInput | GalleryPinUpdateManyWithWhereWithoutAuthorInput[]
+    deleteMany?: GalleryPinScalarWhereInput | GalleryPinScalarWhereInput[]
   }
 
-  export type PostLikeUncheckedUpdateManyWithoutUserNestedInput = {
-    create?: XOR<PostLikeCreateWithoutUserInput, PostLikeUncheckedCreateWithoutUserInput> | PostLikeCreateWithoutUserInput[] | PostLikeUncheckedCreateWithoutUserInput[]
-    connectOrCreate?: PostLikeCreateOrConnectWithoutUserInput | PostLikeCreateOrConnectWithoutUserInput[]
-    upsert?: PostLikeUpsertWithWhereUniqueWithoutUserInput | PostLikeUpsertWithWhereUniqueWithoutUserInput[]
-    createMany?: PostLikeCreateManyUserInputEnvelope
-    set?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    disconnect?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    delete?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    connect?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    update?: PostLikeUpdateWithWhereUniqueWithoutUserInput | PostLikeUpdateWithWhereUniqueWithoutUserInput[]
-    updateMany?: PostLikeUpdateManyWithWhereWithoutUserInput | PostLikeUpdateManyWithWhereWithoutUserInput[]
-    deleteMany?: PostLikeScalarWhereInput | PostLikeScalarWhereInput[]
+  export type GalleryPinLikeUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<GalleryPinLikeCreateWithoutUserInput, GalleryPinLikeUncheckedCreateWithoutUserInput> | GalleryPinLikeCreateWithoutUserInput[] | GalleryPinLikeUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: GalleryPinLikeCreateOrConnectWithoutUserInput | GalleryPinLikeCreateOrConnectWithoutUserInput[]
+    upsert?: GalleryPinLikeUpsertWithWhereUniqueWithoutUserInput | GalleryPinLikeUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: GalleryPinLikeCreateManyUserInputEnvelope
+    set?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    disconnect?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    delete?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    connect?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    update?: GalleryPinLikeUpdateWithWhereUniqueWithoutUserInput | GalleryPinLikeUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: GalleryPinLikeUpdateManyWithWhereWithoutUserInput | GalleryPinLikeUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: GalleryPinLikeScalarWhereInput | GalleryPinLikeScalarWhereInput[]
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -16403,6 +17693,19 @@ export namespace Prisma {
   export type PaletteUpdatetagsInput = {
     set?: string[]
     push?: string | string[]
+  }
+
+  export type SegmentCreatetagsInput = {
+    set: string[]
+  }
+
+  export type SegmentUpdatetagsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
   }
 
   export type ElementAttributeCreateNestedManyWithoutAttributeInput = {
@@ -16710,29 +18013,11 @@ export namespace Prisma {
     connect?: ElementWhereUniqueInput | ElementWhereUniqueInput[]
   }
 
-  export type PostCreateNestedManyWithoutMoodboardInput = {
-    create?: XOR<PostCreateWithoutMoodboardInput, PostUncheckedCreateWithoutMoodboardInput> | PostCreateWithoutMoodboardInput[] | PostUncheckedCreateWithoutMoodboardInput[]
-    connectOrCreate?: PostCreateOrConnectWithoutMoodboardInput | PostCreateOrConnectWithoutMoodboardInput[]
-    createMany?: PostCreateManyMoodboardInputEnvelope
-    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
-  }
-
   export type ElementUncheckedCreateNestedManyWithoutMoodboardInput = {
     create?: XOR<ElementCreateWithoutMoodboardInput, ElementUncheckedCreateWithoutMoodboardInput> | ElementCreateWithoutMoodboardInput[] | ElementUncheckedCreateWithoutMoodboardInput[]
     connectOrCreate?: ElementCreateOrConnectWithoutMoodboardInput | ElementCreateOrConnectWithoutMoodboardInput[]
     createMany?: ElementCreateManyMoodboardInputEnvelope
     connect?: ElementWhereUniqueInput | ElementWhereUniqueInput[]
-  }
-
-  export type PostUncheckedCreateNestedManyWithoutMoodboardInput = {
-    create?: XOR<PostCreateWithoutMoodboardInput, PostUncheckedCreateWithoutMoodboardInput> | PostCreateWithoutMoodboardInput[] | PostUncheckedCreateWithoutMoodboardInput[]
-    connectOrCreate?: PostCreateOrConnectWithoutMoodboardInput | PostCreateOrConnectWithoutMoodboardInput[]
-    createMany?: PostCreateManyMoodboardInputEnvelope
-    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
   }
 
   export type ElementUpdateManyWithoutMoodboardNestedInput = {
@@ -16749,20 +18034,6 @@ export namespace Prisma {
     deleteMany?: ElementScalarWhereInput | ElementScalarWhereInput[]
   }
 
-  export type PostUpdateManyWithoutMoodboardNestedInput = {
-    create?: XOR<PostCreateWithoutMoodboardInput, PostUncheckedCreateWithoutMoodboardInput> | PostCreateWithoutMoodboardInput[] | PostUncheckedCreateWithoutMoodboardInput[]
-    connectOrCreate?: PostCreateOrConnectWithoutMoodboardInput | PostCreateOrConnectWithoutMoodboardInput[]
-    upsert?: PostUpsertWithWhereUniqueWithoutMoodboardInput | PostUpsertWithWhereUniqueWithoutMoodboardInput[]
-    createMany?: PostCreateManyMoodboardInputEnvelope
-    set?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    disconnect?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    delete?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    update?: PostUpdateWithWhereUniqueWithoutMoodboardInput | PostUpdateWithWhereUniqueWithoutMoodboardInput[]
-    updateMany?: PostUpdateManyWithWhereWithoutMoodboardInput | PostUpdateManyWithWhereWithoutMoodboardInput[]
-    deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
-  }
-
   export type ElementUncheckedUpdateManyWithoutMoodboardNestedInput = {
     create?: XOR<ElementCreateWithoutMoodboardInput, ElementUncheckedCreateWithoutMoodboardInput> | ElementCreateWithoutMoodboardInput[] | ElementUncheckedCreateWithoutMoodboardInput[]
     connectOrCreate?: ElementCreateOrConnectWithoutMoodboardInput | ElementCreateOrConnectWithoutMoodboardInput[]
@@ -16777,116 +18048,88 @@ export namespace Prisma {
     deleteMany?: ElementScalarWhereInput | ElementScalarWhereInput[]
   }
 
-  export type PostUncheckedUpdateManyWithoutMoodboardNestedInput = {
-    create?: XOR<PostCreateWithoutMoodboardInput, PostUncheckedCreateWithoutMoodboardInput> | PostCreateWithoutMoodboardInput[] | PostUncheckedCreateWithoutMoodboardInput[]
-    connectOrCreate?: PostCreateOrConnectWithoutMoodboardInput | PostCreateOrConnectWithoutMoodboardInput[]
-    upsert?: PostUpsertWithWhereUniqueWithoutMoodboardInput | PostUpsertWithWhereUniqueWithoutMoodboardInput[]
-    createMany?: PostCreateManyMoodboardInputEnvelope
-    set?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    disconnect?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    delete?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    connect?: PostWhereUniqueInput | PostWhereUniqueInput[]
-    update?: PostUpdateWithWhereUniqueWithoutMoodboardInput | PostUpdateWithWhereUniqueWithoutMoodboardInput[]
-    updateMany?: PostUpdateManyWithWhereWithoutMoodboardInput | PostUpdateManyWithWhereWithoutMoodboardInput[]
-    deleteMany?: PostScalarWhereInput | PostScalarWhereInput[]
-  }
-
-  export type UserCreateNestedOneWithoutPostsInput = {
-    create?: XOR<UserCreateWithoutPostsInput, UserUncheckedCreateWithoutPostsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutPostsInput
+  export type UserCreateNestedOneWithoutGalleryPinsInput = {
+    create?: XOR<UserCreateWithoutGalleryPinsInput, UserUncheckedCreateWithoutGalleryPinsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGalleryPinsInput
     connect?: UserWhereUniqueInput
   }
 
-  export type MoodboardCreateNestedOneWithoutPostsInput = {
-    create?: XOR<MoodboardCreateWithoutPostsInput, MoodboardUncheckedCreateWithoutPostsInput>
-    connectOrCreate?: MoodboardCreateOrConnectWithoutPostsInput
-    connect?: MoodboardWhereUniqueInput
+  export type GalleryPinLikeCreateNestedManyWithoutPinInput = {
+    create?: XOR<GalleryPinLikeCreateWithoutPinInput, GalleryPinLikeUncheckedCreateWithoutPinInput> | GalleryPinLikeCreateWithoutPinInput[] | GalleryPinLikeUncheckedCreateWithoutPinInput[]
+    connectOrCreate?: GalleryPinLikeCreateOrConnectWithoutPinInput | GalleryPinLikeCreateOrConnectWithoutPinInput[]
+    createMany?: GalleryPinLikeCreateManyPinInputEnvelope
+    connect?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
   }
 
-  export type PostLikeCreateNestedManyWithoutPostInput = {
-    create?: XOR<PostLikeCreateWithoutPostInput, PostLikeUncheckedCreateWithoutPostInput> | PostLikeCreateWithoutPostInput[] | PostLikeUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: PostLikeCreateOrConnectWithoutPostInput | PostLikeCreateOrConnectWithoutPostInput[]
-    createMany?: PostLikeCreateManyPostInputEnvelope
-    connect?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
+  export type GalleryPinLikeUncheckedCreateNestedManyWithoutPinInput = {
+    create?: XOR<GalleryPinLikeCreateWithoutPinInput, GalleryPinLikeUncheckedCreateWithoutPinInput> | GalleryPinLikeCreateWithoutPinInput[] | GalleryPinLikeUncheckedCreateWithoutPinInput[]
+    connectOrCreate?: GalleryPinLikeCreateOrConnectWithoutPinInput | GalleryPinLikeCreateOrConnectWithoutPinInput[]
+    createMany?: GalleryPinLikeCreateManyPinInputEnvelope
+    connect?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
   }
 
-  export type PostLikeUncheckedCreateNestedManyWithoutPostInput = {
-    create?: XOR<PostLikeCreateWithoutPostInput, PostLikeUncheckedCreateWithoutPostInput> | PostLikeCreateWithoutPostInput[] | PostLikeUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: PostLikeCreateOrConnectWithoutPostInput | PostLikeCreateOrConnectWithoutPostInput[]
-    createMany?: PostLikeCreateManyPostInputEnvelope
-    connect?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-  }
-
-  export type UserUpdateOneRequiredWithoutPostsNestedInput = {
-    create?: XOR<UserCreateWithoutPostsInput, UserUncheckedCreateWithoutPostsInput>
-    connectOrCreate?: UserCreateOrConnectWithoutPostsInput
-    upsert?: UserUpsertWithoutPostsInput
+  export type UserUpdateOneRequiredWithoutGalleryPinsNestedInput = {
+    create?: XOR<UserCreateWithoutGalleryPinsInput, UserUncheckedCreateWithoutGalleryPinsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGalleryPinsInput
+    upsert?: UserUpsertWithoutGalleryPinsInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPostsInput, UserUpdateWithoutPostsInput>, UserUncheckedUpdateWithoutPostsInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGalleryPinsInput, UserUpdateWithoutGalleryPinsInput>, UserUncheckedUpdateWithoutGalleryPinsInput>
   }
 
-  export type MoodboardUpdateOneRequiredWithoutPostsNestedInput = {
-    create?: XOR<MoodboardCreateWithoutPostsInput, MoodboardUncheckedCreateWithoutPostsInput>
-    connectOrCreate?: MoodboardCreateOrConnectWithoutPostsInput
-    upsert?: MoodboardUpsertWithoutPostsInput
-    connect?: MoodboardWhereUniqueInput
-    update?: XOR<XOR<MoodboardUpdateToOneWithWhereWithoutPostsInput, MoodboardUpdateWithoutPostsInput>, MoodboardUncheckedUpdateWithoutPostsInput>
+  export type GalleryPinLikeUpdateManyWithoutPinNestedInput = {
+    create?: XOR<GalleryPinLikeCreateWithoutPinInput, GalleryPinLikeUncheckedCreateWithoutPinInput> | GalleryPinLikeCreateWithoutPinInput[] | GalleryPinLikeUncheckedCreateWithoutPinInput[]
+    connectOrCreate?: GalleryPinLikeCreateOrConnectWithoutPinInput | GalleryPinLikeCreateOrConnectWithoutPinInput[]
+    upsert?: GalleryPinLikeUpsertWithWhereUniqueWithoutPinInput | GalleryPinLikeUpsertWithWhereUniqueWithoutPinInput[]
+    createMany?: GalleryPinLikeCreateManyPinInputEnvelope
+    set?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    disconnect?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    delete?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    connect?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    update?: GalleryPinLikeUpdateWithWhereUniqueWithoutPinInput | GalleryPinLikeUpdateWithWhereUniqueWithoutPinInput[]
+    updateMany?: GalleryPinLikeUpdateManyWithWhereWithoutPinInput | GalleryPinLikeUpdateManyWithWhereWithoutPinInput[]
+    deleteMany?: GalleryPinLikeScalarWhereInput | GalleryPinLikeScalarWhereInput[]
   }
 
-  export type PostLikeUpdateManyWithoutPostNestedInput = {
-    create?: XOR<PostLikeCreateWithoutPostInput, PostLikeUncheckedCreateWithoutPostInput> | PostLikeCreateWithoutPostInput[] | PostLikeUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: PostLikeCreateOrConnectWithoutPostInput | PostLikeCreateOrConnectWithoutPostInput[]
-    upsert?: PostLikeUpsertWithWhereUniqueWithoutPostInput | PostLikeUpsertWithWhereUniqueWithoutPostInput[]
-    createMany?: PostLikeCreateManyPostInputEnvelope
-    set?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    disconnect?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    delete?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    connect?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    update?: PostLikeUpdateWithWhereUniqueWithoutPostInput | PostLikeUpdateWithWhereUniqueWithoutPostInput[]
-    updateMany?: PostLikeUpdateManyWithWhereWithoutPostInput | PostLikeUpdateManyWithWhereWithoutPostInput[]
-    deleteMany?: PostLikeScalarWhereInput | PostLikeScalarWhereInput[]
+  export type GalleryPinLikeUncheckedUpdateManyWithoutPinNestedInput = {
+    create?: XOR<GalleryPinLikeCreateWithoutPinInput, GalleryPinLikeUncheckedCreateWithoutPinInput> | GalleryPinLikeCreateWithoutPinInput[] | GalleryPinLikeUncheckedCreateWithoutPinInput[]
+    connectOrCreate?: GalleryPinLikeCreateOrConnectWithoutPinInput | GalleryPinLikeCreateOrConnectWithoutPinInput[]
+    upsert?: GalleryPinLikeUpsertWithWhereUniqueWithoutPinInput | GalleryPinLikeUpsertWithWhereUniqueWithoutPinInput[]
+    createMany?: GalleryPinLikeCreateManyPinInputEnvelope
+    set?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    disconnect?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    delete?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    connect?: GalleryPinLikeWhereUniqueInput | GalleryPinLikeWhereUniqueInput[]
+    update?: GalleryPinLikeUpdateWithWhereUniqueWithoutPinInput | GalleryPinLikeUpdateWithWhereUniqueWithoutPinInput[]
+    updateMany?: GalleryPinLikeUpdateManyWithWhereWithoutPinInput | GalleryPinLikeUpdateManyWithWhereWithoutPinInput[]
+    deleteMany?: GalleryPinLikeScalarWhereInput | GalleryPinLikeScalarWhereInput[]
   }
 
-  export type PostLikeUncheckedUpdateManyWithoutPostNestedInput = {
-    create?: XOR<PostLikeCreateWithoutPostInput, PostLikeUncheckedCreateWithoutPostInput> | PostLikeCreateWithoutPostInput[] | PostLikeUncheckedCreateWithoutPostInput[]
-    connectOrCreate?: PostLikeCreateOrConnectWithoutPostInput | PostLikeCreateOrConnectWithoutPostInput[]
-    upsert?: PostLikeUpsertWithWhereUniqueWithoutPostInput | PostLikeUpsertWithWhereUniqueWithoutPostInput[]
-    createMany?: PostLikeCreateManyPostInputEnvelope
-    set?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    disconnect?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    delete?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    connect?: PostLikeWhereUniqueInput | PostLikeWhereUniqueInput[]
-    update?: PostLikeUpdateWithWhereUniqueWithoutPostInput | PostLikeUpdateWithWhereUniqueWithoutPostInput[]
-    updateMany?: PostLikeUpdateManyWithWhereWithoutPostInput | PostLikeUpdateManyWithWhereWithoutPostInput[]
-    deleteMany?: PostLikeScalarWhereInput | PostLikeScalarWhereInput[]
+  export type GalleryPinCreateNestedOneWithoutLikesInput = {
+    create?: XOR<GalleryPinCreateWithoutLikesInput, GalleryPinUncheckedCreateWithoutLikesInput>
+    connectOrCreate?: GalleryPinCreateOrConnectWithoutLikesInput
+    connect?: GalleryPinWhereUniqueInput
   }
 
-  export type PostCreateNestedOneWithoutLikesInput = {
-    create?: XOR<PostCreateWithoutLikesInput, PostUncheckedCreateWithoutLikesInput>
-    connectOrCreate?: PostCreateOrConnectWithoutLikesInput
-    connect?: PostWhereUniqueInput
-  }
-
-  export type UserCreateNestedOneWithoutPostLikesInput = {
-    create?: XOR<UserCreateWithoutPostLikesInput, UserUncheckedCreateWithoutPostLikesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutPostLikesInput
+  export type UserCreateNestedOneWithoutGalleryPinLikesInput = {
+    create?: XOR<UserCreateWithoutGalleryPinLikesInput, UserUncheckedCreateWithoutGalleryPinLikesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGalleryPinLikesInput
     connect?: UserWhereUniqueInput
   }
 
-  export type PostUpdateOneRequiredWithoutLikesNestedInput = {
-    create?: XOR<PostCreateWithoutLikesInput, PostUncheckedCreateWithoutLikesInput>
-    connectOrCreate?: PostCreateOrConnectWithoutLikesInput
-    upsert?: PostUpsertWithoutLikesInput
-    connect?: PostWhereUniqueInput
-    update?: XOR<XOR<PostUpdateToOneWithWhereWithoutLikesInput, PostUpdateWithoutLikesInput>, PostUncheckedUpdateWithoutLikesInput>
+  export type GalleryPinUpdateOneRequiredWithoutLikesNestedInput = {
+    create?: XOR<GalleryPinCreateWithoutLikesInput, GalleryPinUncheckedCreateWithoutLikesInput>
+    connectOrCreate?: GalleryPinCreateOrConnectWithoutLikesInput
+    upsert?: GalleryPinUpsertWithoutLikesInput
+    connect?: GalleryPinWhereUniqueInput
+    update?: XOR<XOR<GalleryPinUpdateToOneWithWhereWithoutLikesInput, GalleryPinUpdateWithoutLikesInput>, GalleryPinUncheckedUpdateWithoutLikesInput>
   }
 
-  export type UserUpdateOneRequiredWithoutPostLikesNestedInput = {
-    create?: XOR<UserCreateWithoutPostLikesInput, UserUncheckedCreateWithoutPostLikesInput>
-    connectOrCreate?: UserCreateOrConnectWithoutPostLikesInput
-    upsert?: UserUpsertWithoutPostLikesInput
+  export type UserUpdateOneRequiredWithoutGalleryPinLikesNestedInput = {
+    create?: XOR<UserCreateWithoutGalleryPinLikesInput, UserUncheckedCreateWithoutGalleryPinLikesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutGalleryPinLikesInput
+    upsert?: UserUpsertWithoutGalleryPinLikesInput
     connect?: UserWhereUniqueInput
-    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPostLikesInput, UserUpdateWithoutPostLikesInput>, UserUncheckedUpdateWithoutPostLikesInput>
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutGalleryPinLikesInput, UserUpdateWithoutGalleryPinLikesInput>, UserUncheckedUpdateWithoutGalleryPinLikesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -17042,19 +18285,6 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -17080,100 +18310,116 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type PostCreateWithoutAuthorInput = {
-    title: string
-    imageUrl: string
-    moodboard: MoodboardCreateNestedOneWithoutPostsInput
-    likes?: PostLikeCreateNestedManyWithoutPostInput
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
-  export type PostUncheckedCreateWithoutAuthorInput = {
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type GalleryPinCreateWithoutAuthorInput = {
+    title: string
+    imageUrl: string
+    description?: string | null
+    createdAt?: Date | string
+    likes?: GalleryPinLikeCreateNestedManyWithoutPinInput
+  }
+
+  export type GalleryPinUncheckedCreateWithoutAuthorInput = {
     id?: number
     title: string
     imageUrl: string
-    moodboardId: number
-    likes?: PostLikeUncheckedCreateNestedManyWithoutPostInput
+    description?: string | null
+    createdAt?: Date | string
+    likes?: GalleryPinLikeUncheckedCreateNestedManyWithoutPinInput
   }
 
-  export type PostCreateOrConnectWithoutAuthorInput = {
-    where: PostWhereUniqueInput
-    create: XOR<PostCreateWithoutAuthorInput, PostUncheckedCreateWithoutAuthorInput>
+  export type GalleryPinCreateOrConnectWithoutAuthorInput = {
+    where: GalleryPinWhereUniqueInput
+    create: XOR<GalleryPinCreateWithoutAuthorInput, GalleryPinUncheckedCreateWithoutAuthorInput>
   }
 
-  export type PostCreateManyAuthorInputEnvelope = {
-    data: PostCreateManyAuthorInput | PostCreateManyAuthorInput[]
+  export type GalleryPinCreateManyAuthorInputEnvelope = {
+    data: GalleryPinCreateManyAuthorInput | GalleryPinCreateManyAuthorInput[]
     skipDuplicates?: boolean
   }
 
-  export type PostLikeCreateWithoutUserInput = {
-    post: PostCreateNestedOneWithoutLikesInput
+  export type GalleryPinLikeCreateWithoutUserInput = {
+    pin: GalleryPinCreateNestedOneWithoutLikesInput
   }
 
-  export type PostLikeUncheckedCreateWithoutUserInput = {
+  export type GalleryPinLikeUncheckedCreateWithoutUserInput = {
     id?: number
-    postId: number
+    pinId: number
   }
 
-  export type PostLikeCreateOrConnectWithoutUserInput = {
-    where: PostLikeWhereUniqueInput
-    create: XOR<PostLikeCreateWithoutUserInput, PostLikeUncheckedCreateWithoutUserInput>
+  export type GalleryPinLikeCreateOrConnectWithoutUserInput = {
+    where: GalleryPinLikeWhereUniqueInput
+    create: XOR<GalleryPinLikeCreateWithoutUserInput, GalleryPinLikeUncheckedCreateWithoutUserInput>
   }
 
-  export type PostLikeCreateManyUserInputEnvelope = {
-    data: PostLikeCreateManyUserInput | PostLikeCreateManyUserInput[]
+  export type GalleryPinLikeCreateManyUserInputEnvelope = {
+    data: GalleryPinLikeCreateManyUserInput | GalleryPinLikeCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
-  export type PostUpsertWithWhereUniqueWithoutAuthorInput = {
-    where: PostWhereUniqueInput
-    update: XOR<PostUpdateWithoutAuthorInput, PostUncheckedUpdateWithoutAuthorInput>
-    create: XOR<PostCreateWithoutAuthorInput, PostUncheckedCreateWithoutAuthorInput>
+  export type GalleryPinUpsertWithWhereUniqueWithoutAuthorInput = {
+    where: GalleryPinWhereUniqueInput
+    update: XOR<GalleryPinUpdateWithoutAuthorInput, GalleryPinUncheckedUpdateWithoutAuthorInput>
+    create: XOR<GalleryPinCreateWithoutAuthorInput, GalleryPinUncheckedCreateWithoutAuthorInput>
   }
 
-  export type PostUpdateWithWhereUniqueWithoutAuthorInput = {
-    where: PostWhereUniqueInput
-    data: XOR<PostUpdateWithoutAuthorInput, PostUncheckedUpdateWithoutAuthorInput>
+  export type GalleryPinUpdateWithWhereUniqueWithoutAuthorInput = {
+    where: GalleryPinWhereUniqueInput
+    data: XOR<GalleryPinUpdateWithoutAuthorInput, GalleryPinUncheckedUpdateWithoutAuthorInput>
   }
 
-  export type PostUpdateManyWithWhereWithoutAuthorInput = {
-    where: PostScalarWhereInput
-    data: XOR<PostUpdateManyMutationInput, PostUncheckedUpdateManyWithoutAuthorInput>
+  export type GalleryPinUpdateManyWithWhereWithoutAuthorInput = {
+    where: GalleryPinScalarWhereInput
+    data: XOR<GalleryPinUpdateManyMutationInput, GalleryPinUncheckedUpdateManyWithoutAuthorInput>
   }
 
-  export type PostScalarWhereInput = {
-    AND?: PostScalarWhereInput | PostScalarWhereInput[]
-    OR?: PostScalarWhereInput[]
-    NOT?: PostScalarWhereInput | PostScalarWhereInput[]
-    id?: IntFilter<"Post"> | number
-    title?: StringFilter<"Post"> | string
-    imageUrl?: StringFilter<"Post"> | string
-    authorId?: StringFilter<"Post"> | string
-    moodboardId?: IntFilter<"Post"> | number
+  export type GalleryPinScalarWhereInput = {
+    AND?: GalleryPinScalarWhereInput | GalleryPinScalarWhereInput[]
+    OR?: GalleryPinScalarWhereInput[]
+    NOT?: GalleryPinScalarWhereInput | GalleryPinScalarWhereInput[]
+    id?: IntFilter<"GalleryPin"> | number
+    title?: StringFilter<"GalleryPin"> | string
+    imageUrl?: StringFilter<"GalleryPin"> | string
+    description?: StringNullableFilter<"GalleryPin"> | string | null
+    createdAt?: DateTimeFilter<"GalleryPin"> | Date | string
+    authorId?: StringFilter<"GalleryPin"> | string
   }
 
-  export type PostLikeUpsertWithWhereUniqueWithoutUserInput = {
-    where: PostLikeWhereUniqueInput
-    update: XOR<PostLikeUpdateWithoutUserInput, PostLikeUncheckedUpdateWithoutUserInput>
-    create: XOR<PostLikeCreateWithoutUserInput, PostLikeUncheckedCreateWithoutUserInput>
+  export type GalleryPinLikeUpsertWithWhereUniqueWithoutUserInput = {
+    where: GalleryPinLikeWhereUniqueInput
+    update: XOR<GalleryPinLikeUpdateWithoutUserInput, GalleryPinLikeUncheckedUpdateWithoutUserInput>
+    create: XOR<GalleryPinLikeCreateWithoutUserInput, GalleryPinLikeUncheckedCreateWithoutUserInput>
   }
 
-  export type PostLikeUpdateWithWhereUniqueWithoutUserInput = {
-    where: PostLikeWhereUniqueInput
-    data: XOR<PostLikeUpdateWithoutUserInput, PostLikeUncheckedUpdateWithoutUserInput>
+  export type GalleryPinLikeUpdateWithWhereUniqueWithoutUserInput = {
+    where: GalleryPinLikeWhereUniqueInput
+    data: XOR<GalleryPinLikeUpdateWithoutUserInput, GalleryPinLikeUncheckedUpdateWithoutUserInput>
   }
 
-  export type PostLikeUpdateManyWithWhereWithoutUserInput = {
-    where: PostLikeScalarWhereInput
-    data: XOR<PostLikeUpdateManyMutationInput, PostLikeUncheckedUpdateManyWithoutUserInput>
+  export type GalleryPinLikeUpdateManyWithWhereWithoutUserInput = {
+    where: GalleryPinLikeScalarWhereInput
+    data: XOR<GalleryPinLikeUpdateManyMutationInput, GalleryPinLikeUncheckedUpdateManyWithoutUserInput>
   }
 
-  export type PostLikeScalarWhereInput = {
-    AND?: PostLikeScalarWhereInput | PostLikeScalarWhereInput[]
-    OR?: PostLikeScalarWhereInput[]
-    NOT?: PostLikeScalarWhereInput | PostLikeScalarWhereInput[]
-    id?: IntFilter<"PostLike"> | number
-    postId?: IntFilter<"PostLike"> | number
-    userId?: StringFilter<"PostLike"> | string
+  export type GalleryPinLikeScalarWhereInput = {
+    AND?: GalleryPinLikeScalarWhereInput | GalleryPinLikeScalarWhereInput[]
+    OR?: GalleryPinLikeScalarWhereInput[]
+    NOT?: GalleryPinLikeScalarWhereInput | GalleryPinLikeScalarWhereInput[]
+    id?: IntFilter<"GalleryPinLike"> | number
+    pinId?: IntFilter<"GalleryPinLike"> | number
+    userId?: StringFilter<"GalleryPinLike"> | string
   }
 
   export type ElementAttributeCreateWithoutAttributeInput = {
@@ -17483,7 +18729,6 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     userId: string
-    posts?: PostCreateNestedManyWithoutMoodboardInput
   }
 
   export type MoodboardUncheckedCreateWithoutElementsInput = {
@@ -17491,7 +18736,6 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     userId: string
-    posts?: PostUncheckedCreateNestedManyWithoutMoodboardInput
   }
 
   export type MoodboardCreateOrConnectWithoutElementsInput = {
@@ -17560,7 +18804,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
-    posts?: PostUpdateManyWithoutMoodboardNestedInput
   }
 
   export type MoodboardUncheckedUpdateWithoutElementsInput = {
@@ -17568,7 +18811,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     userId?: StringFieldUpdateOperationsInput | string
-    posts?: PostUncheckedUpdateManyWithoutMoodboardNestedInput
   }
 
   export type ElementValueUpsertWithWhereUniqueWithoutElementInput = {
@@ -17740,31 +18982,6 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type PostCreateWithoutMoodboardInput = {
-    title: string
-    imageUrl: string
-    author: UserCreateNestedOneWithoutPostsInput
-    likes?: PostLikeCreateNestedManyWithoutPostInput
-  }
-
-  export type PostUncheckedCreateWithoutMoodboardInput = {
-    id?: number
-    title: string
-    imageUrl: string
-    authorId: string
-    likes?: PostLikeUncheckedCreateNestedManyWithoutPostInput
-  }
-
-  export type PostCreateOrConnectWithoutMoodboardInput = {
-    where: PostWhereUniqueInput
-    create: XOR<PostCreateWithoutMoodboardInput, PostUncheckedCreateWithoutMoodboardInput>
-  }
-
-  export type PostCreateManyMoodboardInputEnvelope = {
-    data: PostCreateManyMoodboardInput | PostCreateManyMoodboardInput[]
-    skipDuplicates?: boolean
-  }
-
   export type ElementUpsertWithWhereUniqueWithoutMoodboardInput = {
     where: ElementWhereUniqueInput
     update: XOR<ElementUpdateWithoutMoodboardInput, ElementUncheckedUpdateWithoutMoodboardInput>
@@ -17781,23 +18998,7 @@ export namespace Prisma {
     data: XOR<ElementUpdateManyMutationInput, ElementUncheckedUpdateManyWithoutMoodboardInput>
   }
 
-  export type PostUpsertWithWhereUniqueWithoutMoodboardInput = {
-    where: PostWhereUniqueInput
-    update: XOR<PostUpdateWithoutMoodboardInput, PostUncheckedUpdateWithoutMoodboardInput>
-    create: XOR<PostCreateWithoutMoodboardInput, PostUncheckedCreateWithoutMoodboardInput>
-  }
-
-  export type PostUpdateWithWhereUniqueWithoutMoodboardInput = {
-    where: PostWhereUniqueInput
-    data: XOR<PostUpdateWithoutMoodboardInput, PostUncheckedUpdateWithoutMoodboardInput>
-  }
-
-  export type PostUpdateManyWithWhereWithoutMoodboardInput = {
-    where: PostScalarWhereInput
-    data: XOR<PostUpdateManyMutationInput, PostUncheckedUpdateManyWithoutMoodboardInput>
-  }
-
-  export type UserCreateWithoutPostsInput = {
+  export type UserCreateWithoutGalleryPinsInput = {
     id?: string
     email: string
     firstName?: string | null
@@ -17805,10 +19006,10 @@ export namespace Prisma {
     userName: string
     birthday?: Date | string | null
     role?: $Enums.UserRole
-    postLikes?: PostLikeCreateNestedManyWithoutUserInput
+    galleryPinLikes?: GalleryPinLikeCreateNestedManyWithoutUserInput
   }
 
-  export type UserUncheckedCreateWithoutPostsInput = {
+  export type UserUncheckedCreateWithoutGalleryPinsInput = {
     id?: string
     email: string
     firstName?: string | null
@@ -17816,65 +19017,45 @@ export namespace Prisma {
     userName: string
     birthday?: Date | string | null
     role?: $Enums.UserRole
-    postLikes?: PostLikeUncheckedCreateNestedManyWithoutUserInput
+    galleryPinLikes?: GalleryPinLikeUncheckedCreateNestedManyWithoutUserInput
   }
 
-  export type UserCreateOrConnectWithoutPostsInput = {
+  export type UserCreateOrConnectWithoutGalleryPinsInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutPostsInput, UserUncheckedCreateWithoutPostsInput>
+    create: XOR<UserCreateWithoutGalleryPinsInput, UserUncheckedCreateWithoutGalleryPinsInput>
   }
 
-  export type MoodboardCreateWithoutPostsInput = {
-    name: string
-    createdAt?: Date | string
-    userId: string
-    elements?: ElementCreateNestedManyWithoutMoodboardInput
+  export type GalleryPinLikeCreateWithoutPinInput = {
+    user: UserCreateNestedOneWithoutGalleryPinLikesInput
   }
 
-  export type MoodboardUncheckedCreateWithoutPostsInput = {
-    id?: number
-    name: string
-    createdAt?: Date | string
-    userId: string
-    elements?: ElementUncheckedCreateNestedManyWithoutMoodboardInput
-  }
-
-  export type MoodboardCreateOrConnectWithoutPostsInput = {
-    where: MoodboardWhereUniqueInput
-    create: XOR<MoodboardCreateWithoutPostsInput, MoodboardUncheckedCreateWithoutPostsInput>
-  }
-
-  export type PostLikeCreateWithoutPostInput = {
-    user: UserCreateNestedOneWithoutPostLikesInput
-  }
-
-  export type PostLikeUncheckedCreateWithoutPostInput = {
+  export type GalleryPinLikeUncheckedCreateWithoutPinInput = {
     id?: number
     userId: string
   }
 
-  export type PostLikeCreateOrConnectWithoutPostInput = {
-    where: PostLikeWhereUniqueInput
-    create: XOR<PostLikeCreateWithoutPostInput, PostLikeUncheckedCreateWithoutPostInput>
+  export type GalleryPinLikeCreateOrConnectWithoutPinInput = {
+    where: GalleryPinLikeWhereUniqueInput
+    create: XOR<GalleryPinLikeCreateWithoutPinInput, GalleryPinLikeUncheckedCreateWithoutPinInput>
   }
 
-  export type PostLikeCreateManyPostInputEnvelope = {
-    data: PostLikeCreateManyPostInput | PostLikeCreateManyPostInput[]
+  export type GalleryPinLikeCreateManyPinInputEnvelope = {
+    data: GalleryPinLikeCreateManyPinInput | GalleryPinLikeCreateManyPinInput[]
     skipDuplicates?: boolean
   }
 
-  export type UserUpsertWithoutPostsInput = {
-    update: XOR<UserUpdateWithoutPostsInput, UserUncheckedUpdateWithoutPostsInput>
-    create: XOR<UserCreateWithoutPostsInput, UserUncheckedCreateWithoutPostsInput>
+  export type UserUpsertWithoutGalleryPinsInput = {
+    update: XOR<UserUpdateWithoutGalleryPinsInput, UserUncheckedUpdateWithoutGalleryPinsInput>
+    create: XOR<UserCreateWithoutGalleryPinsInput, UserUncheckedCreateWithoutGalleryPinsInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutPostsInput = {
+  export type UserUpdateToOneWithWhereWithoutGalleryPinsInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutPostsInput, UserUncheckedUpdateWithoutPostsInput>
+    data: XOR<UserUpdateWithoutGalleryPinsInput, UserUncheckedUpdateWithoutGalleryPinsInput>
   }
 
-  export type UserUpdateWithoutPostsInput = {
+  export type UserUpdateWithoutGalleryPinsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17882,10 +19063,10 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    postLikes?: PostLikeUpdateManyWithoutUserNestedInput
+    galleryPinLikes?: GalleryPinLikeUpdateManyWithoutUserNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutPostsInput = {
+  export type UserUncheckedUpdateWithoutGalleryPinsInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17893,72 +19074,48 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    postLikes?: PostLikeUncheckedUpdateManyWithoutUserNestedInput
+    galleryPinLikes?: GalleryPinLikeUncheckedUpdateManyWithoutUserNestedInput
   }
 
-  export type MoodboardUpsertWithoutPostsInput = {
-    update: XOR<MoodboardUpdateWithoutPostsInput, MoodboardUncheckedUpdateWithoutPostsInput>
-    create: XOR<MoodboardCreateWithoutPostsInput, MoodboardUncheckedCreateWithoutPostsInput>
-    where?: MoodboardWhereInput
+  export type GalleryPinLikeUpsertWithWhereUniqueWithoutPinInput = {
+    where: GalleryPinLikeWhereUniqueInput
+    update: XOR<GalleryPinLikeUpdateWithoutPinInput, GalleryPinLikeUncheckedUpdateWithoutPinInput>
+    create: XOR<GalleryPinLikeCreateWithoutPinInput, GalleryPinLikeUncheckedCreateWithoutPinInput>
   }
 
-  export type MoodboardUpdateToOneWithWhereWithoutPostsInput = {
-    where?: MoodboardWhereInput
-    data: XOR<MoodboardUpdateWithoutPostsInput, MoodboardUncheckedUpdateWithoutPostsInput>
+  export type GalleryPinLikeUpdateWithWhereUniqueWithoutPinInput = {
+    where: GalleryPinLikeWhereUniqueInput
+    data: XOR<GalleryPinLikeUpdateWithoutPinInput, GalleryPinLikeUncheckedUpdateWithoutPinInput>
   }
 
-  export type MoodboardUpdateWithoutPostsInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: StringFieldUpdateOperationsInput | string
-    elements?: ElementUpdateManyWithoutMoodboardNestedInput
+  export type GalleryPinLikeUpdateManyWithWhereWithoutPinInput = {
+    where: GalleryPinLikeScalarWhereInput
+    data: XOR<GalleryPinLikeUpdateManyMutationInput, GalleryPinLikeUncheckedUpdateManyWithoutPinInput>
   }
 
-  export type MoodboardUncheckedUpdateWithoutPostsInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    userId?: StringFieldUpdateOperationsInput | string
-    elements?: ElementUncheckedUpdateManyWithoutMoodboardNestedInput
-  }
-
-  export type PostLikeUpsertWithWhereUniqueWithoutPostInput = {
-    where: PostLikeWhereUniqueInput
-    update: XOR<PostLikeUpdateWithoutPostInput, PostLikeUncheckedUpdateWithoutPostInput>
-    create: XOR<PostLikeCreateWithoutPostInput, PostLikeUncheckedCreateWithoutPostInput>
-  }
-
-  export type PostLikeUpdateWithWhereUniqueWithoutPostInput = {
-    where: PostLikeWhereUniqueInput
-    data: XOR<PostLikeUpdateWithoutPostInput, PostLikeUncheckedUpdateWithoutPostInput>
-  }
-
-  export type PostLikeUpdateManyWithWhereWithoutPostInput = {
-    where: PostLikeScalarWhereInput
-    data: XOR<PostLikeUpdateManyMutationInput, PostLikeUncheckedUpdateManyWithoutPostInput>
-  }
-
-  export type PostCreateWithoutLikesInput = {
+  export type GalleryPinCreateWithoutLikesInput = {
     title: string
     imageUrl: string
-    author: UserCreateNestedOneWithoutPostsInput
-    moodboard: MoodboardCreateNestedOneWithoutPostsInput
+    description?: string | null
+    createdAt?: Date | string
+    author: UserCreateNestedOneWithoutGalleryPinsInput
   }
 
-  export type PostUncheckedCreateWithoutLikesInput = {
+  export type GalleryPinUncheckedCreateWithoutLikesInput = {
     id?: number
     title: string
     imageUrl: string
+    description?: string | null
+    createdAt?: Date | string
     authorId: string
-    moodboardId: number
   }
 
-  export type PostCreateOrConnectWithoutLikesInput = {
-    where: PostWhereUniqueInput
-    create: XOR<PostCreateWithoutLikesInput, PostUncheckedCreateWithoutLikesInput>
+  export type GalleryPinCreateOrConnectWithoutLikesInput = {
+    where: GalleryPinWhereUniqueInput
+    create: XOR<GalleryPinCreateWithoutLikesInput, GalleryPinUncheckedCreateWithoutLikesInput>
   }
 
-  export type UserCreateWithoutPostLikesInput = {
+  export type UserCreateWithoutGalleryPinLikesInput = {
     id?: string
     email: string
     firstName?: string | null
@@ -17966,10 +19123,10 @@ export namespace Prisma {
     userName: string
     birthday?: Date | string | null
     role?: $Enums.UserRole
-    posts?: PostCreateNestedManyWithoutAuthorInput
+    galleryPins?: GalleryPinCreateNestedManyWithoutAuthorInput
   }
 
-  export type UserUncheckedCreateWithoutPostLikesInput = {
+  export type UserUncheckedCreateWithoutGalleryPinLikesInput = {
     id?: string
     email: string
     firstName?: string | null
@@ -17977,52 +19134,54 @@ export namespace Prisma {
     userName: string
     birthday?: Date | string | null
     role?: $Enums.UserRole
-    posts?: PostUncheckedCreateNestedManyWithoutAuthorInput
+    galleryPins?: GalleryPinUncheckedCreateNestedManyWithoutAuthorInput
   }
 
-  export type UserCreateOrConnectWithoutPostLikesInput = {
+  export type UserCreateOrConnectWithoutGalleryPinLikesInput = {
     where: UserWhereUniqueInput
-    create: XOR<UserCreateWithoutPostLikesInput, UserUncheckedCreateWithoutPostLikesInput>
+    create: XOR<UserCreateWithoutGalleryPinLikesInput, UserUncheckedCreateWithoutGalleryPinLikesInput>
   }
 
-  export type PostUpsertWithoutLikesInput = {
-    update: XOR<PostUpdateWithoutLikesInput, PostUncheckedUpdateWithoutLikesInput>
-    create: XOR<PostCreateWithoutLikesInput, PostUncheckedCreateWithoutLikesInput>
-    where?: PostWhereInput
+  export type GalleryPinUpsertWithoutLikesInput = {
+    update: XOR<GalleryPinUpdateWithoutLikesInput, GalleryPinUncheckedUpdateWithoutLikesInput>
+    create: XOR<GalleryPinCreateWithoutLikesInput, GalleryPinUncheckedCreateWithoutLikesInput>
+    where?: GalleryPinWhereInput
   }
 
-  export type PostUpdateToOneWithWhereWithoutLikesInput = {
-    where?: PostWhereInput
-    data: XOR<PostUpdateWithoutLikesInput, PostUncheckedUpdateWithoutLikesInput>
+  export type GalleryPinUpdateToOneWithWhereWithoutLikesInput = {
+    where?: GalleryPinWhereInput
+    data: XOR<GalleryPinUpdateWithoutLikesInput, GalleryPinUncheckedUpdateWithoutLikesInput>
   }
 
-  export type PostUpdateWithoutLikesInput = {
+  export type GalleryPinUpdateWithoutLikesInput = {
     title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
-    author?: UserUpdateOneRequiredWithoutPostsNestedInput
-    moodboard?: MoodboardUpdateOneRequiredWithoutPostsNestedInput
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    author?: UserUpdateOneRequiredWithoutGalleryPinsNestedInput
   }
 
-  export type PostUncheckedUpdateWithoutLikesInput = {
+  export type GalleryPinUncheckedUpdateWithoutLikesInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     authorId?: StringFieldUpdateOperationsInput | string
-    moodboardId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type UserUpsertWithoutPostLikesInput = {
-    update: XOR<UserUpdateWithoutPostLikesInput, UserUncheckedUpdateWithoutPostLikesInput>
-    create: XOR<UserCreateWithoutPostLikesInput, UserUncheckedCreateWithoutPostLikesInput>
+  export type UserUpsertWithoutGalleryPinLikesInput = {
+    update: XOR<UserUpdateWithoutGalleryPinLikesInput, UserUncheckedUpdateWithoutGalleryPinLikesInput>
+    create: XOR<UserCreateWithoutGalleryPinLikesInput, UserUncheckedCreateWithoutGalleryPinLikesInput>
     where?: UserWhereInput
   }
 
-  export type UserUpdateToOneWithWhereWithoutPostLikesInput = {
+  export type UserUpdateToOneWithWhereWithoutGalleryPinLikesInput = {
     where?: UserWhereInput
-    data: XOR<UserUpdateWithoutPostLikesInput, UserUncheckedUpdateWithoutPostLikesInput>
+    data: XOR<UserUpdateWithoutGalleryPinLikesInput, UserUncheckedUpdateWithoutGalleryPinLikesInput>
   }
 
-  export type UserUpdateWithoutPostLikesInput = {
+  export type UserUpdateWithoutGalleryPinLikesInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18030,10 +19189,10 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    posts?: PostUpdateManyWithoutAuthorNestedInput
+    galleryPins?: GalleryPinUpdateManyWithoutAuthorNestedInput
   }
 
-  export type UserUncheckedUpdateWithoutPostLikesInput = {
+  export type UserUncheckedUpdateWithoutGalleryPinLikesInput = {
     id?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     firstName?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18041,55 +19200,59 @@ export namespace Prisma {
     userName?: StringFieldUpdateOperationsInput | string
     birthday?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     role?: EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
-    posts?: PostUncheckedUpdateManyWithoutAuthorNestedInput
+    galleryPins?: GalleryPinUncheckedUpdateManyWithoutAuthorNestedInput
   }
 
-  export type PostCreateManyAuthorInput = {
+  export type GalleryPinCreateManyAuthorInput = {
     id?: number
     title: string
     imageUrl: string
-    moodboardId: number
+    description?: string | null
+    createdAt?: Date | string
   }
 
-  export type PostLikeCreateManyUserInput = {
+  export type GalleryPinLikeCreateManyUserInput = {
     id?: number
-    postId: number
+    pinId: number
   }
 
-  export type PostUpdateWithoutAuthorInput = {
+  export type GalleryPinUpdateWithoutAuthorInput = {
     title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
-    moodboard?: MoodboardUpdateOneRequiredWithoutPostsNestedInput
-    likes?: PostLikeUpdateManyWithoutPostNestedInput
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likes?: GalleryPinLikeUpdateManyWithoutPinNestedInput
   }
 
-  export type PostUncheckedUpdateWithoutAuthorInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    moodboardId?: IntFieldUpdateOperationsInput | number
-    likes?: PostLikeUncheckedUpdateManyWithoutPostNestedInput
-  }
-
-  export type PostUncheckedUpdateManyWithoutAuthorInput = {
+  export type GalleryPinUncheckedUpdateWithoutAuthorInput = {
     id?: IntFieldUpdateOperationsInput | number
     title?: StringFieldUpdateOperationsInput | string
     imageUrl?: StringFieldUpdateOperationsInput | string
-    moodboardId?: IntFieldUpdateOperationsInput | number
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    likes?: GalleryPinLikeUncheckedUpdateManyWithoutPinNestedInput
   }
 
-  export type PostLikeUpdateWithoutUserInput = {
-    post?: PostUpdateOneRequiredWithoutLikesNestedInput
-  }
-
-  export type PostLikeUncheckedUpdateWithoutUserInput = {
+  export type GalleryPinUncheckedUpdateManyWithoutAuthorInput = {
     id?: IntFieldUpdateOperationsInput | number
-    postId?: IntFieldUpdateOperationsInput | number
+    title?: StringFieldUpdateOperationsInput | string
+    imageUrl?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type PostLikeUncheckedUpdateManyWithoutUserInput = {
+  export type GalleryPinLikeUpdateWithoutUserInput = {
+    pin?: GalleryPinUpdateOneRequiredWithoutLikesNestedInput
+  }
+
+  export type GalleryPinLikeUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
-    postId?: IntFieldUpdateOperationsInput | number
+    pinId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type GalleryPinLikeUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    pinId?: IntFieldUpdateOperationsInput | number
   }
 
   export type ElementAttributeCreateManyAttributeInput = {
@@ -18230,13 +19393,6 @@ export namespace Prisma {
     elementTypeId: number
   }
 
-  export type PostCreateManyMoodboardInput = {
-    id?: number
-    title: string
-    imageUrl: string
-    authorId: string
-  }
-
   export type ElementUpdateWithoutMoodboardInput = {
     name?: StringFieldUpdateOperationsInput | string
     coordsX?: IntFieldUpdateOperationsInput | number
@@ -18277,43 +19433,21 @@ export namespace Prisma {
     elementTypeId?: IntFieldUpdateOperationsInput | number
   }
 
-  export type PostUpdateWithoutMoodboardInput = {
-    title?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    author?: UserUpdateOneRequiredWithoutPostsNestedInput
-    likes?: PostLikeUpdateManyWithoutPostNestedInput
-  }
-
-  export type PostUncheckedUpdateWithoutMoodboardInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-    likes?: PostLikeUncheckedUpdateManyWithoutPostNestedInput
-  }
-
-  export type PostUncheckedUpdateManyWithoutMoodboardInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    title?: StringFieldUpdateOperationsInput | string
-    imageUrl?: StringFieldUpdateOperationsInput | string
-    authorId?: StringFieldUpdateOperationsInput | string
-  }
-
-  export type PostLikeCreateManyPostInput = {
+  export type GalleryPinLikeCreateManyPinInput = {
     id?: number
     userId: string
   }
 
-  export type PostLikeUpdateWithoutPostInput = {
-    user?: UserUpdateOneRequiredWithoutPostLikesNestedInput
+  export type GalleryPinLikeUpdateWithoutPinInput = {
+    user?: UserUpdateOneRequiredWithoutGalleryPinLikesNestedInput
   }
 
-  export type PostLikeUncheckedUpdateWithoutPostInput = {
+  export type GalleryPinLikeUncheckedUpdateWithoutPinInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
   }
 
-  export type PostLikeUncheckedUpdateManyWithoutPostInput = {
+  export type GalleryPinLikeUncheckedUpdateManyWithoutPinInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
   }

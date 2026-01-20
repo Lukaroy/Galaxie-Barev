@@ -40,10 +40,10 @@ export default function SocialLoginButtons({ onError }: SocialLoginButtonsProps)
   return (
     <div className="social-login">
       <button onClick={handleGoogleLogin} disabled={loading}>
-        {loading ? "Načítám..." : "Google"}
+        {loading ? ("Načítám...") : (<><img src="google.svg" width={20} height={20} alt="Google" />Google</>)}
       </button>
       <button onClick={handleAppleLogin} disabled={loading}>
-        {loading ? "Načítám..." : "Apple"}
+        {loading ? ("Načítám...") : (<><img src="apple.svg" width={20} height={20} alt="Google" />Apple</>)}
       </button>
     </div>
   )

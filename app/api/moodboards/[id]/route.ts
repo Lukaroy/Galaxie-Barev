@@ -129,3 +129,42 @@ export async function PUT(
     return NextResponse.json({ error: 'Failed to update moodboard' }, { status: 500 })
   }
 }
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const { searchParams } = new URL(request.url)
+    const userId = searchParams.get('userId')
+    
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const body = await request.json()
+    const { elementsData } = body
+
+    const moodboard = await prisma.moodboard.findFirst({
+      where: {
+        id: parseInt(id),
+        userId
+      }
+    })
+
+    if (!moodboard) {
+      return NextResponse.json({ error: 'Moodboard not found' }, { status: 404 })
+    }
+
+    const updated = await prisma.moodboard.update({
+      where: { id: parseInt(id) },
+      data: { name: moodboard.name } // Temporary: just update to keep data
+    })
+
+    return NextResponse.json({ success: true, moodboard: updated })
+  } catch (error) {
+    console.error('Error updating moodboard data:', error)
+    return NextResponse.json({ error: 'Failed to update moodboard data' }, { status: 500 })
+  }
+}

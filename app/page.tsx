@@ -45,23 +45,25 @@ export default function HomePage() {
           }}
         />
 
-        <motion.h1 
-          className="hero-title"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          GALAXIE BAREV
-        </motion.h1>
-        
-        <motion.p 
-          className="hero-subtitle"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          Designové studio
-        </motion.p>
+        <div className="hero-heading">
+          <motion.h1 
+            className="hero-title"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            GALAXIE BAREV
+          </motion.h1>
+          
+          <motion.p 
+            className="hero-subtitle"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            Designové studio
+          </motion.p>
+        </div>
 
         <motion.div 
           className="hero-description"
@@ -84,13 +86,12 @@ export default function HomePage() {
               className="cta-primary"
               onClick={() => router.push("/barvy")}
               whileHover={{ 
-                scale: 1.03, 
-                boxShadow: "0 12px 48px rgba(152, 114, 199, 0.45)",
+                scale: 1.02,
                 transition: { duration: 0.2 }
               }}
-              whileTap={{ scale: 0.97 }}
+              whileTap={{ scale: 0.98 }}
             >
-              Začít tvořit <ArrowRight size={20} />
+              Začít tvořit
             </motion.button>
           ) : (
             <>
@@ -98,11 +99,10 @@ export default function HomePage() {
                 className="cta-primary"
                 onClick={() => router.push("/registrace")}
                 whileHover={{ 
-                  scale: 1.03, 
-                  boxShadow: "0 12px 48px rgba(152, 114, 199, 0.45)",
+                  scale: 1.02,
                   transition: { duration: 0.2 }
                 }}
-                whileTap={{ scale: 0.97 }}
+                whileTap={{ scale: 0.98 }}
               >
                 Vytvořit účet
               </motion.button>
@@ -110,10 +110,10 @@ export default function HomePage() {
                 className="cta-secondary"
                 onClick={() => router.push("/prihlaseni")}
                 whileHover={{ 
-                  scale: 1.03,
+                  scale: 1.02,
                   transition: { duration: 0.2 }
                 }}
-                whileTap={{ scale: 0.97 }}
+                whileTap={{ scale: 0.98 }}
               >
                 Přihlásit se
               </motion.button>

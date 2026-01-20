@@ -5,9 +5,12 @@ import { useRouter } from "next/navigation"
 import { registerUser } from "@/lib/auth"
 import { isValidEmail, isValidName } from "@/lib/validator"
 import { handleAuthError } from "@/lib/errorHandling"
+import { auth } from "@/lib/firebase"
+import { signOut } from "firebase/auth"
 import Alert from "../alert"
 import SocialLoginButtons from "./socialLoginButtons"
 import Loading from "../loading"
+import { Eye, EyeOff } from "lucide-react"
 
 export default function RegisterForm() {
   const router = useRouter()
@@ -30,7 +33,6 @@ export default function RegisterForm() {
     password: false
   })
 
-  // Funkce pro kontrolu síly hesla s lepším feedbackem
   const checkPasswordStrength = (pwd: string) => {
     if (pwd.length === 0) {
       setPasswordStrength({ strength: "", color: "", tips: "" })
@@ -68,19 +70,19 @@ export default function RegisterForm() {
 
     if (strength <= 2) {
       setPasswordStrength({ 
-        strength: "Slabé 😟", 
+        strength: "Slabé", 
         color: "#ff4444",
         tips: tips.length > 0 ? `Zkus přidat: ${tips.join(", ")}` : ""
       })
     } else if (strength <= 3) {
       setPasswordStrength({ 
-        strength: "Střední 😐", 
+        strength: "Střední", 
         color: "#ffaa00",
         tips: tips.length > 0 ? `Ještě: ${tips.join(", ")}` : ""
       })
     } else {
       setPasswordStrength({ 
-        strength: "Silné 😎", 
+        strength: "Silné", 
         color: "#00cc44",
         tips: "Super! Tohle je dobré heslo."
       })
@@ -91,7 +93,6 @@ export default function RegisterForm() {
     e.preventDefault()
     setError("")
     
-    // Vylepšená validace s lepším feedbackem
     const trimmedFirstName = firstName.trim()
     const trimmedLastName = lastName.trim()
     
@@ -111,7 +112,7 @@ export default function RegisterForm() {
     }
 
     if (!isValidEmail(email)) {
-      setError("Tohle nevypadá jako platný email")
+      setError("Email není platný")
       return
     }
 
@@ -121,7 +122,7 @@ export default function RegisterForm() {
     }
     
     if (password.length < 8) {
-      setError("Pro lepší zabezpečení doporučujeme aspoň 8 znaků")
+      setError("Heslo musí mít aspoň 8 znaků")
       return
     }
 
@@ -129,11 +130,10 @@ export default function RegisterForm() {
 
     try {
       await registerUser(trimmedFirstName, trimmedLastName, email, password)
-      // Přesměrování po úspěšné registraci
-      router.push("/")
+      await signOut(auth)
+      router.push("/prihlaseni?registered=true")
     } catch (err: any) {
       const errorMsg = handleAuthError(err)
-      // Zlepšení chybových zpráv
       if (errorMsg.includes("email-already-in-use")) {
         setError("Tento email se už používá. Zkus se spíš přihlásit?")
       } else if (errorMsg.includes("weak-password")) {
@@ -152,7 +152,7 @@ export default function RegisterForm() {
   return (
     <div className="register-container">
       <h2>
-        ZAČNI DNES!
+        Začni dnes!
         <span>Vytvořit si nový účet.</span>
       </h2>
 
@@ -217,7 +217,7 @@ export default function RegisterForm() {
             onClick={() => setShowPassword(!showPassword)}
             aria-label={showPassword ? "Skrýt heslo" : "Zobrazit heslo"}
           >
-            {showPassword ? "🙈" : "👁️"}
+            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
 
