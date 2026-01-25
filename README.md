@@ -54,4 +54,4 @@ Kombinuje praktické pomůcky (fonty, barevné palety, moodboard) s učící č�
 ---
 
 ## 🏫 Autor
-Lukáš Buriánek - Krystusssss
+Lukáš Buriánek - Krystus
