@@ -24,7 +24,6 @@ export async function GET() {
       }
     })
     
-    // Transform to include like count
     const pinsWithLikes = pins.map(pin => ({
       ...pin,
       likeCount: pin.likes.length,
@@ -45,7 +44,6 @@ export async function POST(request: Request) {
   try {
     const { title, imageUrl, description, authorId } = await request.json()
 
-    // Validate required fields
     if (!title || !imageUrl || !authorId) {
       return NextResponse.json(
         { error: 'Missing required fields' },
@@ -53,7 +51,6 @@ export async function POST(request: Request) {
       )
     }
 
-    // Create gallery pin
     const pin = await prisma.galleryPin.create({
       data: {
         title,
@@ -78,7 +75,6 @@ export async function POST(request: Request) {
       }
     })
 
-    // Transform to include like count and likes array
     const pinWithLikes = {
       ...pin,
       likeCount: pin.likes.length,

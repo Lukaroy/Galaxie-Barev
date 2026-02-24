@@ -12,7 +12,6 @@ export async function POST(request: Request) {
       )
     }
 
-    // Check if like exists
     const existingLike = await prisma.galleryPinLike.findUnique({
       where: {
         pinId_userId: {
@@ -23,7 +22,6 @@ export async function POST(request: Request) {
     })
 
     if (existingLike) {
-      // Unlike
       await prisma.galleryPinLike.delete({
         where: {
           id: existingLike.id
@@ -31,7 +29,6 @@ export async function POST(request: Request) {
       })
       return NextResponse.json({ liked: false })
     } else {
-      // Like
       await prisma.galleryPinLike.create({
         data: {
           pinId,

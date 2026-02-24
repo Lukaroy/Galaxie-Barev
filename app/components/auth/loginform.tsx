@@ -6,7 +6,7 @@ import { loginUser } from "@/lib/auth"
 import { handleAuthError } from "@/lib/errorHandling"
 import Alert from "../alert"
 import SocialLoginButtons from "./socialLoginButtons"
-import Loading from "../loading"
+import Loading from "@/app/loading"
 import { Eye, EyeOff } from "lucide-react"
 
 
@@ -45,8 +45,8 @@ export default function LoginForm() {
       return
     }
     
-    if (!password || password.length < 6) {
-      setError("Heslo musí mít aspoň 6 znaků")
+    if (!password || password.length < 8) {
+      setError("Heslo musí mít aspoň 8 znaků")
       return
     }
     

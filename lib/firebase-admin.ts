@@ -1,10 +1,7 @@
 import { initializeApp, getApps, cert } from 'firebase-admin/app'
 
-// Initialize Firebase Admin SDK only once
 if (!getApps().length) {
   try {
-    // V produkci použijte správné credentials
-    // Pro development můžete použít Firebase emulator nebo nastavit GOOGLE_APPLICATION_CREDENTIALS
     initializeApp({
       credential: cert({
         projectId: process.env.FIREBASE_PROJECT_ID,

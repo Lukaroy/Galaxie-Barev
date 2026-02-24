@@ -9,7 +9,7 @@ import { auth } from "@/lib/firebase"
 import { signOut } from "firebase/auth"
 import Alert from "../alert"
 import SocialLoginButtons from "./socialLoginButtons"
-import Loading from "../loading"
+import Loading from "@/app/loading"
 import { Eye, EyeOff } from "lucide-react"
 
 export default function RegisterForm() {
@@ -116,11 +116,6 @@ export default function RegisterForm() {
       return
     }
 
-    if (password.length < 6) {
-      setError("Heslo musí mít minimálně 6 znaků")
-      return
-    }
-    
     if (password.length < 8) {
       setError("Heslo musí mít aspoň 8 znaků")
       return
@@ -209,7 +204,7 @@ export default function RegisterForm() {
               checkPasswordStrength(e.target.value)
             }}
             required
-            minLength={6}
+            minLength={8}
           />
           <button
             type="button"

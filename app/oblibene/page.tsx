@@ -5,7 +5,7 @@ import ProtectedRoute from '@/app/components/ProtectedRoute'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Heart, X } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-import Loading from '../components/loading'
+import Loading from '@/app/loading'
 
 type GalleryPin = {
   id: number
@@ -75,9 +75,9 @@ function OblibeneContent() {
   return (
     <div className="favorites-page">
       <div className="favorites-container">
-        <div className="favorites-header">
-          <h1>Oblíbené</h1>
-          <p>Tvoje oblíbené piny z galerie</p>
+        <div className="page-header-unified">
+          <h1 className="page-title-gradient">Oblíbené</h1>
+          <p className="page-subtitle">Tvoje oblíbené piny z galerie</p>
         </div>
 
         {pins.length === 0 ? (

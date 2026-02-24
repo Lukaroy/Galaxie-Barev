@@ -85,11 +85,36 @@ export namespace $Enums {
 
 export type UserRole = (typeof UserRole)[keyof typeof UserRole]
 
+
+export const SegmentType: {
+  LESSON: 'LESSON',
+  TEST: 'TEST'
+};
+
+export type SegmentType = (typeof SegmentType)[keyof typeof SegmentType]
+
+
+export const Difficulty: {
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  EXPERT: 'EXPERT'
+};
+
+export type Difficulty = (typeof Difficulty)[keyof typeof Difficulty]
+
 }
 
 export type UserRole = $Enums.UserRole
 
 export const UserRole: typeof $Enums.UserRole
+
+export type SegmentType = $Enums.SegmentType
+
+export const SegmentType: typeof $Enums.SegmentType
+
+export type Difficulty = $Enums.Difficulty
+
+export const Difficulty: typeof $Enums.Difficulty
 
 /**
  * ##  Prisma Client ʲˢ
@@ -5291,6 +5316,12 @@ export namespace Prisma {
     title: string | null
     slug: string | null
     description: string | null
+    content: string | null
+    type: $Enums.SegmentType | null
+    difficulty: $Enums.Difficulty | null
+    duration: string | null
+    icon: string | null
+    color: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5300,6 +5331,12 @@ export namespace Prisma {
     title: string | null
     slug: string | null
     description: string | null
+    content: string | null
+    type: $Enums.SegmentType | null
+    difficulty: $Enums.Difficulty | null
+    duration: string | null
+    icon: string | null
+    color: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5309,7 +5346,14 @@ export namespace Prisma {
     title: number
     slug: number
     description: number
+    content: number
+    type: number
+    difficulty: number
+    duration: number
+    icon: number
+    color: number
     tags: number
+    questions: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5329,6 +5373,12 @@ export namespace Prisma {
     title?: true
     slug?: true
     description?: true
+    content?: true
+    type?: true
+    difficulty?: true
+    duration?: true
+    icon?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5338,6 +5388,12 @@ export namespace Prisma {
     title?: true
     slug?: true
     description?: true
+    content?: true
+    type?: true
+    difficulty?: true
+    duration?: true
+    icon?: true
+    color?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5347,7 +5403,14 @@ export namespace Prisma {
     title?: true
     slug?: true
     description?: true
+    content?: true
+    type?: true
+    difficulty?: true
+    duration?: true
+    icon?: true
+    color?: true
     tags?: true
+    questions?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5444,7 +5507,14 @@ export namespace Prisma {
     title: string
     slug: string
     description: string | null
+    content: string | null
+    type: $Enums.SegmentType
+    difficulty: $Enums.Difficulty
+    duration: string | null
+    icon: string | null
+    color: string | null
     tags: string[]
+    questions: JsonValue | null
     createdAt: Date
     updatedAt: Date
     _count: SegmentCountAggregateOutputType | null
@@ -5473,7 +5543,14 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     description?: boolean
+    content?: boolean
+    type?: boolean
+    difficulty?: boolean
+    duration?: boolean
+    icon?: boolean
+    color?: boolean
     tags?: boolean
+    questions?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["segment"]>
@@ -5483,7 +5560,14 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     description?: boolean
+    content?: boolean
+    type?: boolean
+    difficulty?: boolean
+    duration?: boolean
+    icon?: boolean
+    color?: boolean
     tags?: boolean
+    questions?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["segment"]>
@@ -5493,7 +5577,14 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     description?: boolean
+    content?: boolean
+    type?: boolean
+    difficulty?: boolean
+    duration?: boolean
+    icon?: boolean
+    color?: boolean
     tags?: boolean
+    questions?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["segment"]>
@@ -5503,12 +5594,19 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     description?: boolean
+    content?: boolean
+    type?: boolean
+    difficulty?: boolean
+    duration?: boolean
+    icon?: boolean
+    color?: boolean
     tags?: boolean
+    questions?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type SegmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "tags" | "createdAt" | "updatedAt", ExtArgs["result"]["segment"]>
+  export type SegmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "content" | "type" | "difficulty" | "duration" | "icon" | "color" | "tags" | "questions" | "createdAt" | "updatedAt", ExtArgs["result"]["segment"]>
 
   export type $SegmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Segment"
@@ -5518,7 +5616,14 @@ export namespace Prisma {
       title: string
       slug: string
       description: string | null
+      content: string | null
+      type: $Enums.SegmentType
+      difficulty: $Enums.Difficulty
+      duration: string | null
+      icon: string | null
+      color: string | null
       tags: string[]
+      questions: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["segment"]>
@@ -5948,7 +6053,14 @@ export namespace Prisma {
     readonly title: FieldRef<"Segment", 'String'>
     readonly slug: FieldRef<"Segment", 'String'>
     readonly description: FieldRef<"Segment", 'String'>
+    readonly content: FieldRef<"Segment", 'String'>
+    readonly type: FieldRef<"Segment", 'SegmentType'>
+    readonly difficulty: FieldRef<"Segment", 'Difficulty'>
+    readonly duration: FieldRef<"Segment", 'String'>
+    readonly icon: FieldRef<"Segment", 'String'>
+    readonly color: FieldRef<"Segment", 'String'>
     readonly tags: FieldRef<"Segment", 'String[]'>
+    readonly questions: FieldRef<"Segment", 'Json'>
     readonly createdAt: FieldRef<"Segment", 'DateTime'>
     readonly updatedAt: FieldRef<"Segment", 'DateTime'>
   }
@@ -15300,7 +15412,14 @@ export namespace Prisma {
     title: 'title',
     slug: 'slug',
     description: 'description',
+    content: 'content',
+    type: 'type',
+    difficulty: 'difficulty',
+    duration: 'duration',
+    icon: 'icon',
+    color: 'color',
     tags: 'tags',
+    questions: 'questions',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -15401,6 +15520,14 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -15415,6 +15542,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -15475,6 +15611,48 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SegmentType'
+   */
+  export type EnumSegmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SegmentType'>
+    
+
+
+  /**
+   * Reference to a field of type 'SegmentType[]'
+   */
+  export type ListEnumSegmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SegmentType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Difficulty'
+   */
+  export type EnumDifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Difficulty'>
+    
+
+
+  /**
+   * Reference to a field of type 'Difficulty[]'
+   */
+  export type ListEnumDifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Difficulty[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -15686,7 +15864,14 @@ export namespace Prisma {
     title?: StringFilter<"Segment"> | string
     slug?: StringFilter<"Segment"> | string
     description?: StringNullableFilter<"Segment"> | string | null
+    content?: StringNullableFilter<"Segment"> | string | null
+    type?: EnumSegmentTypeFilter<"Segment"> | $Enums.SegmentType
+    difficulty?: EnumDifficultyFilter<"Segment"> | $Enums.Difficulty
+    duration?: StringNullableFilter<"Segment"> | string | null
+    icon?: StringNullableFilter<"Segment"> | string | null
+    color?: StringNullableFilter<"Segment"> | string | null
     tags?: StringNullableListFilter<"Segment">
+    questions?: JsonNullableFilter<"Segment">
     createdAt?: DateTimeFilter<"Segment"> | Date | string
     updatedAt?: DateTimeFilter<"Segment"> | Date | string
   }
@@ -15696,7 +15881,14 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrderInput | SortOrder
+    content?: SortOrderInput | SortOrder
+    type?: SortOrder
+    difficulty?: SortOrder
+    duration?: SortOrderInput | SortOrder
+    icon?: SortOrderInput | SortOrder
+    color?: SortOrderInput | SortOrder
     tags?: SortOrder
+    questions?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -15709,7 +15901,14 @@ export namespace Prisma {
     NOT?: SegmentWhereInput | SegmentWhereInput[]
     title?: StringFilter<"Segment"> | string
     description?: StringNullableFilter<"Segment"> | string | null
+    content?: StringNullableFilter<"Segment"> | string | null
+    type?: EnumSegmentTypeFilter<"Segment"> | $Enums.SegmentType
+    difficulty?: EnumDifficultyFilter<"Segment"> | $Enums.Difficulty
+    duration?: StringNullableFilter<"Segment"> | string | null
+    icon?: StringNullableFilter<"Segment"> | string | null
+    color?: StringNullableFilter<"Segment"> | string | null
     tags?: StringNullableListFilter<"Segment">
+    questions?: JsonNullableFilter<"Segment">
     createdAt?: DateTimeFilter<"Segment"> | Date | string
     updatedAt?: DateTimeFilter<"Segment"> | Date | string
   }, "id" | "slug">
@@ -15719,7 +15918,14 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrderInput | SortOrder
+    content?: SortOrderInput | SortOrder
+    type?: SortOrder
+    difficulty?: SortOrder
+    duration?: SortOrderInput | SortOrder
+    icon?: SortOrderInput | SortOrder
+    color?: SortOrderInput | SortOrder
     tags?: SortOrder
+    questions?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: SegmentCountOrderByAggregateInput
@@ -15737,7 +15943,14 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Segment"> | string
     slug?: StringWithAggregatesFilter<"Segment"> | string
     description?: StringNullableWithAggregatesFilter<"Segment"> | string | null
+    content?: StringNullableWithAggregatesFilter<"Segment"> | string | null
+    type?: EnumSegmentTypeWithAggregatesFilter<"Segment"> | $Enums.SegmentType
+    difficulty?: EnumDifficultyWithAggregatesFilter<"Segment"> | $Enums.Difficulty
+    duration?: StringNullableWithAggregatesFilter<"Segment"> | string | null
+    icon?: StringNullableWithAggregatesFilter<"Segment"> | string | null
+    color?: StringNullableWithAggregatesFilter<"Segment"> | string | null
     tags?: StringNullableListFilter<"Segment">
+    questions?: JsonNullableWithAggregatesFilter<"Segment">
     createdAt?: DateTimeWithAggregatesFilter<"Segment"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Segment"> | Date | string
   }
@@ -16398,7 +16611,14 @@ export namespace Prisma {
     title: string
     slug: string
     description?: string | null
+    content?: string | null
+    type?: $Enums.SegmentType
+    difficulty?: $Enums.Difficulty
+    duration?: string | null
+    icon?: string | null
+    color?: string | null
     tags?: SegmentCreatetagsInput | string[]
+    questions?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -16408,7 +16628,14 @@ export namespace Prisma {
     title: string
     slug: string
     description?: string | null
+    content?: string | null
+    type?: $Enums.SegmentType
+    difficulty?: $Enums.Difficulty
+    duration?: string | null
+    icon?: string | null
+    color?: string | null
     tags?: SegmentCreatetagsInput | string[]
+    questions?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -16417,7 +16644,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumSegmentTypeFieldUpdateOperationsInput | $Enums.SegmentType
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: SegmentUpdatetagsInput | string[]
+    questions?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16427,7 +16661,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumSegmentTypeFieldUpdateOperationsInput | $Enums.SegmentType
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: SegmentUpdatetagsInput | string[]
+    questions?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16437,7 +16678,14 @@ export namespace Prisma {
     title: string
     slug: string
     description?: string | null
+    content?: string | null
+    type?: $Enums.SegmentType
+    difficulty?: $Enums.Difficulty
+    duration?: string | null
+    icon?: string | null
+    color?: string | null
     tags?: SegmentCreatetagsInput | string[]
+    questions?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -16446,7 +16694,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumSegmentTypeFieldUpdateOperationsInput | $Enums.SegmentType
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: SegmentUpdatetagsInput | string[]
+    questions?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -16456,7 +16711,14 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumSegmentTypeFieldUpdateOperationsInput | $Enums.SegmentType
+    difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
+    duration?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: SegmentUpdatetagsInput | string[]
+    questions?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -17149,6 +17411,43 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type EnumSegmentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SegmentType | EnumSegmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSegmentTypeFilter<$PrismaModel> | $Enums.SegmentType
+  }
+
+  export type EnumDifficultyFilter<$PrismaModel = never> = {
+    equals?: $Enums.Difficulty | EnumDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumDifficultyFilter<$PrismaModel> | $Enums.Difficulty
+  }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -17165,7 +17464,14 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    content?: SortOrder
+    type?: SortOrder
+    difficulty?: SortOrder
+    duration?: SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     tags?: SortOrder
+    questions?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -17179,6 +17485,12 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    content?: SortOrder
+    type?: SortOrder
+    difficulty?: SortOrder
+    duration?: SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -17188,12 +17500,64 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    content?: SortOrder
+    type?: SortOrder
+    difficulty?: SortOrder
+    duration?: SortOrder
+    icon?: SortOrder
+    color?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type SegmentSumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type EnumSegmentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SegmentType | EnumSegmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSegmentTypeWithAggregatesFilter<$PrismaModel> | $Enums.SegmentType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSegmentTypeFilter<$PrismaModel>
+    _max?: NestedEnumSegmentTypeFilter<$PrismaModel>
+  }
+
+  export type EnumDifficultyWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Difficulty | EnumDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumDifficultyWithAggregatesFilter<$PrismaModel> | $Enums.Difficulty
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDifficultyFilter<$PrismaModel>
+    _max?: NestedEnumDifficultyFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
@@ -17697,6 +18061,14 @@ export namespace Prisma {
 
   export type SegmentCreatetagsInput = {
     set: string[]
+  }
+
+  export type EnumSegmentTypeFieldUpdateOperationsInput = {
+    set?: $Enums.SegmentType
+  }
+
+  export type EnumDifficultyFieldUpdateOperationsInput = {
+    set?: $Enums.Difficulty
   }
 
   export type SegmentUpdatetagsInput = {
@@ -18285,6 +18657,20 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedEnumSegmentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SegmentType | EnumSegmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSegmentTypeFilter<$PrismaModel> | $Enums.SegmentType
+  }
+
+  export type NestedEnumDifficultyFilter<$PrismaModel = never> = {
+    equals?: $Enums.Difficulty | EnumDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumDifficultyFilter<$PrismaModel> | $Enums.Difficulty
+  }
+
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -18294,6 +18680,49 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedEnumSegmentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SegmentType | EnumSegmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSegmentTypeWithAggregatesFilter<$PrismaModel> | $Enums.SegmentType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumSegmentTypeFilter<$PrismaModel>
+    _max?: NestedEnumSegmentTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumDifficultyWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.Difficulty | EnumDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumDifficultyWithAggregatesFilter<$PrismaModel> | $Enums.Difficulty
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumDifficultyFilter<$PrismaModel>
+    _max?: NestedEnumDifficultyFilter<$PrismaModel>
+  }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {

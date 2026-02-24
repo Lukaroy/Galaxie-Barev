@@ -43,9 +43,9 @@ export default function Navbar() {
             <li><Link href="/">Domů</Link></li>
             <li><Link href="/barvy">Barvy</Link></li>
             <li><Link href="/fonty">Fonty</Link></li>
-            <li><Link href="/moodbords">Moodboard</Link></li>
+            <li><Link href="/moodboard">Moodboard</Link></li>
             <li><Link href="/galerie">Galerie</Link></li>
-            <li><Link href="/teorie">Teorie</Link></li>
+            <li><Link href="/uceni">Učení</Link></li>
           </ul>
         </div>
 
@@ -93,14 +93,14 @@ export default function Navbar() {
           <li><Link href="/" onClick={() => setMenuOpen(false)}>Domů</Link></li>
           <li><Link href="/barvy" onClick={() => setMenuOpen(false)}>Barvy</Link></li>
           <li><Link href="/fonty" onClick={() => setMenuOpen(false)}>Fonty</Link></li>
-          <li><Link href="/moodbords" onClick={() => setMenuOpen(false)}>Moodboard</Link></li>
+          <li><Link href="/moodboard" onClick={() => setMenuOpen(false)}>Moodboard</Link></li>
           <li><Link href="/galerie" onClick={() => setMenuOpen(false)}>Galerie</Link></li>
-          <li><Link href="/teorie" onClick={() => setMenuOpen(false)}>Teorie</Link></li>
+          <li><Link href="/uceni" onClick={() => setMenuOpen(false)}>Učení</Link></li>
         </ul>
         <ul className="down-links">
-          <li><Link href="/nastenka"onClick={() => setProfileOpen(false)}>Nástěnka</Link></li>
-          <li><Link href="/oblibene"onClick={() => setProfileOpen(false)}>Oblíbené</Link></li>
-          <li><Link href="/nastaveni"onClick={() => setProfileOpen(false)}>Nastavení</Link></li>
+          <li><Link href="/nastenka" onClick={() => setMenuOpen(false)}>Nástěnka</Link></li>
+          <li><Link href="/oblibene" onClick={() => setMenuOpen(false)}>Oblíbené</Link></li>
+          <li><Link href="/nastaveni" onClick={() => setMenuOpen(false)}>Nastavení</Link></li>
         </ul>
 
         {!user && (

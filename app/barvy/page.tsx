@@ -1,22 +1,23 @@
 "use client"
 
 import { useState, useEffect, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Download, Copy, Shuffle, History, Check, Palette, Eye, Lock, Unlock, RotateCw, Sun, Moon } from 'lucide-react'
+import { Download, Copy, Shuffle, History, Check, Eye, Lock, Unlock, Sun, Moon } from 'lucide-react'
 import type { ColorScheme, PaletteHistory } from '@/types'
-import { generateColorScheme, generateRandomColor, copyToClipboard, hexToHSL, hslToHex, type HSL } from '@/lib/colorUtils'
+import { generateColorScheme, generateRandomColor, copyToClipboard, hexToHSL, hslToHex } from '@/lib/colorUtils'
 import ProtectedRoute from '@/app/components/ProtectedRoute'
 
 function BarvyPageContent() {
   const [baseColor, setBaseColor] = useState('#9872C7')
   const [scheme, setScheme] = useState<ColorScheme>('complementary')
   const [generatedColors, setGeneratedColors] = useState<string[]>([])
-  const [wheelAngle, setWheelAngle] = useState(0)
   const [history, setHistory] = useState<PaletteHistory[]>([])
   const [copiedColor, setCopiedColor] = useState<string | null>(null)
   const [lockedColors, setLockedColors] = useState<Set<number>>(new Set())
   const [hoverColor, setHoverColor] = useState<number | null>(null)
   const [mounted, setMounted] = useState(false)
+
+  // Compute wheel angle from base color
+  const wheelAngle = hexToHSL(baseColor).h
 
   const handleGenerateColors = useCallback(() => {
     const colors = generateColorScheme(baseColor, scheme)
@@ -122,11 +123,6 @@ function BarvyPageContent() {
     return hslToHex(h, s, Math.max(0, Math.min(100, l + amount)))
   }
 
-  const rotateHue = (color: string, amount: number) => {
-    const { h, s, l } = hexToHSL(color)
-    return hslToHex((h + amount + 360) % 360, s, l)
-  }
-
   const handleWheelClick = (e: React.MouseEvent<SVGSVGElement>) => {
     const svg = e.currentTarget
     const rect = svg.getBoundingClientRect()
@@ -141,13 +137,7 @@ function BarvyPageContent() {
     const { s, l } = hexToHSL(baseColor)
     const newColor = hslToHex(hue, s, l)
     setBaseColor(newColor)
-    setWheelAngle(hue)
   }
-
-  useEffect(() => {
-    const { h } = hexToHSL(baseColor)
-    setWheelAngle(h)
-  }, [baseColor])
 
   useEffect(() => {
     if (baseColor && mounted) {
@@ -158,10 +148,18 @@ function BarvyPageContent() {
 
   useEffect(() => {
     setMounted(true)
-    if (generatedColors.length === 0) {
-      handleGenerateColors()
-    }
+    // Generate initial colors - we only run this once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Generate colors when mounted for the first time
+  useEffect(() => {
+    if (mounted && generatedColors.length === 0) {
+      const colors = generateColorScheme(baseColor, scheme)
+      setGeneratedColors(colors)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted])
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -192,11 +190,9 @@ function BarvyPageContent() {
   return (
     <div className="barvy-page">
       <div className="barvy-container">
-        <div className="page-header">
-          <h2>
-            Generátor barevných palet
-            <span>Najdi svou perfektní kombinaci</span>
-          </h2>
+        <div className="page-header-unified">
+          <h1 className="page-title-gradient">Generátor palet</h1>
+          <p className="page-subtitle">Najdi svou perfektní kombinaci barev</p>
         </div>
 
         <div className="barvy-content">
@@ -308,6 +304,11 @@ function BarvyPageContent() {
               <Eye size={16} />
               Psychologie barev
             </a>
+
+            <div className="keyboard-hints">
+              <span><kbd>Space</kbd> Generovat</span>
+              <span><kbd>R</kbd> Náhodná barva</span>
+            </div>
           </div>
 
           <div className="palette-section">
@@ -315,10 +316,20 @@ function BarvyPageContent() {
               <>
                 <div className="palette-header">
                   <h3>Tvoje paleta</h3>
-                  <button onClick={copyAllColors} className="btn-copy-all">
-                    {copiedColor === 'all' ? <Check size={16} /> : <Copy size={16} />}
-                    {copiedColor === 'all' ? 'Zkopírováno' : 'Kopírovat'}
-                  </button>
+                  <div className="palette-actions">
+                    <button onClick={copyAllColors} className="btn-copy-all">
+                      {copiedColor === 'all' ? <Check size={16} /> : <Copy size={16} />}
+                      {copiedColor === 'all' ? 'Zkopírováno' : 'Kopírovat'}
+                    </button>
+                    <button onClick={() => exportPalette('css')} className="btn-export" title="Export jako CSS">
+                      <Download size={16} />
+                      CSS
+                    </button>
+                    <button onClick={() => exportPalette('json')} className="btn-export" title="Export jako JSON">
+                      <Download size={16} />
+                      JSON
+                    </button>
+                  </div>
                 </div>
 
                 <div className="palette-grid">
@@ -417,7 +428,7 @@ function BarvyPageContent() {
                   <div className="history-section">
                     <h4><History size={16} /> Historie palet</h4>
                     <div className="history-grid">
-                      {history.map((item, idx) => (
+                      {history.map((item) => (
                         <div 
                           key={item.timestamp}
                           className="history-item"

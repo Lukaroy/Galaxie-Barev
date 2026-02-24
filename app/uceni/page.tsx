@@ -1,411 +1,625 @@
 "use client"
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Book, Palette, Type as TypeIcon, Image, Layout, Sparkles, ChevronRight, Play, ArrowRight } from 'lucide-react'
-import Link from 'next/link'
-import ProtectedRoute from '@/app/components/ProtectedRoute'
+import { useState, useEffect } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { 
+  Trash2, Plus, BookOpen, FileQuestion, ChevronRight, Play, 
+  Palette, Type as TypeIcon, Image, Layout, Sparkles
+} from "lucide-react"
+import { useAuth } from "@/hooks/useAuth"
+import { useRouter } from "next/navigation"
+import slugify from "slugify"
+import Loading from "@/app/loading"
+import { useToast } from "@/app/components/Toast"
+import ProtectedRoute from "@/app/components/ProtectedRoute"
 
-type Lesson = {
-  id: string
+type Segment = {
+  id: number
   title: string
-  description: string
-  duration: string
-  difficulty: 'Začátečník' | 'Pokročilý' | 'Expert'
-  icon: any
-  color: string
-  topics: string[]
+  slug: string
+  description?: string
+  content?: string
+  type: "LESSON" | "TEST"
+  difficulty: "BEGINNER" | "INTERMEDIATE" | "EXPERT"
+  duration?: string
+  icon?: string
+  color?: string
+  tags: string[]
+  questions?: TestQuestion[]
+  createdAt: string
 }
 
-const lessons: Lesson[] = [
-  {
-    id: 'barvy-zaklady',
-    title: 'Základy barevné teorie',
-    description: 'Nauč se pracovat s barvami jako profík. Barevný kruh, komplementární barvy a harmonie.',
-    duration: '15 min',
-    difficulty: 'Začátečník',
-    icon: Palette,
-    color: '#9872C7',
-    topics: ['Barevný kruh', 'Komplementární barvy', 'Harmonické kombinace']
-  },
-  {
-    id: 'typografie',
-    title: 'Typografie v designu',
-    description: 'Vyber správný font a vytvoř čitelný, krásný text. Párování fontů a hierarchie.',
-    duration: '20 min',
-    difficulty: 'Začátečník',
-    icon: TypeIcon,
-    color: '#684D89',
-    topics: ['Výběr fontu', 'Párování fontů', 'Typografická hierarchie']
-  },
-  {
-    id: 'moodboardy',
-    title: 'Tvorba moodboardů',
-    description: 'Získej inspiraci a uspořádej své nápady vizuálně. Od koncepce po finální board.',
-    duration: '25 min',
-    difficulty: 'Pokročilý',
-    icon: Layout,
-    color: '#9B7EBD',
-    topics: ['Hledání inspirace', 'Kompozice', 'Export a sdílení']
-  },
-  {
-    id: 'obrazky-optimalizace',
-    title: 'Práce s obrázky',
-    description: 'Optimalizuj obrázky pro web, ořezávej a uprav je jako boss.',
-    duration: '18 min',
-    difficulty: 'Pokročilý',
-    icon: Image,
-    color: '#CFBEE4',
-    topics: ['Formáty obrázků', 'Komprese', 'Responzivita']
-  },
-  {
-    id: 'pokrocile-techniky',
-    title: 'Pokročilé designové techniky',
-    description: 'Gradient mastery, stíny, efekty a další pokročilé triky pro wow efekt.',
-    duration: '30 min',
-    difficulty: 'Expert',
-    icon: Sparkles,
-    color: '#4F3173',
-    topics: ['Gradienty', 'Stíny a depth', 'Blend modes', 'Efekty']
-  },
-]
+type TestQuestion = {
+  question: string
+  options: string[]
+  correctIndex: number
+}
 
-function LearningPageContent() {
-  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('Vše')
+const iconMap: Record<string, React.ElementType> = {
+  Palette,
+  Type: TypeIcon,
+  Image,
+  Layout,
+  Sparkles,
+  BookOpen,
+  FileQuestion
+}
 
-  const filteredLessons = selectedDifficulty === 'Vše' 
-    ? lessons 
-    : lessons.filter(l => l.difficulty === selectedDifficulty)
+const difficultyLabels: Record<string, string> = {
+  BEGINNER: "Začátečník",
+  INTERMEDIATE: "Pokročilý",
+  EXPERT: "Expert"
+}
+
+const difficultyColors: Record<string, { bg: string; text: string }> = {
+  BEGINNER: { bg: "rgba(74, 222, 128, 0.2)", text: "#4ade80" },
+  INTERMEDIATE: { bg: "rgba(251, 191, 36, 0.2)", text: "#fbbf24" },
+  EXPERT: { bg: "rgba(239, 68, 68, 0.2)", text: "#ef4444" }
+}
+
+function UceniPageContent() {
+  const { user, loading: authLoading } = useAuth()
+  const { showToast } = useToast()
+  const router = useRouter()
+  
+  const [segments, setSegments] = useState<Segment[]>([])
+  const [loading, setLoading] = useState(true)
+  const [selectedType, setSelectedType] = useState<string>("Vše")
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("Vše")
+  
+  // Modal states
+  const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [segmentToDelete, setSegmentToDelete] = useState<number | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  
+  // Form states
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    content: "",
+    type: "LESSON" as "LESSON" | "TEST",
+    difficulty: "BEGINNER" as "BEGINNER" | "INTERMEDIATE" | "EXPERT",
+    duration: "",
+    icon: "BookOpen",
+    color: "#9872C7",
+    tags: ""
+  })
+  const [questions, setQuestions] = useState<TestQuestion[]>([])
+
+  const isAdmin = user?.role === "ADMIN"
+
+  useEffect(() => {
+    fetchSegments()
+  }, [])
+
+  const fetchSegments = async () => {
+    try {
+      const res = await fetch("/api/segments")
+      if (res.ok) {
+        const data = await res.json()
+        setSegments(data)
+      }
+    } catch (err) {
+      console.error("Chyba při načítání:", err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const filteredSegments = segments.filter(s => {
+    const segmentType = s.type || "LESSON"
+    const segmentDifficulty = s.difficulty || "BEGINNER"
+    const matchType = selectedType === "Vše" || 
+      (selectedType === "Lekce" && segmentType === "LESSON") ||
+      (selectedType === "Testy" && segmentType === "TEST")
+    const matchDiff = selectedDifficulty === "Vše" || 
+      difficultyLabels[segmentDifficulty] === selectedDifficulty
+    return matchType && matchDiff
+  })
+
+  const handleCreateSegment = async () => {
+    if (!formData.title.trim()) {
+      showToast("Zadej název!", "warning")
+      return
+    }
+    if (formData.type === "TEST" && questions.length === 0) {
+      showToast("Test musí mít alespoň jednu otázku!", "warning")
+      return
+    }
+
+    setIsSubmitting(true)
+    const slug = slugify(formData.title, { lower: true, strict: true })
+    const tags = formData.tags.split(",").map(t => t.trim()).filter(Boolean)
+
+    try {
+      const res = await fetch("/api/segments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          slug,
+          tags,
+          questions: formData.type === "TEST" ? questions : null
+        })
+      })
+      
+      if (res.ok) {
+        resetForm()
+        setShowCreateModal(false)
+        await fetchSegments()
+        showToast("Segment byl vytvořen!", "success")
+      } else {
+        const err = await res.json()
+        showToast(err.error || "Chyba při vytváření", "error")
+      }
+    } catch {
+      showToast("Chyba při spojení se serverem", "error")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  const handleDeleteSegment = async () => {
+    if (!segmentToDelete) return
+    try {
+      const res = await fetch(`/api/segments/${segmentToDelete}`, { method: "DELETE" })
+      if (res.ok) {
+        setSegments(prev => prev.filter(s => s.id !== segmentToDelete))
+        setShowDeleteModal(false)
+        setSegmentToDelete(null)
+        showToast("Segment smazán", "success")
+      }
+    } catch {
+      showToast("Chyba při mazání", "error")
+    }
+  }
+
+  const resetForm = () => {
+    setFormData({
+      title: "",
+      description: "",
+      content: "",
+      type: "LESSON",
+      difficulty: "BEGINNER",
+      duration: "",
+      icon: "BookOpen",
+      color: "#9872C7",
+      tags: ""
+    })
+    setQuestions([])
+  }
+
+  const addQuestion = () => {
+    setQuestions([...questions, { question: "", options: ["", "", "", ""], correctIndex: 0 }])
+  }
+
+  const updateQuestion = (index: number, field: string, value: string | number) => {
+    const updated = [...questions]
+    if (field === "question") {
+      updated[index].question = value as string
+    } else if (field === "correctIndex") {
+      updated[index].correctIndex = value as number
+    }
+    setQuestions(updated)
+  }
+
+  const updateOption = (qIndex: number, oIndex: number, value: string) => {
+    const updated = [...questions]
+    updated[qIndex].options[oIndex] = value
+    setQuestions(updated)
+  }
+
+  const removeQuestion = (index: number) => {
+    setQuestions(questions.filter((_, i) => i !== index))
+  }
+
+  const getIcon = (iconName?: string) => {
+    const IconComponent = iconMap[iconName || "BookOpen"] || BookOpen
+    return IconComponent
+  }
+
+  if (authLoading || loading) return <Loading />
 
   return (
-    <div style={{ 
-      minHeight: "100vh",
-      background: "#0a0015 url('/background.png') center/cover fixed",
-      padding: "2rem"
-    }}>
-      <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          style={{ marginBottom: "3rem", textAlign: "center" }}
-        >
-          <div style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "80px",
-            height: "80px",
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, #9872C7 0%, #7B5FA0 100%)",
-            marginBottom: "1.5rem"
-          }}>
-            <Book size={40} color="white" />
-          </div>
-          <h1 style={{ 
-            fontSize: "3rem", 
-            fontWeight: "700", 
-            marginBottom: "0.5rem",
-            color: "white",
-            letterSpacing: "-0.02em"
-          }}>
-            Škola designu
-          </h1>
-          <p style={{ 
-            fontSize: "1.1rem", 
-            color: "rgba(255, 255, 255, 0.6)",
-            fontWeight: "400",
-            maxWidth: "600px",
-            margin: "0 auto"
-          }}>
-            Zlepši svoje dovednosti krok za krokem. Praktické lekce, který ti pomohou tvořit lepší design.
-          </p>
-        </motion.div>
+    <div className="uceni-page">
+      <div className="uceni-container">
+        <div className="page-header-unified">
+          <h1 className="page-title-gradient">Škola designu</h1>
+          <p className="page-subtitle">Lekce a testy pro zdokonalení tvých dovedností</p>
+        </div>
 
-        {/* Difficulty Filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          style={{
-            display: "flex",
-            gap: "1rem",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            marginBottom: "3rem"
-          }}
-        >
-          {['Vše', 'Začátečník', 'Pokročilý', 'Expert'].map((diff) => (
-            <button
-              key={diff}
-              onClick={() => setSelectedDifficulty(diff)}
-              style={{
-                padding: "0.75rem 1.5rem",
-                borderRadius: "0.75rem",
-                border: "none",
-                background: selectedDifficulty === diff ? "#9872C7" : "rgba(255, 255, 255, 0.05)",
-                color: "white",
-                fontSize: "0.95rem",
-                fontWeight: selectedDifficulty === diff ? "600" : "400",
-                cursor: "pointer",
-                transition: "all 0.2s"
-              }}
-              onMouseEnter={(e) => {
-                if (selectedDifficulty !== diff) {
-                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)"
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (selectedDifficulty !== diff) {
-                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)"
-                }
-              }}
-            >
-              {diff}
-            </button>
-          ))}
-        </motion.div>
-
-        {/* Lessons Grid */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
-          gap: "1.5rem",
-          marginBottom: "3rem"
-        }}>
-          {filteredLessons.map((lesson, index) => (
-            <motion.div
-              key={lesson.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 * index }}
-              whileHover={{ y: -4 }}
-              style={{
-                background: "rgba(255, 255, 255, 0.03)",
-                border: "1px solid rgba(255, 255, 255, 0.06)",
-                borderRadius: "1rem",
-                padding: "1.5rem",
-                cursor: "pointer",
-                transition: "border-color 0.2s"
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.borderColor = "rgba(152, 114, 199, 0.3)"}
-              onMouseLeave={(e) => e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.06)"}
-            >
-              {/* Lesson Icon */}
-              <div style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: "64px",
-                height: "64px",
-                borderRadius: "1rem",
-                background: `linear-gradient(135deg, ${lesson.color}, ${lesson.color}dd)`,
-                marginBottom: "1.25rem"
-              }}>
-                <lesson.icon size={32} color="white" />
-              </div>
-
-              {/* Meta Info */}
-              <div style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.75rem",
-                marginBottom: "1rem"
-              }}>
-                <span style={{
-                  padding: "0.35rem 0.75rem",
-                  borderRadius: "0.5rem",
-                  fontSize: "0.75rem",
-                  fontWeight: "600",
-                  background: lesson.difficulty === 'Začátečník' ? "rgba(74, 222, 128, 0.2)" :
-                             lesson.difficulty === 'Pokročilý' ? "rgba(251, 191, 36, 0.2)" :
-                             "rgba(239, 68, 68, 0.2)",
-                  color: lesson.difficulty === 'Začátečník' ? "#4ade80" :
-                         lesson.difficulty === 'Pokročilý' ? "#fbbf24" :
-                         "#ef4444"
-                }}>
-                  {lesson.difficulty}
-                </span>
-                <span style={{
-                  fontSize: "0.875rem",
-                  color: "rgba(255, 255, 255, 0.5)"
-                }}>
-                  {lesson.duration}
-                </span>
-              </div>
-
-              {/* Title & Description */}
-              <h3 style={{
-                fontSize: "1.25rem",
-                fontWeight: "600",
-                color: "white",
-                marginBottom: "0.75rem",
-                letterSpacing: "-0.01em"
-              }}>
-                {lesson.title}
-              </h3>
-              <p style={{
-                fontSize: "0.95rem",
-                color: "rgba(255, 255, 255, 0.5)",
-                lineHeight: "1.6",
-                marginBottom: "1.25rem"
-              }}>
-                {lesson.description}
-              </p>
-
-              {/* Topics */}
-              <div style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "0.5rem",
-                marginBottom: "1.5rem"
-              }}>
-                {lesson.topics.map((topic, i) => (
-                  <span
-                    key={i}
-                    style={{
-                      padding: "0.4rem 0.75rem",
-                      borderRadius: "0.5rem",
-                      background: "rgba(152, 114, 199, 0.15)",
-                      color: "#9872C7",
-                      fontSize: "0.8rem",
-                      fontWeight: "500"
-                    }}
-                  >
-                    {topic}
-                  </span>
-                ))}
-              </div>
-
-              {/* Start Button */}
-              <button style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "0.5rem",
-                padding: "0.9rem",
-                borderRadius: "0.75rem",
-                border: "none",
-                background: "#9872C7",
-                color: "white",
-                fontSize: "0.95rem",
-                fontWeight: "600",
-                cursor: "pointer",
-                transition: "all 0.2s"
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = "#7B5FA0"
-                e.currentTarget.style.transform = "scale(1.02)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = "#9872C7"
-                e.currentTarget.style.transform = "scale(1)"
-              }}
+        {/* Filters */}
+        <div className="uceni-filters">
+          <div className="filter-group">
+            <span className="filter-label">Typ:</span>
+            {["Vše", "Lekce", "Testy"].map(t => (
+              <button
+                key={t}
+                onClick={() => setSelectedType(t)}
+                className={`filter-btn ${selectedType === t ? "active" : ""}`}
               >
-                <Play size={16} />
-                Začít lekci
-                <ChevronRight size={16} />
+                {t === "Lekce" && <BookOpen size={16} />}
+                {t === "Testy" && <FileQuestion size={16} />}
+                {t}
               </button>
-            </motion.div>
-          ))}
+            ))}
+          </div>
+          <div className="filter-group">
+            <span className="filter-label">Obtížnost:</span>
+            {["Vše", "Začátečník", "Pokročilý", "Expert"].map(d => (
+              <button
+                key={d}
+                onClick={() => setSelectedDifficulty(d)}
+                className={`filter-btn ${selectedDifficulty === d ? "active" : ""}`}
+              >
+                {d}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Admin Add Button */}
+        {isAdmin && (
+          <motion.button
+            onClick={() => setShowCreateModal(true)}
+            className="uceni-add-btn"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Plus size={20} /> Přidat segment
+          </motion.button>
+        )}
+
+        {/* Segments Grid */}
+        <div className="uceni-grid">
+          <AnimatePresence>
+            {filteredSegments.map((segment, index) => {
+              const IconComponent = getIcon(segment.icon)
+              const segmentDifficulty = segment.difficulty || "BEGINNER"
+              const segmentType = segment.type || "LESSON"
+              const diffColors = difficultyColors[segmentDifficulty] || difficultyColors.BEGINNER
+              
+              return (
+                <motion.div
+                  key={segment.id}
+                  className="uceni-card"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  whileHover={{ y: -4, borderColor: "rgba(152, 114, 199, 0.4)" }}
+                  onClick={() => router.push(`/uceni/${segment.slug}`)}
+                  style={{ cursor: "pointer" }}
+                >
+                  {isAdmin && (
+                    <button
+                      className="uceni-card-delete"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setSegmentToDelete(segment.id)
+                        setShowDeleteModal(true)
+                      }}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  )}
+
+                  <div 
+                    className="uceni-card-icon"
+                    style={{ background: segment.color || "#9872C7" }}
+                  >
+                    <IconComponent size={28} color="white" />
+                  </div>
+
+                  <div className="uceni-card-meta">
+                    <span 
+                      className="uceni-card-type"
+                      style={{ 
+                        background: segmentType === "TEST" ? "rgba(239, 68, 68, 0.2)" : "rgba(59, 130, 246, 0.2)",
+                        color: segmentType === "TEST" ? "#ef4444" : "#3b82f6"
+                      }}
+                    >
+                      {segmentType === "TEST" ? <FileQuestion size={12} /> : <BookOpen size={12} />}
+                      {segmentType === "TEST" ? "Test" : "Lekce"}
+                    </span>
+                    <span 
+                      className="uceni-card-difficulty"
+                      style={{ background: diffColors.bg, color: diffColors.text }}
+                    >
+                      {difficultyLabels[segmentDifficulty]}
+                    </span>
+                    {segment.duration && (
+                      <span className="uceni-card-duration">{segment.duration}</span>
+                    )}
+                  </div>
+
+                  <h3 className="uceni-card-title">{segment.title}</h3>
+                  {segment.description && (
+                    <p className="uceni-card-desc">{segment.description}</p>
+                  )}
+
+                  {(segment.tags?.length ?? 0) > 0 && (
+                    <div className="uceni-card-tags">
+                      {segment.tags.slice(0, 3).map((tag, i) => (
+                        <span key={i} className="uceni-tag">{tag}</span>
+                      ))}
+                    </div>
+                  )}
+
+                  <button className="uceni-card-btn">
+                    {segmentType === "TEST" ? (
+                      <>
+                        <Play size={16} /> Spustit test
+                      </>
+                    ) : (
+                      <>
+                        <ChevronRight size={16} /> Otevřít lekci
+                      </>
+                    )}
+                  </button>
+                </motion.div>
+              )
+            })}
+          </AnimatePresence>
         </div>
 
         {/* Empty State */}
-        {filteredLessons.length === 0 && (
+        {filteredSegments.length === 0 && !loading && (
+          <div className="uceni-empty">
+            <BookOpen size={64} className="uceni-empty-icon" />
+            <h3>Žádné segmenty</h3>
+            <p>Pro zvolenou kategorii nemáme žádný obsah.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Create Modal */}
+      <AnimatePresence>
+        {showCreateModal && (
           <motion.div
+            className="modal-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            style={{
-              textAlign: "center",
-              padding: "4rem 2rem",
-              background: "rgba(255, 255, 255, 0.02)",
-              borderRadius: "1rem",
-              border: "1px solid rgba(255, 255, 255, 0.05)"
-            }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowCreateModal(false)}
           >
-            <p style={{
-              color: "rgba(255, 255, 255, 0.5)",
-              fontSize: "1.1rem"
-            }}>
-              Žádné lekce pro tuhle obtížnost. Zkus jinou kategorii!
-            </p>
+            <motion.div
+              className="modal-content modal-large"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={e => e.stopPropagation()}
+            >
+              <h2 className="modal-title">
+                <Plus size={24} /> Nový segment
+              </h2>
+
+              <div className="modal-form">
+                <div className="modal-row">
+                  <div className="modal-field">
+                    <label>Název</label>
+                    <input
+                      type="text"
+                      value={formData.title}
+                      onChange={e => setFormData({ ...formData, title: e.target.value })}
+                      placeholder="Např. Základy barev"
+                      className="modal-input"
+                    />
+                  </div>
+                  <div className="modal-field">
+                    <label>Typ</label>
+                    <select
+                      value={formData.type}
+                      onChange={e => setFormData({ ...formData, type: e.target.value as "LESSON" | "TEST" })}
+                      className="modal-select"
+                    >
+                      <option value="LESSON">Lekce</option>
+                      <option value="TEST">Test</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="modal-row">
+                  <div className="modal-field">
+                    <label>Obtížnost</label>
+                    <select
+                      value={formData.difficulty}
+                      onChange={e => setFormData({ ...formData, difficulty: e.target.value as "BEGINNER" | "INTERMEDIATE" | "EXPERT" })}
+                      className="modal-select"
+                    >
+                      <option value="BEGINNER">Začátečník</option>
+                      <option value="INTERMEDIATE">Pokročilý</option>
+                      <option value="EXPERT">Expert</option>
+                    </select>
+                  </div>
+                  <div className="modal-field">
+                    <label>Délka</label>
+                    <input
+                      type="text"
+                      value={formData.duration}
+                      onChange={e => setFormData({ ...formData, duration: e.target.value })}
+                      placeholder="Např. 15 min"
+                      className="modal-input"
+                    />
+                  </div>
+                </div>
+
+                <div className="modal-row">
+                  <div className="modal-field">
+                    <label>Ikona</label>
+                    <select
+                      value={formData.icon}
+                      onChange={e => setFormData({ ...formData, icon: e.target.value })}
+                      className="modal-select"
+                    >
+                      <option value="BookOpen">Kniha</option>
+                      <option value="Palette">Paleta</option>
+                      <option value="Type">Typografie</option>
+                      <option value="Image">Obrázek</option>
+                      <option value="Layout">Layout</option>
+                      <option value="Sparkles">Efekty</option>
+                      <option value="FileQuestion">Otázka</option>
+                    </select>
+                  </div>
+                  <div className="modal-field">
+                    <label>Barva</label>
+                    <input
+                      type="color"
+                      value={formData.color}
+                      onChange={e => setFormData({ ...formData, color: e.target.value })}
+                      className="modal-color"
+                    />
+                  </div>
+                </div>
+
+                <div className="modal-field">
+                  <label>Krátký popis</label>
+                  <textarea
+                    value={formData.description}
+                    onChange={e => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="Stručný popis segmentu..."
+                    className="modal-textarea"
+                    rows={2}
+                  />
+                </div>
+
+                <div className="modal-field">
+                  <label>Tagy (oddělené čárkou)</label>
+                  <input
+                    type="text"
+                    value={formData.tags}
+                    onChange={e => setFormData({ ...formData, tags: e.target.value })}
+                    placeholder="design, barvy, teorie"
+                    className="modal-input"
+                  />
+                </div>
+
+                {formData.type === "LESSON" && (
+                  <div className="modal-field">
+                    <label>Obsah lekce</label>
+                    <textarea
+                      value={formData.content}
+                      onChange={e => setFormData({ ...formData, content: e.target.value })}
+                      placeholder="Obsah lekce (podporuje markdown)..."
+                      className="modal-textarea"
+                      rows={6}
+                    />
+                  </div>
+                )}
+
+                {formData.type === "TEST" && (
+                  <div className="modal-field">
+                    <label>Otázky testu</label>
+                    <div className="questions-list">
+                      {questions.map((q, qIndex) => (
+                        <div key={qIndex} className="question-item">
+                          <div className="question-header">
+                            <span>Otázka {qIndex + 1}</span>
+                            <button 
+                              type="button"
+                              onClick={() => removeQuestion(qIndex)}
+                              className="question-remove"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            value={q.question}
+                            onChange={e => updateQuestion(qIndex, "question", e.target.value)}
+                            placeholder="Zadej otázku..."
+                            className="modal-input"
+                          />
+                          <div className="options-grid">
+                            {q.options.map((opt, oIndex) => (
+                              <div key={oIndex} className="option-row">
+                                <input
+                                  type="radio"
+                                  name={`correct-${qIndex}`}
+                                  checked={q.correctIndex === oIndex}
+                                  onChange={() => updateQuestion(qIndex, "correctIndex", oIndex)}
+                                />
+                                <input
+                                  type="text"
+                                  value={opt}
+                                  onChange={e => updateOption(qIndex, oIndex, e.target.value)}
+                                  placeholder={`Odpověď ${oIndex + 1}`}
+                                  className="modal-input option-input"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                      <button type="button" onClick={addQuestion} className="add-question-btn">
+                        <Plus size={16} /> Přidat otázku
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="modal-buttons">
+                <button
+                  onClick={() => { setShowCreateModal(false); resetForm() }}
+                  className="modal-btn-cancel"
+                >
+                  Zrušit
+                </button>
+                <button
+                  onClick={handleCreateSegment}
+                  className="modal-btn-confirm"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Vytvářím..." : "Vytvořit"}
+                </button>
+              </div>
+            </motion.div>
           </motion.div>
         )}
+      </AnimatePresence>
 
-        {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          style={{
-            textAlign: "center",
-            padding: "3rem 2rem",
-            background: "rgba(152, 114, 199, 0.1)",
-            border: "1px solid rgba(152, 114, 199, 0.2)",
-            borderRadius: "1rem",
-            marginTop: "2rem"
-          }}
-        >
-          <h2 style={{
-            fontSize: "2rem",
-            fontWeight: "600",
-            color: "white",
-            marginBottom: "1rem",
-            letterSpacing: "-0.01em"
-          }}>
-            Připravený začít?
-          </h2>
-          <p style={{
-            fontSize: "1.1rem",
-            color: "rgba(255, 255, 255, 0.6)",
-            marginBottom: "2rem",
-            maxWidth: "600px",
-            margin: "0 auto 2rem"
-          }}>
-            Všechny lekce jsou interaktivní a postavené na praktických příkladech.
-          </p>
-          <Link href="/barvy" style={{ textDecoration: "none" }}>
-            <button style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "0.75rem",
-              padding: "1rem 2.5rem",
-              borderRadius: "0.75rem",
-              border: "none",
-              background: "#9872C7",
-              color: "white",
-              fontSize: "1rem",
-              fontWeight: "600",
-              cursor: "pointer",
-              transition: "all 0.2s",
-              boxShadow: "0 4px 20px rgba(152, 114, 199, 0.4)"
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#7B5FA0"
-              e.currentTarget.style.transform = "translateY(-2px)"
-              e.currentTarget.style.boxShadow = "0 6px 25px rgba(152, 114, 199, 0.5)"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#9872C7"
-              e.currentTarget.style.transform = "translateY(0)"
-              e.currentTarget.style.boxShadow = "0 4px 20px rgba(152, 114, 199, 0.4)"
-            }}
+      {/* Delete Modal */}
+      <AnimatePresence>
+        {showDeleteModal && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowDeleteModal(false)}
+          >
+            <motion.div
+              className="modal-content modal-content-small"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={e => e.stopPropagation()}
             >
-              Zkusit barvy
-              <ArrowRight size={20} />
-            </button>
-          </Link>
-        </motion.div>
-      </div>
+              <Trash2 size={48} color="#ff4444" className="modal-icon" />
+              <h2 className="modal-title">Smazat segment?</h2>
+              <p className="modal-text">Tato akce je nevratná.</p>
+              <div className="modal-buttons modal-buttons-center">
+                <button onClick={() => setShowDeleteModal(false)} className="modal-btn-cancel">
+                  Zrušit
+                </button>
+                <button onClick={handleDeleteSegment} className="modal-btn-delete">
+                  Smazat
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
 
-export default function LearningPage() {
+export default function UceniPage() {
   return (
     <ProtectedRoute>
-      <LearningPageContent />
+      <UceniPageContent />
     </ProtectedRoute>
   )
 }

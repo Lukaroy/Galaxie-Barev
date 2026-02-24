@@ -144,7 +144,7 @@ export async function PATCH(
     }
 
     const body = await request.json()
-    const { elementsData } = body
+    const { name } = body
 
     const moodboard = await prisma.moodboard.findFirst({
       where: {
@@ -159,7 +159,7 @@ export async function PATCH(
 
     const updated = await prisma.moodboard.update({
       where: { id: parseInt(id) },
-      data: { name: moodboard.name } // Temporary: just update to keep data
+      data: { name: name || moodboard.name }
     })
 
     return NextResponse.json({ success: true, moodboard: updated })

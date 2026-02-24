@@ -1,16 +1,25 @@
 "use client"
 
-import { useState } from "react"
-import { sendPasswordResetEmail } from "firebase/auth"
-import { auth } from "@/lib/firebase"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import Alert from "../components/alert"
-import Loading from "../components/loading"
-import { ArrowLeft } from "lucide-react"
+import { motion } from "framer-motion"
+import { useAuth } from "@/hooks/useAuth"
+import Loading from "@/app/loading"
+import ProtectedRoute from "@/app/components/ProtectedRoute"
+import { Palette, Image, Layout, BookOpen, Heart, Settings, ArrowRight, Sparkles } from "lucide-react"
+import Link from "next/link"
+
+function NastenkaContent() {
+  return (
+    <div className="nastenka-page">
+    </div>
+  )
+}
 
 export default function NastenkaPage() {
   return (
-    <div>
-    </div>
+    <ProtectedRoute>
+      <NastenkaContent />
+    </ProtectedRoute>
   )
 }

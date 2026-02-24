@@ -1,6 +1,7 @@
 import './globals.css'
 import {Montserrat, Inder } from 'next/font/google'
 import Navbar from './components/navbar'
+import { ToastProvider } from './components/Toast'
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -75,8 +76,6 @@ export const metadata = {
     },
   },
   verification: {
-    // google: 'váš-google-verification-code',
-    // yandex: 'váš-yandex-verification-code',
   },
 }
 
@@ -116,8 +115,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        <Navbar />
-        <main>{children}</main>
+        <ToastProvider>
+          <Navbar />
+          <main>{children}</main>
+        </ToastProvider>
       </body>
     </html>
   )

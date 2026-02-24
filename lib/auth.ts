@@ -9,7 +9,6 @@ import {
 } from "firebase/auth"
 import { isValidPassword } from "./validator"
 
-// Registrace s jménem a příjmením
 export const registerUser = async (
   firstName: string,
   lastName: string,
@@ -23,7 +22,6 @@ export const registerUser = async (
 
   const userCredential = await createUserWithEmailAndPassword(auth, email, password)
 
-  // Uložíme uživatele do Prisma databáze
   await syncUserToPrisma(userCredential.user.uid, {
     email,
     firstName,
@@ -33,16 +31,12 @@ export const registerUser = async (
   return userCredential.user
 }
 
-// Login
 export const loginUser = async (email: string, password: string) =>
   (await signInWithEmailAndPassword(auth, email, password)).user
 
-// Google login
 export const loginWithGoogle = async () => {
   const provider = new GoogleAuthProvider()
   const result = await signInWithPopup(auth, provider)
-
-  // Zjistíme jméno a příjmení z Google OAuth
   const firstName = result.user.displayName?.split(" ")[0] || ""
   const lastName = result.user.displayName?.split(" ").slice(1).join(" ") || ""
 
@@ -55,7 +49,6 @@ export const loginWithGoogle = async () => {
   return result.user
 }
 
-// Apple login
 export const loginWithApple = async () => {
   const provider = new OAuthProvider("apple.com")
   const result = await signInWithPopup(auth, provider)
@@ -72,10 +65,8 @@ export const loginWithApple = async () => {
   return result.user
 }
 
-// Logout
 export const logoutUser = async () => await signOut(auth)
 
-// --- pomocná funkce pro sync do Prismy ---
 const syncUserToPrisma = async (
   uid: string,
   data: {

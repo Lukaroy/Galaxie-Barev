@@ -42,8 +42,8 @@ export async function POST(
     const element = await prisma.element.create({
       data: {
         name: `${type}-${Date.now()}`,
-        coordsX: Math.round(x * 100), // Ukládáme jako procenta * 100
-        coordsY: Math.round(y * 100),
+        coordsX: Math.round(x),
+        coordsY: Math.round(y),
         width: width || 100,
         height: height || 100,
         opacity: 100,
@@ -164,7 +164,7 @@ export async function PUT(
     const userId = request.nextUrl.searchParams.get('userId') || 'temp-user-id'
 
     const body = await request.json()
-    const { elementId, x, y } = body
+    const { elementId, x, y, width, height, opacity, rotation, borderRadius, strokeWidth, strokeColor, shadowX, shadowY, shadowBlur, shadowColor, blendMode, fontSize, fontWeight, textColor, textAlign, fontFamily, content, layer } = body
 
     // Ověříme, že element patří uživateli
     const element = await prisma.element.findFirst({
@@ -181,12 +181,78 @@ export async function PUT(
       return NextResponse.json({ error: 'Element not found' }, { status: 404 })
     }
 
-    const updated = await prisma.element.update({
+    const updateData: Record<string, number> = {}
+    if (x !== undefined) updateData.coordsX = Math.round(x)
+    if (y !== undefined) updateData.coordsY = Math.round(y)
+    if (width !== undefined) updateData.width = Math.round(width)
+    if (height !== undefined) updateData.height = Math.round(height)
+    if (opacity !== undefined) updateData.opacity = Math.round(opacity)
+    if (rotation !== undefined) updateData.rotation = Math.round(rotation)
+    if (layer !== undefined) updateData.layer = layer
+
+    // Update element
+    await prisma.element.update({
       where: { id: elementId },
-      data: {
-        coordsX: Math.round(x * 100),
-        coordsY: Math.round(y * 100)
-      },
+      data: updateData
+    })
+
+    // Update style attributes (stored as ElementValue)
+    const styleAttributes = [
+      { name: 'borderRadius', value: borderRadius },
+      { name: 'strokeWidth', value: strokeWidth },
+      { name: 'strokeColor', value: strokeColor },
+      { name: 'shadowX', value: shadowX },
+      { name: 'shadowY', value: shadowY },
+      { name: 'shadowBlur', value: shadowBlur },
+      { name: 'shadowColor', value: shadowColor },
+      { name: 'blendMode', value: blendMode },
+      { name: 'fontSize', value: fontSize },
+      { name: 'fontWeight', value: fontWeight },
+      { name: 'textColor', value: textColor },
+      { name: 'textAlign', value: textAlign },
+      { name: 'fontFamily', value: fontFamily },
+      { name: 'content', value: content }
+    ]
+
+    for (const attr of styleAttributes) {
+      if (attr.value === undefined) continue
+      
+      // Find or create attribute
+      let attribute = await prisma.attribute.findFirst({
+        where: { name: attr.name }
+      })
+      
+      if (!attribute) {
+        attribute = await prisma.attribute.create({
+          data: {
+            name: attr.name,
+            description: `Style attribute: ${attr.name}`,
+            isActive: true
+          }
+        })
+      }
+      
+      // Upsert ElementValue
+      await prisma.elementValue.upsert({
+        where: {
+          elementId_attributeId: {
+            elementId,
+            attributeId: attribute.id
+          }
+        },
+        create: {
+          elementId,
+          attributeId: attribute.id,
+          value: String(attr.value)
+        },
+        update: {
+          value: String(attr.value)
+        }
+      })
+    }
+
+    const updated = await prisma.element.findUnique({
+      where: { id: elementId },
       include: {
         elementType: true,
         values: {

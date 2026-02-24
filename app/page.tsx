@@ -4,22 +4,14 @@ import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
+import Loading from "@/app/loading"
 
 export default function HomePage() {
   const { user, loading } = useAuth()
   const router = useRouter()
 
   if (loading) {
-    return (
-      <div className="loading-container">
-        <motion.div 
-          className="loader"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        />
-        <p>Načítám...</p>
-      </div>
-    )
+    return <Loading />
   }
 
   return (
@@ -72,7 +64,7 @@ export default function HomePage() {
           transition={{ delay: 0.6 }}
         >
           <p>Tvořit dobrý design není snadné. A to je v pořádku.</p>
-          <p>Máme nástroje, které ti pomoužou dostat tvé nápady na další úroveň.</p>
+          <p>Máme nástroje, které ti pomůžou dostat tvé nápady na další úroveň.</p>
         </motion.div>
 
         <motion.div 

@@ -5,7 +5,7 @@ export interface ApiResponse<T = any> {
 }
 
 // User types
-export type UserRole = 'USER' | 'ADMIN' | 'MODERATOR'
+export type UserRole = 'USER' | 'ADMIN'
 
 export interface User {
   id: string

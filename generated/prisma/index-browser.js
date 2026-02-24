@@ -151,7 +151,14 @@ exports.Prisma.SegmentScalarFieldEnum = {
   title: 'title',
   slug: 'slug',
   description: 'description',
+  content: 'content',
+  type: 'type',
+  difficulty: 'difficulty',
+  duration: 'duration',
+  icon: 'icon',
+  color: 'color',
   tags: 'tags',
+  questions: 'questions',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -222,6 +229,11 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -231,9 +243,26 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+};
 exports.UserRole = exports.$Enums.UserRole = {
   USER: 'USER',
   ADMIN: 'ADMIN'
+};
+
+exports.SegmentType = exports.$Enums.SegmentType = {
+  LESSON: 'LESSON',
+  TEST: 'TEST'
+};
+
+exports.Difficulty = exports.$Enums.Difficulty = {
+  BEGINNER: 'BEGINNER',
+  INTERMEDIATE: 'INTERMEDIATE',
+  EXPERT: 'EXPERT'
 };
 
 exports.Prisma.ModelName = {

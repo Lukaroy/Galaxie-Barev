@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { updateProfile } from "firebase/auth"
 import { auth } from "@/lib/firebase"
-import Loading from "../components/loading"
+import Loading from "@/app/loading"
 import { isValidName } from "@/lib/validator"
 import { handleApiError, handleAuthError } from "@/lib/errorHandling"
 
@@ -297,8 +297,9 @@ export default function ProfilePage() {
     <div className="profil-page">
       <div className="profil-container">
 
-        <div className="page-header">
-          <h2>Tvůj profil <span>Upravuj své údaje</span></h2>
+        <div className="page-header-unified">
+          <h1 className="page-title-gradient">Tvůj profil</h1>
+          <p className="page-subtitle">Upravuj své údaje</p>
         </div>
 
         <div className="profile-header">

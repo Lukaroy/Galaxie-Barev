@@ -1,1420 +1,656 @@
-"use client"
+﻿'use client';
 
-import { useState, useEffect, useRef } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { ArrowLeft, Square, Image as ImageIcon, Type, Circle, Trash2, Copy, Download, Layers, MousePointer2, ZoomIn, ZoomOut, Move, Minus } from 'lucide-react'
-import { auth } from '@/lib/firebase'
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 
-interface CanvasElement {
-  id: number
-  coordsX: number
-  coordsY: number
-  width: number
-  height: number
-  rotation: number
-  opacity: number
-  layer: number
-  elementType: {
-    name: string
-  }
-  values: Array<{
-    attribute: {
-      name: string
-    }
-    value: string
-  }>
-  isLocked?: boolean
-  isHidden?: boolean
-}
+// Dynamic import fabric to avoid SSR issues
+let fabric: typeof import('fabric') | null = null;
 
-interface Moodboard {
-  id: number
-  name: string
-  elements: CanvasElement[]
-}
+const PRESETS: Record<string, { w: number; h: number }> = {
+  'A4 na vysku': { w: 595, h: 842 },
+  'A4 na sirku': { w: 842, h: 595 },
+  'Instagram': { w: 1080, h: 1080 },
+  'Story': { w: 1080, h: 1920 },
+  'YouTube': { w: 1280, h: 720 },
+  'Plakat': { w: 800, h: 1200 },
+};
 
-export default function MoodboardEditorPage() {
-  const params = useParams()
-  const router = useRouter()
-  const moodboardId = params.id as string
-  
-  const [moodboard, setMoodboard] = useState<Moodboard | null>(null)
-  const [activeTool, setActiveTool] = useState<'select' | 'rect' | 'circle' | 'text' | 'image'>('select')
-  const [selectedElements, setSelectedElements] = useState<number[]>([])
-  const [draggedElement, setDraggedElement] = useState<number | null>(null)
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
-  const [resizingElement, setResizingElement] = useState<{ id: number, handle: string } | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [zoom, setZoom] = useState(100)
-  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 })
-  const [isPanning, setIsPanning] = useState(false)
-  const [canvasBg, setCanvasBg] = useState('#1E1E1E')
-  const [showLayersPanel, setShowLayersPanel] = useState(true)
-  const [showPropertiesPanel, setShowPropertiesPanel] = useState(true)
-  const [showColorPicker, setShowColorPicker] = useState(false)
-  const canvasRef = useRef<HTMLDivElement>(null)
-  const [history, setHistory] = useState<Moodboard[]>([])
-  const [historyIndex, setHistoryIndex] = useState(-1)
-  const [selectedItem, setSelectedItem] = useState<number | null>(null)
+export default function EditorPage() {
+  const router = useRouter();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const fabricCanvas = useRef<InstanceType<typeof import('fabric').Canvas> | null>(null);
+  const initialized = useRef(false);
 
-  // Modal states
-  const [showTextModal, setShowTextModal] = useState(false)
-  const [showImageModal, setShowImageModal] = useState(false)
-  const [showTextInput, setShowTextInput] = useState(false)
-  const [showImageInput, setShowImageInput] = useState(false)
-  const [pendingText, setPendingText] = useState('')
-  const [pendingImageUrl, setPendingImageUrl] = useState('')
-  const [pendingColor, setPendingColor] = useState('#9872C7')
-  const [pendingFontSize, setPendingFontSize] = useState(24)
-  const [pendingPosition, setPendingPosition] = useState<{ x: number, y: number } | null>(null)
-  const [newColor, setNewColor] = useState('#9872C7')
-  const [showExportModal, setShowExportModal] = useState(false)
+  const [ready, setReady] = useState(false);
+  const [uid, setUid] = useState<string | null>(null);
+  const [fabricLoaded, setFabricLoaded] = useState(false);
+  const [canvasW, setCanvasW] = useState(800);
+  const [canvasH, setCanvasH] = useState(600);
+  const [bgColor, setBgColor] = useState('#ffffff');
+  const [selected, setSelected] = useState<any>(null);
+  const [zoom, setZoom] = useState(80);
 
+  // Load fabric.js dynamically
   useEffect(() => {
-    fetchMoodboard()
+    import('fabric').then(mod => {
+      fabric = mod;
+      setFabricLoaded(true);
+    });
+  }, []);
+
+  // Auth
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, u => {
+      setUid(u?.uid || null);
+      setReady(true);
+    });
+    return () => unsub();
+  }, []);
+
+  // Initialize canvas after fabric is loaded and user is authenticated
+  useEffect(() => {
+    if (!fabricLoaded || !fabric || !canvasRef.current || !uid || initialized.current) return;
     
-    // Keyboard shortcuts
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Delete
-      if ((e.key === 'Delete' || e.key === 'Backspace') && selectedElements.length > 0) {
-        e.preventDefault()
-        deleteSelectedElements()
-      }
-      
-      // Escape - deselect
-      if (e.key === 'Escape') {
-        setSelectedElements([])
-        setActiveTool('select')
-      }
-      
-      // Ctrl/Cmd + Z - Undo
-      if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
-        e.preventDefault()
-        undo()
-      }
-      
-      // Ctrl/Cmd + Shift + Z - Redo
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z') {
-        e.preventDefault()
-        redo()
-      }
-      
-      // Ctrl/Cmd + C - Copy
-      if ((e.ctrlKey || e.metaKey) && e.key === 'c' && selectedElements.length > 0) {
-        e.preventDefault()
-        copySelectedElements()
-      }
-      
-      // Ctrl/Cmd + D - Duplicate
-      if ((e.ctrlKey || e.metaKey) && e.key === 'd' && selectedElements.length > 0) {
-        e.preventDefault()
-        duplicateSelectedElements()
-      }
-      
-      // Tool shortcuts
-      if (e.key === 'v') setActiveTool('select')
-      if (e.key === 'r') setActiveTool('rect')
-      if (e.key === 't') { setActiveTool('text'); setShowTextModal(true) }
-      if (e.key === 'i') { setActiveTool('image'); setShowImageModal(true) }
-      
-      // Zoom
-      if ((e.ctrlKey || e.metaKey) && e.key === '0') {
-        e.preventDefault()
-        setZoom(100)
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === '+') {
-        e.preventDefault()
-        setZoom(prev => Math.min(prev + 10, 200))
-      }
-      if ((e.ctrlKey || e.metaKey) && e.key === '-') {
-        e.preventDefault()
-        setZoom(prev => Math.max(prev - 10, 25))
-      }
-    }
+    console.log('Initializing fabric canvas...');
     
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [moodboardId, selectedElements])
+    const canvas = new fabric.Canvas(canvasRef.current, {
+      width: canvasW,
+      height: canvasH,
+      backgroundColor: bgColor,
+      selection: true,
+      preserveObjectStacking: true,
+    });
 
-  const fetchMoodboard = async () => {
-    try {
-      const userId = auth.currentUser?.uid || 'temp-user-id'
-      const response = await fetch(`/api/moodboards/${moodboardId}?userId=${userId}`)
+    fabricCanvas.current = canvas;
+    initialized.current = true;
 
-      if (response.ok) {
-        const data = await response.json()
-        setMoodboard(data)
-      } else {
-        router.push('/moodboard')
-      }
-    } catch (error) {
-      console.error('Error fetching moodboard:', error)
-      router.push('/moodboard')
-    }
-  }
+    canvas.on('selection:created', (e: any) => {
+      console.log('Selection created', e.selected?.[0]);
+      setSelected(e.selected?.[0] || null);
+    });
+    canvas.on('selection:updated', (e: any) => {
+      setSelected(e.selected?.[0] || null);
+    });
+    canvas.on('selection:cleared', () => {
+      setSelected(null);
+    });
 
-  const getContent = (item: CanvasElement) => {
-    const contentValue = item.values.find(v => v.attribute.name === 'content')
-    return contentValue?.value || ''
-  }
-
-  const deleteSelectedElements = async () => {
-    if (selectedElements.length === 0 || !moodboard) return
-
-    try {
-      const userId = auth.currentUser?.uid
-      if (!userId) return
-
-      for (const elementId of selectedElements) {
-        await fetch(`/api/moodboards/${moodboardId}/elements/${elementId}?userId=${userId}`, {
-          method: 'DELETE'
-        })
-      }
-
-      await fetchMoodboard()
-      setSelectedElements([])
-    } catch (error) {
-      console.error('Error deleting elements:', error)
-    }
-  }
-
-  const copySelectedElements = () => {
-    if (selectedElements.length === 0 || !moodboard) return
-    // Copy logic here
-  }
-
-  const duplicateSelectedElements = async () => {
-    if (selectedElements.length === 0 || !moodboard) return
-    // Duplicate logic here
-  }
-
-  const undo = () => {
-    if (historyIndex > 0) {
-      setHistoryIndex(historyIndex - 1)
-      setMoodboard(history[historyIndex - 1])
-    }
-  }
-
-  const redo = () => {
-    if (historyIndex < history.length - 1) {
-      setHistoryIndex(historyIndex + 1)
-      setMoodboard(history[historyIndex + 1])
-    }
-  }
-
-  const addColor = async () => {
-    if (!moodboard || !newColor || isLoading) return
-
-    setIsLoading(true)
-    try {
-      const userId = auth.currentUser?.uid
-      if (!userId) return
-      
-      const response = await fetch(`/api/moodboards/${moodboardId}/elements?userId=${userId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          type: 'color',
-          content: newColor,
-          x: Math.random() * 60 + 20,
-          y: Math.random() * 60 + 10,
-          width: 120,
-          height: 120
-        })
-      })
-
-      if (response.ok) {
-        await fetchMoodboard()
-        setShowColorPicker(false)
-        setActiveTool('select')
-      }
-    } catch (error) {
-      console.error('Error adding color:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const addColorAtPosition = async (x: number, y: number) => {
-    if (!moodboard || isLoading) return
-
-    setIsLoading(true)
-    try {
-      const userId = auth.currentUser?.uid
-      if (!userId) return
-      
-      const response = await fetch(`/api/moodboards/${moodboardId}/elements?userId=${userId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          type: activeTool === 'circle' ? 'circle' : activeTool === 'line' ? 'line' : 'color',
-          content: newColor,
-          x,
-          y,
-          width: activeTool === 'line' ? 200 : 120,
-          height: activeTool === 'line' ? 4 : 120
-        })
-      })
-
-      if (response.ok) {
-        await fetchMoodboard()
-        setActiveTool('select')
-      }
-    } catch (error) {
-      console.error('Error adding shape:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const addText = async () => {
-    if (!moodboard || !pendingText.trim() || isLoading || !pendingPosition) return
-
-    setIsLoading(true)
-    try {
-      const userId = auth.currentUser?.uid
-      if (!userId) return
-      
-      const response = await fetch(`/api/moodboards/${moodboardId}/elements?userId=${userId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          type: 'text',
-          content: pendingText,
-          x: pendingPosition.x,
-          y: pendingPosition.y,
-          width: 100,
-          height: 50
-        })
-      })
-
-      if (response.ok) {
-        await fetchMoodboard()
-        setPendingText('')
-        setShowTextInput(false)
-        setPendingPosition(null)
-        setActiveTool('select')
-      }
-    } catch (error) {
-      console.error('Error adding text:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const addImage = async () => {
-    if (!moodboard || !pendingImageUrl.trim() || isLoading || !pendingPosition) return
-
-    setIsLoading(true)
-    try {
-      const userId = auth.currentUser?.uid
-      if (!userId) return
-      
-      const response = await fetch(`/api/moodboards/${moodboardId}/elements?userId=${userId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          type: 'image',
-          content: pendingImageUrl,
-          x: pendingPosition.x,
-          y: pendingPosition.y,
-          width: 200,
-          height: 200
-        })
-      })
-
-      if (response.ok) {
-        await fetchMoodboard()
-        setPendingImageUrl('')
-        setShowImageInput(false)
-        setPendingPosition(null)
-        setActiveTool('select')
-      }
-    } catch (error) {
-      console.error('Error adding image:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const deleteItem = async (id: number) => {
-    if (!moodboard) return
-
-    try {
-      const userId = auth.currentUser?.uid
-      if (!userId) return
-      
-      const response = await fetch(`/api/moodboards/${moodboardId}/elements?userId=${userId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ elementId: id })
-      })
-
-      if (response.ok) {
-        await fetchMoodboard()
-      }
-    } catch (error) {
-      console.error('Error deleting element:', error)
-    }
-  }
-
-  const handleDragStart = (e: React.DragEvent, itemId: number) => {
-    setDraggedItem(itemId)
-  }
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault()
-  }
-
-  const handleDrop = async (e: React.DragEvent) => {
-    e.preventDefault()
-    if (!moodboard || !draggedItem) return
-
-    const canvas = e.currentTarget as HTMLElement
-    const rect = canvas.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * 100
-    const y = ((e.clientY - rect.top) / rect.height) * 100
-
-    try {
-      const userId = auth.currentUser?.uid
-      if (!userId) return
-      
-      const response = await fetch(`/api/moodboards/${moodboardId}/elements?userId=${userId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          elementId: draggedItem,
-          x,
-          y
-        })
-      })
-
-      if (response.ok) {
-        await fetchMoodboard()
-      }
-    } catch (error) {
-      console.error('Error updating element position:', error)
-    } finally {
-      setDraggedItem(null)
-    }
-  }
-
-  const handleCanvasClick = (e: React.MouseEvent) => {
-    if (activeTool === 'select' || isLoading) return
-
-    const canvas = e.currentTarget as HTMLElement
-    const rect = canvas.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width) * 100
-    const y = ((e.clientY - rect.top) / rect.height) * 100
-
-    if (activeTool === 'rect' || activeTool === 'circle' || activeTool === 'line') {
-      addColorAtPosition(x, y)
-    } else if (activeTool === 'text') {
-      setPendingPosition({ x, y })
-      setShowTextInput(true)
-    } else if (activeTool === 'image') {
-      setPendingPosition({ x, y })
-      setShowImageInput(true)
-    }
-  }
-
-  const exportCanvas = async (format: 'png' | 'jpg') => {
-    if (!canvasRef.current) return
+    console.log('Fabric canvas initialized!');
     
-    // Použij html2canvas nebo similar library pro export
-    // Pro teď jen simuluji download
-    const link = document.createElement('a')
-    link.download = `${moodboard?.name || 'moodboard'}.${format}`
-    link.href = '#' // TODO: implement actual export
-    alert(`Export do ${format.toUpperCase()} bude implementován s html2canvas knihovnou`)
+    return () => {
+      canvas.dispose();
+      fabricCanvas.current = null;
+      initialized.current = false;
+    };
+  }, [fabricLoaded, uid]);
+
+  // Update canvas size
+  useEffect(() => {
+    if (!fabricCanvas.current) return;
+    fabricCanvas.current.setDimensions({ width: canvasW, height: canvasH });
+    fabricCanvas.current.renderAll();
+  }, [canvasW, canvasH]);
+
+  // Update background color
+  useEffect(() => {
+    if (!fabricCanvas.current) return;
+    fabricCanvas.current.backgroundColor = bgColor;
+    fabricCanvas.current.renderAll();
+  }, [bgColor]);
+
+  const handlePreset = (name: string) => {
+    const p = PRESETS[name];
+    if (p) {
+      setCanvasW(p.w);
+      setCanvasH(p.h);
+    }
+  };
+
+  const addBgImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !fabricCanvas.current || !fabric) return;
+    
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const url = ev.target?.result as string;
+      fabric!.FabricImage.fromURL(url).then((img: any) => {
+        if (!fabricCanvas.current) return;
+        const scaleX = canvasW / (img.width || 1);
+        const scaleY = canvasH / (img.height || 1);
+        const scale = Math.max(scaleX, scaleY);
+        img.set({
+          scaleX: scale,
+          scaleY: scale,
+          left: canvasW / 2,
+          top: canvasH / 2,
+          originX: 'center',
+          originY: 'center',
+          selectable: true,
+        });
+        fabricCanvas.current.add(img);
+        fabricCanvas.current.sendObjectToBack(img);
+        fabricCanvas.current.renderAll();
+      });
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  const addImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !fabricCanvas.current || !fabric) return;
+    
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const url = ev.target?.result as string;
+      fabric!.FabricImage.fromURL(url).then((img: any) => {
+        if (!fabricCanvas.current) return;
+        const maxSize = Math.min(canvasW, canvasH) * 0.4;
+        const scale = Math.min(maxSize / (img.width || 1), maxSize / (img.height || 1));
+        img.set({
+          scaleX: scale,
+          scaleY: scale,
+          left: canvasW / 2,
+          top: canvasH / 2,
+          originX: 'center',
+          originY: 'center',
+        });
+        fabricCanvas.current.add(img);
+        fabricCanvas.current.setActiveObject(img);
+        fabricCanvas.current.renderAll();
+      });
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  const addText = () => {
+    if (!fabricCanvas.current || !fabric) return;
+    const text = new fabric.IText('Dvojklik pro editaci', {
+      left: canvasW / 2,
+      top: canvasH / 2,
+      originX: 'center',
+      originY: 'center',
+      fontSize: 48,
+      fontFamily: 'Arial',
+      fill: '#000000',
+    });
+    fabricCanvas.current.add(text);
+    fabricCanvas.current.setActiveObject(text);
+    fabricCanvas.current.renderAll();
+  };
+
+  const addRect = () => {
+    if (!fabricCanvas.current || !fabric) return;
+    const rect = new fabric.Rect({
+      left: canvasW / 2 - 50,
+      top: canvasH / 2 - 50,
+      width: 100,
+      height: 100,
+      fill: '#6366f1',
+      stroke: '#4f46e5',
+      strokeWidth: 2,
+    });
+    fabricCanvas.current.add(rect);
+    fabricCanvas.current.setActiveObject(rect);
+    fabricCanvas.current.renderAll();
+  };
+
+  const addCircle = () => {
+    if (!fabricCanvas.current || !fabric) return;
+    const circle = new fabric.Circle({
+      left: canvasW / 2 - 40,
+      top: canvasH / 2 - 40,
+      radius: 40,
+      fill: '#10b981',
+      stroke: '#059669',
+      strokeWidth: 2,
+    });
+    fabricCanvas.current.add(circle);
+    fabricCanvas.current.setActiveObject(circle);
+    fabricCanvas.current.renderAll();
+  };
+
+  const deleteSelected = () => {
+    if (!fabricCanvas.current) return;
+    const obj = fabricCanvas.current.getActiveObject();
+    if (obj) {
+      fabricCanvas.current.remove(obj);
+      fabricCanvas.current.renderAll();
+      setSelected(null);
+    }
+  };
+
+  const bringForward = () => {
+    if (!fabricCanvas.current || !selected) return;
+    fabricCanvas.current.bringObjectForward(selected);
+    fabricCanvas.current.renderAll();
+  };
+
+  const sendBackward = () => {
+    if (!fabricCanvas.current || !selected) return;
+    fabricCanvas.current.sendObjectBackwards(selected);
+    fabricCanvas.current.renderAll();
+  };
+
+  const exportPNG = () => {
+    if (!fabricCanvas.current) return;
+    const dataURL = fabricCanvas.current.toDataURL({
+      format: 'png',
+      quality: 1,
+      multiplier: 2,
+    });
+    const link = document.createElement('a');
+    link.download = 'poster.png';
+    link.href = dataURL;
+    link.click();
+  };
+
+  // Loading state
+  if (!ready || !fabricLoaded) {
+    return (
+      <div style={styles.loading}>
+        <div style={styles.spinner} />
+        <p style={{ color: '#888', marginTop: 16 }}>Nacitani editoru...</p>
+      </div>
+    );
   }
 
-  const moveLayer = async (elementId: number, direction: 'up' | 'down') => {
-    // TODO: Implement z-index update in database
-    console.log(`Moving element ${elementId} ${direction}`)
-  }
-
-  if (!moodboard) {
-    return <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', backgroundColor: '#1e1e1e', color: '#fff' }}>Načítám...</div>
+  // Auth required
+  if (!uid) {
+    return (
+      <div style={styles.authPage}>
+        <h2 style={{ margin: 0, fontSize: 28, marginBottom: 12 }}>Prihlaste se</h2>
+        <p style={{ color: '#888', marginBottom: 24 }}>Pro pouziti editoru plakatu se musite prihlasit</p>
+        <button onClick={() => router.push('/prihlaseni')} style={styles.authBtn}>
+          Prihlasit se
+        </button>
+      </div>
+    );
   }
 
   return (
-    <div style={{ 
-      height: '100vh', 
-      display: 'flex', 
-      flexDirection: 'column',
-      backgroundColor: '#1e1e1e',
-      color: '#fff',
-      fontFamily: 'Inter, system-ui, sans-serif'
-    }}>
-      {/* Top Toolbar */}
-      <div style={{
-        height: '48px',
-        backgroundColor: '#2c2c2c',
-        borderBottom: '1px solid #3c3c3c',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 16px',
-        gap: '12px',
-        justifyContent: 'space-between'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <button
-            onClick={() => router.push('/moodboard')}
-            style={{
-              backgroundColor: 'transparent',
-              border: 'none',
-              color: '#fff',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              padding: '6px',
-              borderRadius: '4px',
-              transition: 'background 0.2s'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#3c3c3c'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+    <div style={styles.container}>
+      {/* TOP BAR */}
+      <header style={styles.topbar}>
+        <div style={styles.topbarGroup}>
+          <select 
+            style={styles.select} 
+            onChange={(e) => handlePreset(e.target.value)}
+            defaultValue=""
           >
-            <ArrowLeft size={20} />
-          </button>
+            <option value="" disabled>Rozmer platna</option>
+            {Object.keys(PRESETS).map(k => (
+              <option key={k} value={k}>{k}</option>
+            ))}
+          </select>
           
-          <div style={{ width: '1px', height: '24px', backgroundColor: '#3c3c3c' }} />
-
-          <h2 style={{ fontSize: '14px', fontWeight: '500', margin: 0, color: '#b4b4b4' }}>
-            {moodboard.name}
-          </h2>
+          <input
+            type="number"
+            value={canvasW}
+            onChange={(e) => setCanvasW(Math.max(100, parseInt(e.target.value) || 100))}
+            style={styles.numInput}
+            min={100}
+            max={4000}
+          />
+          <span style={{ color: '#666' }}>×</span>
+          <input
+            type="number"
+            value={canvasH}
+            onChange={(e) => setCanvasH(Math.max(100, parseInt(e.target.value) || 100))}
+            style={styles.numInput}
+            min={100}
+            max={4000}
+          />
         </div>
 
-        <div style={{ display: 'flex', gap: '4px' }}>
-          <button
-            onClick={() => {
-              setActiveTool('select')
-              setShowColorPicker(false)
-              setShowTextInput(false)
-              setShowImageInput(false)
-            }}
-            disabled={isLoading}
-            style={{
-              backgroundColor: activeTool === 'select' ? '#3c3c3c' : 'transparent',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '8px 12px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              color: '#fff',
-              fontSize: '13px',
-              opacity: isLoading ? 0.5 : 1,
-              transition: 'background 0.2s'
-            }}
-            onMouseEnter={(e) => !isLoading && activeTool !== 'select' && (e.currentTarget.style.backgroundColor = '#3c3c3c')}
-            onMouseLeave={(e) => activeTool !== 'select' && (e.currentTarget.style.backgroundColor = 'transparent')}
-          >
-            <MousePointer2 size={16} />
-            Vybrat
-          </button>
-
-          <div style={{ width: '1px', height: '24px', backgroundColor: '#3c3c3c', margin: '0 4px' }} />
-
-          <button
-            onClick={() => setShowColorPicker(true)}
-            disabled={isLoading}
-            style={{
-              backgroundColor: activeTool === 'rect' ? '#3c3c3c' : 'transparent',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '8px 12px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              color: '#fff',
-              fontSize: '13px',
-              opacity: isLoading ? 0.5 : 1,
-              transition: 'background 0.2s'
-            }}
-            onMouseEnter={(e) => !isLoading && activeTool !== 'rect' && (e.currentTarget.style.backgroundColor = '#3c3c3c')}
-            onMouseLeave={(e) => activeTool !== 'rect' && (e.currentTarget.style.backgroundColor = 'transparent')}
-          >
-            <Square size={16} />
-            Obdélník
-          </button>
-
-          <button
-            onClick={() => setShowColorPicker(true)}
-            disabled={isLoading}
-            style={{
-              backgroundColor: activeTool === 'circle' ? '#3c3c3c' : 'transparent',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '8px 12px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              color: '#fff',
-              fontSize: '13px',
-              opacity: isLoading ? 0.5 : 1,
-              transition: 'background 0.2s'
-            }}
-            onMouseEnter={(e) => !isLoading && activeTool !== 'circle' && (e.currentTarget.style.backgroundColor = '#3c3c3c')}
-            onMouseLeave={(e) => activeTool !== 'circle' && (e.currentTarget.style.backgroundColor = 'transparent')}
-          >
-            <Circle size={16} />
-            Kruh
-          </button>
-
-          <button
-            onClick={() => setShowColorPicker(true)}
-            disabled={isLoading}
-            style={{
-              backgroundColor: activeTool === 'line' ? '#3c3c3c' : 'transparent',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '8px 12px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              color: '#fff',
-              fontSize: '13px',
-              opacity: isLoading ? 0.5 : 1,
-              transition: 'background 0.2s'
-            }}
-            onMouseEnter={(e) => !isLoading && activeTool !== 'line' && (e.currentTarget.style.backgroundColor = '#3c3c3c')}
-            onMouseLeave={(e) => activeTool !== 'line' && (e.currentTarget.style.backgroundColor = 'transparent')}
-          >
-            <Minus size={16} />
-            Čára
-          </button>
-
-          <div style={{ width: '1px', height: '24px', backgroundColor: '#3c3c3c', margin: '0 4px' }} />
-
-          <button
-            onClick={() => {
-              setActiveTool('image')
-            }}
-            disabled={isLoading}
-            style={{
-              backgroundColor: activeTool === 'image' ? '#3c3c3c' : 'transparent',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '8px 12px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              color: '#fff',
-              fontSize: '13px',
-              opacity: isLoading ? 0.5 : 1,
-              transition: 'background 0.2s'
-            }}
-            onMouseEnter={(e) => !isLoading && activeTool !== 'image' && (e.currentTarget.style.backgroundColor = '#3c3c3c')}
-            onMouseLeave={(e) => activeTool !== 'image' && (e.currentTarget.style.backgroundColor = 'transparent')}
-          >
-            <ImageIcon size={16} />
-            Obrázek
-          </button>
-
-          <button
-            onClick={() => {
-              setActiveTool('text')
-            }}
-            disabled={isLoading}
-            style={{
-              backgroundColor: activeTool === 'text' ? '#3c3c3c' : 'transparent',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '8px 12px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              color: '#fff',
-              fontSize: '13px',
-              opacity: isLoading ? 0.5 : 1,
-              transition: 'background 0.2s'
-            }}
-            onMouseEnter={(e) => !isLoading && activeTool !== 'text' && (e.currentTarget.style.backgroundColor = '#3c3c3c')}
-            onMouseLeave={(e) => activeTool !== 'text' && (e.currentTarget.style.backgroundColor = 'transparent')}
-          >
-            <Type size={16} />
-            Text
-          </button>
+        <div style={styles.topbarGroup}>
+          <button onClick={() => setZoom(z => Math.max(20, z - 10))} style={styles.btn}></button>
+          <span style={{ color: '#888', minWidth: 50, textAlign: 'center' }}>{zoom}%</span>
+          <button onClick={() => setZoom(z => Math.min(200, z + 10))} style={styles.btn}>+</button>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-          <button
-            onClick={() => setShowLayersPanel(!showLayersPanel)}
-            disabled={isLoading}
-            style={{
-              backgroundColor: showLayersPanel ? '#3c3c3c' : 'transparent',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '6px 12px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              color: '#fff',
-              fontSize: '13px',
-              fontWeight: '500',
-              opacity: isLoading ? 0.5 : 1,
-              transition: 'background 0.2s',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-            onMouseEnter={(e) => !isLoading && !showLayersPanel && (e.currentTarget.style.backgroundColor = '#3c3c3c')}
-            onMouseLeave={(e) => !showLayersPanel && (e.currentTarget.style.backgroundColor = 'transparent')}
-          >
-            <Layers size={16} />
-            Vrstvy
-          </button>
+        <button onClick={exportPNG} style={styles.exportBtn}>
+          Export PNG
+        </button>
+      </header>
 
-          <button
-            onClick={() => setShowExportModal(true)}
-            disabled={isLoading}
-            style={{
-              backgroundColor: 'transparent',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '6px 12px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              color: '#fff',
-              fontSize: '13px',
-              fontWeight: '500',
-              opacity: isLoading ? 0.5 : 1,
-              transition: 'background 0.2s',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-            onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#3c3c3c')}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-          >
-            <Download size={16} />
-            Export
-          </button>
-
-          <button
-            onClick={fetchMoodboard}
-            disabled={isLoading}
-            style={{
-              backgroundColor: '#5865F2',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '6px 12px',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              color: '#fff',
-              fontSize: '13px',
-              fontWeight: '500',
-              opacity: isLoading ? 0.5 : 1,
-              transition: 'background 0.2s'
-            }}
-            onMouseEnter={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#4752C4')}
-            onMouseLeave={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#5865F2')}
-          >
-            {isLoading ? 'Ukládám...' : 'Načíst'}
-          </button>
-        </div>
-      </div>
-
-      {/* Canvas */}
-      <div
-        ref={canvasRef}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        onClick={handleCanvasClick}
-        style={{
-          flex: 1,
-          position: 'relative',
-          backgroundColor: canvasBg,
-          backgroundImage: 'linear-gradient(#2c2c2c 1px, transparent 1px), linear-gradient(90deg, #2c2c2c 1px, transparent 1px)',
-          backgroundSize: '20px 20px',
-          overflow: 'auto',
-          cursor: activeTool === 'select' ? 'default' : 'crosshair'
-        }}
-      >
-        {moodboard.elements.map((item) => (
-          <div
-            key={item.id}
-            draggable
-            onDragStart={(e) => handleDragStart(e, item.id)}
-            style={{
-              position: 'absolute',
-              left: `${item.coordsX / 100}%`,
-              top: `${item.coordsY / 100}%`,
-              cursor: 'move',
-              transform: 'translate(-50%, -50%)'
-            }}
-          >
-            {item.elementType.name === 'color' && (
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                <div
-                  style={{
-                    width: item.width || 120,
-                    height: item.height || 120,
-                    backgroundColor: getContent(item),
-                    borderRadius: '4px',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
-                  }}
-                />
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    deleteItem(item.id)
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: '-8px',
-                    right: '-8px',
-                    backgroundColor: '#ed4245',
-                    border: 'none',
-                    borderRadius: '3px',
-                    width: '20px',
-                    height: '20px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '14px',
-                    color: '#fff',
-                    opacity: 0.9,
-                    transition: 'opacity 0.2s',
-                    zIndex: 10
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
-                >
-                  ×
-                </button>
-              </div>
-            )}
-
-            {item.elementType.name === 'circle' && (
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                <div
-                  style={{
-                    width: item.width || 120,
-                    height: item.height || 120,
-                    backgroundColor: getContent(item),
-                    borderRadius: '50%',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
-                  }}
-                />
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    deleteItem(item.id)
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: '-8px',
-                    right: '-8px',
-                    backgroundColor: '#ed4245',
-                    border: 'none',
-                    borderRadius: '3px',
-                    width: '20px',
-                    height: '20px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '14px',
-                    color: '#fff',
-                    opacity: 0.9,
-                    transition: 'opacity 0.2s',
-                    zIndex: 10
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
-                >
-                  ×
-                </button>
-              </div>
-            )}
-
-            {item.elementType.name === 'line' && (
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                <div
-                  style={{
-                    width: item.width || 200,
-                    height: item.height || 4,
-                    backgroundColor: getContent(item),
-                    borderRadius: '2px',
-                    boxShadow: '0 1px 4px rgba(0, 0, 0, 0.3)'
-                  }}
-                />
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    deleteItem(item.id)
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: '-8px',
-                    right: '-8px',
-                    backgroundColor: '#ed4245',
-                    border: 'none',
-                    borderRadius: '3px',
-                    width: '20px',
-                    height: '20px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '14px',
-                    color: '#fff',
-                    opacity: 0.9,
-                    transition: 'opacity 0.2s',
-                    zIndex: 10
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
-                >
-                  ×
-                </button>
-              </div>
-            )}
-
-            {item.elementType.name === 'text' && (
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                <div
-                  style={{
-                    padding: '12px 16px',
-                    backgroundColor: '#2c2c2c',
-                    border: '1px solid #3c3c3c',
-                    borderRadius: '4px',
-                    color: '#fff',
-                    fontSize: '14px',
-                    whiteSpace: 'nowrap',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
-                    minWidth: item.width || 100
-                  }}
-                >
-                  {getContent(item)}
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    deleteItem(item.id)
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: '-8px',
-                    right: '-8px',
-                    backgroundColor: '#ed4245',
-                    border: 'none',
-                    borderRadius: '3px',
-                    width: '20px',
-                    height: '20px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '14px',
-                    color: '#fff',
-                    opacity: 0.9,
-                    transition: 'opacity 0.2s'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
-                >
-                  ×
-                </button>
-              </div>
-            )}
-
-            {item.elementType.name === 'image' && (
-              <div style={{ position: 'relative', display: 'inline-block' }}>
-                <img
-                  src={getContent(item)}
-                  alt="Moodboard element"
-                  style={{
-                    width: item.width || 200,
-                    height: item.height || 200,
-                    objectFit: 'cover',
-                    borderRadius: '4px',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
-                  }}
-                />
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    deleteItem(item.id)
-                  }}
-                  style={{
-                    position: 'absolute',
-                    top: '-8px',
-                    right: '-8px',
-                    backgroundColor: '#ed4245',
-                    border: 'none',
-                    borderRadius: '3px',
-                    width: '20px',
-                    height: '20px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '14px',
-                    color: '#fff',
-                    opacity: 0.9,
-                    transition: 'opacity 0.2s'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                  onMouseLeave={(e) => e.currentTarget.style.opacity = '0.9'}
-                >
-                  ×
-                </button>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Color Picker Modal */}
-      {showColorPicker && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000
-          }}
-          onClick={() => setShowColorPicker(false)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: '#2c2c2c',
-              padding: '24px',
-              borderRadius: '8px',
-              border: '1px solid #3c3c3c',
-              width: '320px'
-            }}
-          >
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '500' }}>Vyberte barvu</h3>
+      <div style={styles.main}>
+        {/* LEFT SIDEBAR */}
+        <aside style={styles.sidebar}>
+          <div style={styles.sidebarSection}>
+            <h3 style={styles.sidebarTitle}>Pozadi</h3>
             <input
               type="color"
-              value={newColor}
-              onChange={(e) => setNewColor(e.target.value)}
-              style={{ width: '100%', height: '60px', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              value={bgColor}
+              onChange={(e) => setBgColor(e.target.value)}
+              style={styles.colorPicker}
             />
-            <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
-              <button
-                onClick={() => {
-                  setShowColorPicker(false)
-                  setActiveTool('select')
-                }}
-                style={{
-                  flex: 1,
-                  backgroundColor: '#3c3c3c',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '8px',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  fontSize: '13px'
-                }}
-              >
-                Zrušit
-              </button>
-              <button
-                onClick={() => {
-                  setShowColorPicker(false)
-                  // Aktivuj nástroj podle toho co je zvolené
-                  if (activeTool !== 'rect' && activeTool !== 'circle' && activeTool !== 'line') {
-                    setActiveTool('rect')
-                  }
-                }}
-                disabled={isLoading}
-                style={{
-                  flex: 1,
-                  backgroundColor: '#5865F2',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '8px',
-                  color: '#fff',
-                  cursor: isLoading ? 'not-allowed' : 'pointer',
-                  fontSize: '13px',
-                  opacity: isLoading ? 0.5 : 1
-                }}
-              >
-                Klikněte na plátno
-              </button>
-            </div>
+            <label style={styles.uploadBtn}>
+              <input type="file" accept="image/*" onChange={addBgImage} hidden />
+              Nahrat obrazek pozadi
+            </label>
           </div>
-        </div>
-      )}
 
-      {/* Text Input Modal */}
-      {showTextInput && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000
-          }}
-          onClick={() => setShowTextInput(false)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: '#2c2c2c',
-              padding: '24px',
-              borderRadius: '8px',
-              border: '1px solid #3c3c3c',
-              width: '320px'
+          <div style={styles.sidebarSection}>
+            <h3 style={styles.sidebarTitle}>Pridat prvky</h3>
+            <label style={styles.uploadBtn}>
+              <input type="file" accept="image/*" onChange={addImage} hidden />
+              Nahrat obrazek
+            </label>
+            <button onClick={addText} style={styles.toolBtn}>T Text</button>
+            <button onClick={addRect} style={styles.toolBtn}> Obdelnik</button>
+            <button onClick={addCircle} style={styles.toolBtn}> Kruh</button>
+          </div>
+        </aside>
+
+        {/* CANVAS AREA */}
+        <main style={styles.canvasArea}>
+          <div 
+            style={{ 
+              transform: `scale(${zoom / 100})`, 
+              transformOrigin: 'center center',
+              boxShadow: '0 25px 80px rgba(0,0,0,0.5)',
             }}
           >
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '500' }}>Přidat text</h3>
-            <input
-              type="text"
-              value={pendingText}
-              onChange={(e) => setPendingText(e.target.value)}
-              placeholder="Zadejte text..."
-              autoFocus
-              style={{
-                width: '100%',
-                padding: '10px',
-                backgroundColor: '#1e1e1e',
-                border: '1px solid #3c3c3c',
-                borderRadius: '4px',
-                color: '#fff',
-                fontSize: '13px'
-              }}
-            />
-            <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
-              <button
-                onClick={() => {
-                  setShowTextInput(false)
-                  setPendingText('')
-                  setPendingPosition(null)
-                  setActiveTool('select')
-                }}
-                style={{
-                  flex: 1,
-                  backgroundColor: '#3c3c3c',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '8px',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  fontSize: '13px'
-                }}
-              >
-                Zrušit
-              </button>
-              <button
-                onClick={addText}
-                disabled={isLoading || !pendingText.trim()}
-                style={{
-                  flex: 1,
-                  backgroundColor: '#5865F2',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '8px',
-                  color: '#fff',
-                  cursor: (isLoading || !pendingText.trim()) ? 'not-allowed' : 'pointer',
-                  fontSize: '13px',
-                  opacity: (isLoading || !pendingText.trim()) ? 0.5 : 1
-                }}
-              >
-                Přidat
-              </button>
-            </div>
+            <canvas ref={canvasRef} />
           </div>
-        </div>
-      )}
+        </main>
 
-      {/* Image Input Modal */}
-      {showImageInput && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000
-          }}
-          onClick={() => setShowImageInput(false)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: '#2c2c2c',
-              padding: '24px',
-              borderRadius: '8px',
-              border: '1px solid #3c3c3c',
-              width: '320px'
-            }}
-          >
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '500' }}>Přidat obrázek</h3>
-            <input
-              type="text"
-              value={pendingImageUrl}
-              onChange={(e) => setPendingImageUrl(e.target.value)}
-              placeholder="URL obrázku..."
-              autoFocus
-              style={{
-                width: '100%',
-                padding: '10px',
-                backgroundColor: '#1e1e1e',
-                border: '1px solid #3c3c3c',
-                borderRadius: '4px',
-                color: '#fff',
-                fontSize: '13px'
-              }}
-            />
-            <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
-              <button
-                onClick={() => {
-                  setShowImageInput(false)
-                  setPendingImageUrl('')
-                  setPendingPosition(null)
-                  setActiveTool('select')
-                }}
-                style={{
-                  flex: 1,
-                  backgroundColor: '#3c3c3c',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '8px',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  fontSize: '13px'
-                }}
-              >
-                Zrušit
-              </button>
-              <button
-                onClick={addImage}
-                disabled={isLoading || !pendingImageUrl.trim()}
-                style={{
-                  flex: 1,
-                  backgroundColor: '#5865F2',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '8px',
-                  color: '#fff',
-                  cursor: (isLoading || !pendingImageUrl.trim()) ? 'not-allowed' : 'pointer',
-                  fontSize: '13px',
-                  opacity: (isLoading || !pendingImageUrl.trim()) ? 0.5 : 1
-                }}
-              >
-                Přidat
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+        {/* RIGHT SIDEBAR */}
+        <aside style={{ ...styles.sidebar, borderLeft: '1px solid #222', borderRight: 'none' }}>
+          {selected ? (
+            <div style={styles.sidebarSection}>
+              <h3 style={styles.sidebarTitle}>Vybrany objekt</h3>
+              <button onClick={bringForward} style={styles.toolBtn}> Posunout nahoru</button>
+              <button onClick={sendBackward} style={styles.toolBtn}> Posunout dolu</button>
+              <button onClick={deleteSelected} style={styles.deleteBtn}>Smazat</button>
 
-      {/* Export Modal */}
-      {showExportModal && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.6)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000
-          }}
-          onClick={() => setShowExportModal(false)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: '#2c2c2c',
-              padding: '24px',
-              borderRadius: '8px',
-              border: '1px solid #3c3c3c',
-              width: '320px'
-            }}
-          >
-            <h3 style={{ margin: '0 0 16px 0', fontSize: '16px', fontWeight: '500' }}>Export plakátu</h3>
-            <p style={{ color: '#b4b4b4', fontSize: '13px', marginBottom: '16px' }}>Vyberte formát exportu:</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <button
-                onClick={() => {
-                  exportCanvas('png')
-                  setShowExportModal(false)
-                }}
-                style={{
-                  backgroundColor: '#3c3c3c',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '12px',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  transition: 'background 0.2s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4c4c4c'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3c3c3c'}
-              >
-                PNG (s průhledností)
-              </button>
-              <button
-                onClick={() => {
-                  exportCanvas('jpg')
-                  setShowExportModal(false)
-                }}
-                style={{
-                  backgroundColor: '#3c3c3c',
-                  border: 'none',
-                  borderRadius: '4px',
-                  padding: '12px',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  transition: 'background 0.2s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4c4c4c'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3c3c3c'}
-              >
-                JPG (menší soubor)
-              </button>
-              <button
-                onClick={() => setShowExportModal(false)}
-                style={{
-                  backgroundColor: 'transparent',
-                  border: '1px solid #3c3c3c',
-                  borderRadius: '4px',
-                  padding: '12px',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  fontSize: '13px',
-                  marginTop: '8px'
-                }}
-              >
-                Zrušit
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+              {selected.type === 'i-text' && (
+                <div style={{ marginTop: 16 }}>
+                  <h3 style={styles.sidebarTitle}>Text</h3>
+                  <label style={styles.label}>Velikost</label>
+                  <input
+                    type="number"
+                    defaultValue={selected.fontSize || 48}
+                    min={8}
+                    max={200}
+                    style={styles.numInput}
+                    onChange={(e) => {
+                      selected.set('fontSize', parseInt(e.target.value) || 48);
+                      fabricCanvas.current?.renderAll();
+                    }}
+                  />
+                  <label style={styles.label}>Barva</label>
+                  <input
+                    type="color"
+                    defaultValue={selected.fill || '#000000'}
+                    style={styles.colorPicker}
+                    onChange={(e) => {
+                      selected.set('fill', e.target.value);
+                      fabricCanvas.current?.renderAll();
+                    }}
+                  />
+                </div>
+              )}
 
-      {/* Layers Panel */}
-      {showLayersPanel && moodboard && (
-        <div
-          style={{
-            position: 'fixed',
-            right: '16px',
-            top: '64px',
-            width: '280px',
-            maxHeight: '500px',
-            backgroundColor: '#2c2c2c',
-            border: '1px solid #3c3c3c',
-            borderRadius: '8px',
-            padding: '16px',
-            zIndex: 1000,
-            overflowY: 'auto'
-          }}
-        >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-            <h3 style={{ margin: 0, fontSize: '14px', fontWeight: '500' }}>Vrstvy ({moodboard.elements.length})</h3>
-            <button
-              onClick={() => setShowLayersPanel(false)}
-              style={{
-                backgroundColor: 'transparent',
-                border: 'none',
-                color: '#b4b4b4',
-                cursor: 'pointer',
-                fontSize: '18px',
-                padding: 0
-              }}
-            >
-              ×
-            </button>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            {moodboard.elements.map((item, index) => (
-              <div
-                key={item.id}
-                onClick={() => setSelectedItem(item.id)}
-                style={{
-                  padding: '8px 12px',
-                  backgroundColor: selectedItem === item.id ? '#3c3c3c' : '#252526',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  transition: 'background 0.2s'
-                }}
-                onMouseEnter={(e) => selectedItem !== item.id && (e.currentTarget.style.backgroundColor = '#2e2e2e')}
-                onMouseLeave={(e) => selectedItem !== item.id && (e.currentTarget.style.backgroundColor = '#252526')}
-              >
-                <span style={{ fontSize: '13px' }}>
-                  {item.elementType.name === 'color' && '🟦 Obdélník'}
-                  {item.elementType.name === 'circle' && '⚫ Kruh'}
-                  {item.elementType.name === 'line' && '━ Čára'}
-                  {item.elementType.name === 'text' && `📝 ${getContent(item).slice(0, 15)}...`}
-                  {item.elementType.name === 'image' && '🖼️ Obrázek'}
-                </span>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    deleteItem(item.id)
-                  }}
-                  style={{
-                    backgroundColor: '#ed4245',
-                    border: 'none',
-                    borderRadius: '3px',
-                    width: '24px',
-                    height: '24px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '16px',
-                    color: '#fff'
-                  }}
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+              {(selected.type === 'rect' || selected.type === 'circle') && (
+                <div style={{ marginTop: 16 }}>
+                  <h3 style={styles.sidebarTitle}>Tvar</h3>
+                  <label style={styles.label}>Barva</label>
+                  <input
+                    type="color"
+                    defaultValue={selected.fill || '#6366f1'}
+                    style={styles.colorPicker}
+                    onChange={(e) => {
+                      selected.set('fill', e.target.value);
+                      fabricCanvas.current?.renderAll();
+                    }}
+                  />
+                  <label style={styles.label}>Pruhlednost</label>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    defaultValue={(selected.opacity || 1) * 100}
+                    style={{ width: '100%' }}
+                    onChange={(e) => {
+                      selected.set('opacity', parseInt(e.target.value) / 100);
+                      fabricCanvas.current?.renderAll();
+                    }}
+                  />
+                </div>
+              )}
+
+              {selected.type === 'image' && fabric && (
+                <div style={{ marginTop: 16 }}>
+                  <h3 style={styles.sidebarTitle}>Obrazek</h3>
+                  <label style={styles.label}>Jas</label>
+                  <input
+                    type="range"
+                    min={-100}
+                    max={100}
+                    defaultValue={0}
+                    style={{ width: '100%' }}
+                    onChange={(e) => {
+                      const v = parseInt(e.target.value) / 100;
+                      selected.filters = selected.filters?.filter((f: any) => f.type !== 'Brightness') || [];
+                      selected.filters.push(new fabric!.filters.Brightness({ brightness: v }));
+                      selected.applyFilters();
+                      fabricCanvas.current?.renderAll();
+                    }}
+                  />
+                  <label style={styles.label}>Kontrast</label>
+                  <input
+                    type="range"
+                    min={-100}
+                    max={100}
+                    defaultValue={0}
+                    style={{ width: '100%' }}
+                    onChange={(e) => {
+                      const v = parseInt(e.target.value) / 100;
+                      selected.filters = selected.filters?.filter((f: any) => f.type !== 'Contrast') || [];
+                      selected.filters.push(new fabric!.filters.Contrast({ contrast: v }));
+                      selected.applyFilters();
+                      fabricCanvas.current?.renderAll();
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div style={styles.sidebarSection}>
+              <p style={{ color: '#666', fontSize: 13, textAlign: 'center' }}>
+                Kliknete na objekt pro upravu
+              </p>
+            </div>
+          )}
+        </aside>
+      </div>
     </div>
-  )
+  );
 }
+
+const styles: Record<string, React.CSSProperties> = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100vh',
+    background: '#0d0d12',
+    color: '#e2e8f0',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  },
+  loading: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+    background: '#0d0d12',
+  },
+  spinner: {
+    width: 48,
+    height: 48,
+    border: '4px solid #222',
+    borderTopColor: '#6366f1',
+    borderRadius: '50%',
+    animation: 'spin 1s linear infinite',
+  },
+  authPage: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100vh',
+    background: '#0d0d12',
+    color: '#fff',
+  },
+  authBtn: {
+    background: '#6366f1',
+    color: '#fff',
+    border: 'none',
+    padding: '14px 40px',
+    borderRadius: 10,
+    fontSize: 16,
+    fontWeight: 500,
+    cursor: 'pointer',
+  },
+  topbar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 16,
+    padding: '14px 20px',
+    background: '#111118',
+    borderBottom: '1px solid #222',
+  },
+  topbarGroup: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+  },
+  select: {
+    background: '#1a1a24',
+    color: '#e2e8f0',
+    border: '1px solid #333',
+    padding: '10px 14px',
+    borderRadius: 8,
+    fontSize: 14,
+    cursor: 'pointer',
+  },
+  numInput: {
+    width: 75,
+    background: '#1a1a24',
+    color: '#e2e8f0',
+    border: '1px solid #333',
+    padding: '10px',
+    borderRadius: 8,
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  btn: {
+    background: '#1a1a24',
+    color: '#e2e8f0',
+    border: '1px solid #333',
+    padding: '10px 16px',
+    borderRadius: 8,
+    cursor: 'pointer',
+    fontSize: 16,
+  },
+  exportBtn: {
+    background: '#6366f1',
+    color: '#fff',
+    border: 'none',
+    padding: '10px 24px',
+    borderRadius: 8,
+    fontSize: 14,
+    fontWeight: 500,
+    cursor: 'pointer',
+  },
+  main: {
+    display: 'flex',
+    flex: 1,
+    overflow: 'hidden',
+  },
+  sidebar: {
+    width: 240,
+    background: '#111118',
+    borderRight: '1px solid #222',
+    padding: 20,
+    overflowY: 'auto',
+  },
+  sidebarSection: {
+    marginBottom: 28,
+  },
+  sidebarTitle: {
+    fontSize: 11,
+    textTransform: 'uppercase',
+    letterSpacing: '0.1em',
+    color: '#888',
+    margin: '0 0 14px 0',
+  },
+  label: {
+    display: 'block',
+    fontSize: 12,
+    color: '#888',
+    marginBottom: 6,
+    marginTop: 12,
+  },
+  colorPicker: {
+    width: '100%',
+    height: 40,
+    border: 'none',
+    borderRadius: 8,
+    cursor: 'pointer',
+    marginBottom: 12,
+  },
+  uploadBtn: {
+    display: 'block',
+    background: '#1a1a24',
+    border: '2px dashed #333',
+    padding: 14,
+    borderRadius: 10,
+    textAlign: 'center',
+    cursor: 'pointer',
+    fontSize: 13,
+    marginBottom: 10,
+    transition: 'border-color 0.2s',
+  },
+  toolBtn: {
+    display: 'block',
+    width: '100%',
+    background: '#1a1a24',
+    border: '1px solid #333',
+    padding: 12,
+    borderRadius: 8,
+    color: '#e2e8f0',
+    cursor: 'pointer',
+    fontSize: 14,
+    marginBottom: 8,
+    textAlign: 'left',
+    transition: 'background 0.2s',
+  },
+  deleteBtn: {
+    display: 'block',
+    width: '100%',
+    background: '#dc2626',
+    border: 'none',
+    padding: 12,
+    borderRadius: 8,
+    color: '#fff',
+    cursor: 'pointer',
+    fontSize: 14,
+    marginTop: 8,
+  },
+  canvasArea: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: '#0d0d12',
+    overflow: 'auto',
+    padding: 40,
+  },
+};

@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Heart, Plus, X, Search } from "lucide-react"
+import { Heart, Plus, X, Trash2 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
-import Loading from "../components/loading"
+import Loading from "@/app/loading"
+import ProtectedRoute from '@/app/components/ProtectedRoute'
+import { useToast } from '@/app/components/Toast'
 
 type Post = {
   id: number
@@ -21,13 +23,16 @@ type Post = {
   likes: string[]
 }
 
-export default function GaleriePage() {
+function GaleriePageContent() {
   const { user } = useAuth()
+  const { showToast } = useToast()
 
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [showAddModal, setShowAddModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [pinToDelete, setPinToDelete] = useState<number | null>(null)
   const [newPost, setNewPost] = useState({ title: "", description: "", imageUrl: "" })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState("")
@@ -65,8 +70,14 @@ export default function GaleriePage() {
 
   const handleAddPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!user) return alert("Musíš být přihlášen/a")
-    if (!newPost.title || !newPost.imageUrl) return alert("Vyplň název a obrázek")
+    if (!user) {
+      showToast("Musíš být přihlášen/a", "error")
+      return
+    }
+    if (!newPost.title || !newPost.imageUrl) {
+      showToast("Vyplň název a obrázek", "warning")
+      return
+    }
 
     setUploading(true)
     try {
@@ -82,30 +93,43 @@ export default function GaleriePage() {
       setNewPost({ title: "", description: "", imageUrl: "" })
       setSelectedFile(null)
       setPreviewUrl("")
+      showToast("Příspěvek byl úspěšně přidán", "success")
     } catch (err) {
       console.error(err)
-      alert("Nepodařilo se přidat příspěvek")
+      showToast("Nepodařilo se přidat příspěvek", "error")
     } finally {
       setUploading(false)
     }
   }
 
-const handleDeletePin = async (pinId: number) => {
-  console.log("Deleting pinId:", pinId);
-
-  try {
-    const res = await fetch(`/api/gallery-pins/${pinId}`, { method: "DELETE" });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Nepodařilo se smazat příspěvek");
-    setPosts(prev => prev.filter(p => p.id !== pinId));
-  } catch (err: any) {
-    console.error(err);
-    alert(err.message);
+  const handleDeletePin = (pinId: number, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setPinToDelete(pinId)
+    setShowDeleteModal(true)
   }
-};
+
+  const confirmDeletePin = async () => {
+    if (pinToDelete === null) return
+    
+    try {
+      const res = await fetch(`/api/gallery-pins/${pinToDelete}`, { method: "DELETE" })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Nepodařilo se smazat příspěvek")
+      setPosts(prev => prev.filter(p => p.id !== pinToDelete))
+      setPinToDelete(null)
+      setShowDeleteModal(false)
+      showToast("Příspěvek byl smazán", "success")
+    } catch (err: unknown) {
+      console.error(err)
+      showToast(err instanceof Error ? err.message : "Chyba při mazání", "error")
+    }
+  }
 
   const toggleLike = async (pinId: number) => {
-    if (!user) return alert("Pro lajkování musíš být přihlášen/a")
+    if (!user) {
+      showToast("Pro lajkování musíš být přihlášen/a", "warning")
+      return
+    }
     const pin = posts.find(p => p.id === pinId)
     if (!pin || pin.author.id === user.uid) return
 
@@ -144,37 +168,32 @@ const handleDeletePin = async (pinId: number) => {
     <div className="galerie-page">
       <div className="galerie-container">
 
-        {/* HEADER */}
-        <div className="galerie-header">
-          <div className="galerie-title-section">
-            <h1 className="galerie-title">Galerie</h1>
-            <p className="galerie-subtitle">Sdílej své kreativní práce s komunitou</p>
+        <div className="page-header-unified">
+          <h1 className="page-title-gradient">Galerie</h1>
+          <p className="page-subtitle">Sdílej své kreativní práce s komunitou</p>
+        </div>
+
+        <div className="galerie-toolbar">
+          <div className="galerie-search-box">
+            <input
+              type="text"
+              className="galerie-search-input"
+              placeholder="Hledat příspěvky..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
           </div>
+          
           <motion.button
             className="add-post-button"
             onClick={() => setShowAddModal(true)}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Plus size={22} /> Přidat příspěvek
+            <Plus size={20} /> Přidat příspěvek
           </motion.button>
         </div>
 
-        {/* SEARCH */}
-        <div className="galerie-search-section">
-          <div className="search-input-wrapper">
-            <Search size={20} className="search-icon" />
-            <input
-              type="text"
-              className="search-input"
-              placeholder="Hledat..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-            />
-          </div>
-        </div>
-
-        {/* POSTS GRID */}
         <div className="masonry-grid">
           {filteredPosts.map(post => {
             const isAuthor = user?.uid === post.author.id
@@ -192,10 +211,7 @@ const handleDeletePin = async (pinId: number) => {
                     <div className="delete-button-wrapper">
                       <button
                         className="delete-button"
-                        onClick={e => {
-                          e.stopPropagation()
-                          handleDeletePin(post.id)
-                        }}
+                        onClick={e => handleDeletePin(post.id, e)}
                       >
                         <X size={20} />
                       </button>
@@ -231,11 +247,10 @@ const handleDeletePin = async (pinId: number) => {
         </div>
       </div>
 
-      {/* MODALS */}
       <AnimatePresence>
         {showAddModal && (
           <motion.div
-            className="modal-backdrop"
+            className="modal-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -248,27 +263,64 @@ const handleDeletePin = async (pinId: number) => {
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={e => e.stopPropagation()}
             >
-              <h2>Přidat příspěvek</h2>
-              <form className="add-post-form" onSubmit={handleAddPost}>
+              <h2 className="modal-title">Přidat příspěvek</h2>
+              <form onSubmit={handleAddPost}>
                 <input
                   type="text"
-                  placeholder="Název"
+                  placeholder="Název příspěvku"
                   value={newPost.title}
                   onChange={e => setNewPost({ ...newPost, title: e.target.value })}
+                  className="modal-input"
                 />
                 <textarea
-                  placeholder="Popis"
+                  placeholder="Popis (nepovinné)"
                   value={newPost.description}
                   onChange={e => setNewPost({ ...newPost, description: e.target.value })}
+                  className="modal-textarea"
+                  rows={3}
                 />
-                <div className="file-input-wrapper">
-                  {selectedFile ? selectedFile.name : "Vyber soubor"}
-                  <input type="file" accept="image/*" onChange={handleFileSelect} />
+                <div className="modal-file-upload">
+                  <div className="modal-file-dropzone">
+                    {previewUrl ? (
+                      <div className="modal-file-preview">
+                        <img src={previewUrl} alt="Preview" />
+                        <button 
+                          type="button" 
+                          className="modal-file-remove"
+                          onClick={() => { setSelectedFile(null); setPreviewUrl(""); setNewPost(prev => ({ ...prev, imageUrl: "" })) }}
+                        >
+                          <X size={16} />
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <Plus size={32} className="modal-file-icon" />
+                        <span>Klikni pro nahrání obrázku</span>
+                        <span className="modal-file-hint">PNG, JPG, GIF do 10MB</span>
+                      </>
+                    )}
+                    <input type="file" accept="image/*" onChange={handleFileSelect} />
+                  </div>
                 </div>
-                {previewUrl && <img src={previewUrl} className="preview-image" alt="Preview" />}
-                <button type="submit" disabled={uploading}>
-                  {uploading ? "Přidávám..." : "Přidat"}
-                </button>
+                <div className="modal-buttons">
+                  <motion.button 
+                    type="button"
+                    onClick={() => setShowAddModal(false)} 
+                    className="modal-btn-cancel"
+                    whileHover={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+                  >
+                    Zrušit
+                  </motion.button>
+                  <motion.button 
+                    type="submit" 
+                    className="modal-btn-confirm"
+                    disabled={uploading}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {uploading ? "Přidávám..." : "Přidat příspěvek"}
+                  </motion.button>
+                </div>
               </form>
             </motion.div>
           </motion.div>
@@ -299,6 +351,56 @@ const handleDeletePin = async (pinId: number) => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {showDeleteModal && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowDeleteModal(false)}
+          >
+            <motion.div
+              className="modal-content modal-content-small"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={e => e.stopPropagation()}
+            >
+              <Trash2 size={48} color="#ff4444" className="modal-icon" />
+              <h2 className="modal-title">Smazat příspěvek?</h2>
+              <p className="modal-text">Tato akce je nevratná.</p>
+              <div className="modal-buttons modal-buttons-center">
+                <motion.button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="modal-btn-cancel"
+                  whileHover={{ backgroundColor: "rgba(255,255,255,0.2)" }}
+                >
+                  Zrušit
+                </motion.button>
+                <motion.button
+                  onClick={confirmDeletePin}
+                  className="modal-btn-delete"
+                  whileHover={{ backgroundColor: "#cc0000" }}
+                >
+                  Smazat
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
+
+export default function GaleriePage() {
+  return (
+    <ProtectedRoute>
+      <GaleriePageContent />
+    </ProtectedRoute>
+  )
+}
+

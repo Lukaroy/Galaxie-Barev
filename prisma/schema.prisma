@@ -41,14 +41,32 @@ model Palette {
   description String?  @db.Text
 }
 
+enum SegmentType {
+  LESSON
+  TEST
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  EXPERT
+}
+
 model Segment {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(255)   // Název článku
-  slug        String   @unique             // Unikátní identifikátor pro URL, např. "typografie-v-ui"
-  description String?  @db.Text           // Krátký úvod / obsah pro seznam článků
-  tags        String[]                     // Kategorie nebo štítky
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id          Int          @id @default(autoincrement())
+  title       String       @db.VarChar(255)
+  slug        String       @unique
+  description String?      @db.Text
+  content     String?      @db.Text           // Obsah lekce (markdown/html)
+  type        SegmentType  @default(LESSON)  // Lekce nebo Test
+  difficulty  Difficulty   @default(BEGINNER)
+  duration    String?      @db.VarChar(32)   // např. "15 min"
+  icon        String?      @db.VarChar(32)   // název ikony z lucide
+  color       String?      @db.VarChar(7)    // hex barva
+  tags        String[]
+  questions   Json?                           // JSON pole otázek pro testy
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Attribute {

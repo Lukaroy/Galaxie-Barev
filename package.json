@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.2.0",
+    "@types/fabric": "^5.3.11",
     "express": "^5.2.1",
+    "fabric": "^7.1.0",
     "firebase": "^12.7.0",
     "firebase-admin": "^13.6.0",
     "framer-motion": "^12.24.5",
@@ -19,7 +21,8 @@
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-hot-toast": "^2.6.0"
+    "react-hot-toast": "^2.6.0",
+    "slugify": "^1.6.6"
   },
   "devDependencies": {
     "@prisma/client": "^7.2.0",
