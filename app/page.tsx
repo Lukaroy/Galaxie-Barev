@@ -22,11 +22,7 @@ export default function HomePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       >
-        <motion.img 
-          src="/logo.svg" 
-          alt="Logo" 
-          width={120} 
-          height={120}
+      <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ 
@@ -34,8 +30,10 @@ export default function HomePage() {
             type: "spring",
             stiffness: 100,
             damping: 15
-          }}
-        />
+        }}
+      >
+  <img src="/logo.svg" alt="Logo" width={120} height={120} />
+</motion.div>
 
         <div className="hero-heading">
           <motion.h1 
