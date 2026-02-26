@@ -32,7 +32,7 @@ export default function HomePage() {
             damping: 15
         }}
       >
-  <img src="/logo.svg" alt="Logo" width={120} height={120} />
+  <img src="/Logo.svg" alt="Logo" width={120} height={120} />
 </motion.div>
 
         <div className="hero-heading">
