@@ -16,7 +16,7 @@ const inder = Inder({
 })
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://galaxie-barev.cz'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://galaxie-barev.vercel.app/'),
   title: {
     default: 'Galaxie Barev - Kreativní nástroje pro designéry',
     template: '%s | Galaxie Barev'
@@ -85,7 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     '@type': 'WebApplication',
     name: 'Galaxie Barev',
     description: 'Kreativní nástroje pro designéry - generování barevných palet, moodboardy, fonty a galerie',
-    url: process.env.NEXT_PUBLIC_BASE_URL || 'https://galaxie-barev.cz',
+    url: process.env.NEXT_PUBLIC_BASE_URL || 'https://galaxie-barev.vercel.app/',
     applicationCategory: 'DesignApplication',
     operatingSystem: 'Web',
     offers: {

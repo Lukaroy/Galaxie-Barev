@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://galaxie-barev.cz'
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://galaxie-barev.vercel.app/'
   
   return [
     {
