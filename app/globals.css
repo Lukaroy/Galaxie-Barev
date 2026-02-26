@@ -4255,7 +4255,6 @@ body.menu-open {
   color: white;
 }
 
-/* Responsive styles for moodboard and teorie pages */
 @media (max-width: 1024px) {
   .wrapper {
     padding: 4rem 2rem;
@@ -4332,7 +4331,6 @@ body.menu-open {
   }
 }
 
-/* ===================== MOODBOARD PAGE ===================== */
 .moodboard-page {
   min-height: 100vh;
   padding: 1.5rem 2rem 3rem;
@@ -10432,7 +10430,6 @@ body.menu-open {
   color: #666;
 }
 
-/* ===================== MOODBOARD EDITOR V2 ===================== */
 .moodboard-editor-v2 {
   position: fixed;
   inset: 0;

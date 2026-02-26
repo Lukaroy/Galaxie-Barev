@@ -70,7 +70,6 @@ export default function Navbar() {
                   </div>
 
                   <Link href="/profil" className="dropdown-item" onClick={() => setProfileOpen(false)}>Můj profil</Link>
-                  <Link href="/nastenka" className="dropdown-item" onClick={() => setProfileOpen(false)}>Nástěnka</Link>
                   <Link href="/oblibene" className="dropdown-item" onClick={() => setProfileOpen(false)}>Oblíbené</Link>
                   <Link href="/nastaveni" className="dropdown-item" onClick={() => setProfileOpen(false)}>Nastavení</Link>
                   <button className="dropdown-item logout-btn" onClick={() => { logoutUser(); setProfileOpen(false) }}>Odhlásit se</button>
@@ -98,7 +97,6 @@ export default function Navbar() {
           <li><Link href="/uceni" onClick={() => setMenuOpen(false)}>Učení</Link></li>
         </ul>
         <ul className="down-links">
-          <li><Link href="/nastenka" onClick={() => setMenuOpen(false)}>Nástěnka</Link></li>
           <li><Link href="/oblibene" onClick={() => setMenuOpen(false)}>Oblíbené</Link></li>
           <li><Link href="/nastaveni" onClick={() => setMenuOpen(false)}>Nastavení</Link></li>
         </ul>
