@@ -34,7 +34,6 @@ export default function HomePage() {
       >
   <img src="/Logo.svg" alt="Logo" width={120} height={120} />
 </motion.div>
-
         <div className="hero-heading">
           <motion.h1 
             className="hero-title"
