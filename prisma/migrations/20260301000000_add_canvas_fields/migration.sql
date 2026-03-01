@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Moodboard" ADD COLUMN "canvasJson" TEXT;
+ALTER TABLE "Moodboard" ADD COLUMN "canvasWidth" INTEGER NOT NULL DEFAULT 794;
+ALTER TABLE "Moodboard" ADD COLUMN "canvasHeight" INTEGER NOT NULL DEFAULT 1123;

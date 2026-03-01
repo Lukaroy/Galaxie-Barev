@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
-  Trash2, Plus, BookOpen, FileQuestion, ChevronRight, Play, 
+  Trash2, Plus, BookOpen, FileQuestion, ChevronRight, 
   Palette, Type as TypeIcon, Image, Layout, Sparkles
 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
@@ -272,7 +272,7 @@ function UceniPageContent() {
         )}
 
         {/* Segments Grid */}
-        <div className="uceni-grid">
+        <div className="uceni-module-grid">
           <AnimatePresence>
             {filteredSegments.map((segment, index) => {
               const IconComponent = getIcon(segment.icon)
@@ -283,12 +283,12 @@ function UceniPageContent() {
               return (
                 <motion.div
                   key={segment.id}
-                  className="uceni-card"
-                  initial={{ opacity: 0, y: 20 }}
+                  className="uceni-module-card"
+                  initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3, delay: index * 0.05 }}
-                  whileHover={{ y: -4, borderColor: "rgba(152, 114, 199, 0.4)" }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.25, delay: index * 0.04 }}
+                  whileHover={{ y: -4 }}
                   onClick={() => router.push(`/uceni/${segment.slug}`)}
                   style={{ cursor: "pointer" }}
                 >
@@ -301,63 +301,49 @@ function UceniPageContent() {
                         setShowDeleteModal(true)
                       }}
                     >
-                      <Trash2 size={16} />
+                      <Trash2 size={15} />
                     </button>
                   )}
 
-                  <div 
-                    className="uceni-card-icon"
-                    style={{ background: segment.color || "#9872C7" }}
-                  >
-                    <IconComponent size={28} color="white" />
-                  </div>
-
-                  <div className="uceni-card-meta">
-                    <span 
-                      className="uceni-card-type"
-                      style={{ 
-                        background: segmentType === "TEST" ? "rgba(239, 68, 68, 0.2)" : "rgba(59, 130, 246, 0.2)",
-                        color: segmentType === "TEST" ? "#ef4444" : "#3b82f6"
-                      }}
+                  <div className="uceni-module-top">
+                    <div
+                      className="uceni-module-icon"
+                      style={{ background: segment.color || "#9872C7" }}
                     >
-                      {segmentType === "TEST" ? <FileQuestion size={12} /> : <BookOpen size={12} />}
-                      {segmentType === "TEST" ? "Test" : "Lekce"}
-                    </span>
-                    <span 
-                      className="uceni-card-difficulty"
-                      style={{ background: diffColors.bg, color: diffColors.text }}
-                    >
-                      {difficultyLabels[segmentDifficulty]}
-                    </span>
-                    {segment.duration && (
-                      <span className="uceni-card-duration">{segment.duration}</span>
-                    )}
-                  </div>
-
-                  <h3 className="uceni-card-title">{segment.title}</h3>
-                  {segment.description && (
-                    <p className="uceni-card-desc">{segment.description}</p>
-                  )}
-
-                  {(segment.tags?.length ?? 0) > 0 && (
-                    <div className="uceni-card-tags">
-                      {segment.tags.slice(0, 3).map((tag, i) => (
-                        <span key={i} className="uceni-tag">{tag}</span>
-                      ))}
+                      <IconComponent size={22} color="white" />
                     </div>
+                    <div className="uceni-module-badges">
+                      <span
+                        className="uceni-card-type"
+                        style={{
+                          background: segmentType === "TEST" ? "rgba(239,68,68,0.15)" : "rgba(59,130,246,0.15)",
+                          color: segmentType === "TEST" ? "#ef4444" : "#3b82f6"
+                        }}
+                      >
+                        {segmentType === "TEST" ? <FileQuestion size={11} /> : <BookOpen size={11} />}
+                        {segmentType === "TEST" ? "Test" : "Lekce"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <h3 className="uceni-module-title">{segment.title}</h3>
+                  {segment.description && (
+                    <p className="uceni-module-desc">{segment.description}</p>
                   )}
 
-                  <button className="uceni-card-btn">
-                    {segmentType === "TEST" ? (
-                      <>
-                        <Play size={16} /> Spustit test
-                      </>
-                    ) : (
-                      <>
-                        <ChevronRight size={16} /> Otevřít lekci
-                      </>
+                  <div className="uceni-module-footer">
+                    {(segment.tags?.length ?? 0) > 0 && (
+                      <div className="uceni-module-tags">
+                        {segment.tags.slice(0, 2).map((tag, i) => (
+                          <span key={i} className="uceni-tag">{tag}</span>
+                        ))}
+                      </div>
                     )}
-                  </button>
+                    <span className="uceni-module-action">
+                      {segmentType === "TEST" ? "Spustit test" : "Otevřít lekci"}
+                      <ChevronRight size={16} />
+                    </span>
+                  </div>
                 </motion.div>
               )
             })}
@@ -366,11 +352,24 @@ function UceniPageContent() {
 
         {/* Empty State */}
         {filteredSegments.length === 0 && !loading && (
-          <div className="uceni-empty">
-            <BookOpen size={64} className="uceni-empty-icon" />
-            <h3>Žádné segmenty</h3>
-            <p>Pro zvolenou kategorii nemáme žádný obsah.</p>
-          </div>
+          <motion.div
+            className="moodboard-empty"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <BookOpen size={56} className="moodboard-empty-icon" />
+            <h2 className="moodboard-empty-title">Nic tu není</h2>
+            <p className="moodboard-empty-subtitle">Pro zvolenou kategorii nebo obtížnost nemáme žádný obsah.</p>
+            <motion.button
+              className="moodboard-empty-cta"
+              onClick={() => { setSelectedType("Vše"); setSelectedDifficulty("Vše") }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Zobrazit vše
+            </motion.button>
+          </motion.div>
         )}
       </div>
 
@@ -391,11 +390,14 @@ function UceniPageContent() {
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={e => e.stopPropagation()}
             >
-              <h2 className="modal-title">
-                <Plus size={24} /> Nový segment
-              </h2>
+              <div className="modal-large-header">
+                <h2 className="modal-title">
+                  <Plus size={24} /> Nový segment
+                </h2>
+              </div>
 
-              <div className="modal-form">
+              <div className="modal-large-body">
+                <div className="modal-form">
                 <div className="modal-row">
                   <div className="modal-field">
                     <label>Název</label>
@@ -558,9 +560,10 @@ function UceniPageContent() {
                     </div>
                   </div>
                 )}
+                </div>
               </div>
 
-              <div className="modal-buttons">
+              <div className="modal-large-footer">
                 <button
                   onClick={() => { setShowCreateModal(false); resetForm() }}
                   className="modal-btn-cancel"

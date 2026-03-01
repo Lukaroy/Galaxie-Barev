@@ -6,7 +6,7 @@ import {
   ArrowLeft, Clock, BookOpen, FileQuestion, CheckCircle, XCircle,
   Palette, Type as TypeIcon, Image, Layout, Sparkles, Award, RotateCcw,
   Edit3, Save, X, Bold, Italic, Heading1, Heading2, Heading3, 
-  ImagePlus, Link2, List, Quote, Code, Eye, EyeOff, Trash2
+  ImagePlus, List, Quote, Code, Eye, EyeOff, Trash2
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Loading from "@/app/loading"
@@ -75,6 +75,9 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
   const [saving, setSaving] = useState(false)
   const [showPreview, setShowPreview] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const imageInputRef = useRef<HTMLInputElement>(null)
+  const [imageMap, setImageMap] = useState<Record<string, string>>({})
+  const imageCounter = useRef(0)
   
   // Test state
   const [testStarted, setTestStarted] = useState(false)
@@ -156,6 +159,13 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
   const handleSave = async () => {
     if (!segment) return
     
+    // Resolve img:N placeholders back to data URLs before saving
+    const resolveContent = (text: string) =>
+      text.replace(/\(img:(\d+)\)/g, (_m, n) => {
+        const url = imageMap[`img:${n}`]
+        return url ? `(${url})` : `(img:${n})`
+      })
+
     setSaving(true)
     try {
       const res = await fetch(`/api/segments/${segment.id}`, {
@@ -164,7 +174,7 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
         body: JSON.stringify({
           title: editTitle,
           description: editDescription,
-          content: editContent,
+          content: resolveContent(editContent),
           duration: editDuration || null
         })
       })
@@ -173,6 +183,8 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
         const updated = await res.json()
         setSegment(updated)
         setIsEditing(false)
+        setImageMap({})
+        imageCounter.current = 0
       } else {
         alert("Chyba při ukládání")
       }
@@ -183,20 +195,19 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
     }
   }
   
-  const handleInsertImage = () => {
-    const url = prompt("Zadejte URL obrázku:")
-    if (url) {
-      const alt = prompt("Zadejte popis obrázku (volitelné):") || "obrázek"
-      insertAtCursor(`\n![${alt}](${url})\n`)
+  const handleInsertImageFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      const dataUrl = reader.result as string
+      const key = `img:${++imageCounter.current}`
+      const label = `obrázek ${imageCounter.current}`
+      setImageMap(prev => ({ ...prev, [key]: dataUrl }))
+      insertAtCursor(`\n![${label}](${key})\n`)
     }
-  }
-  
-  const handleInsertLink = () => {
-    const url = prompt("Zadejte URL odkazu:")
-    if (url) {
-      const text = prompt("Zadejte text odkazu:") || url
-      insertText(`[${text}](${url})`)
-    }
+    reader.readAsDataURL(file)
+    e.target.value = ''
   }
 
   const handleAnswerSelect = (answerIndex: number) => {
@@ -244,8 +255,8 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
   
   if (error || !segment) {
     return (
-      <div className="segment-detail-page">
-        <div className="segment-container">
+      <div className="profil-page">
+        <div className="lesson-container">
           <div className="segment-error">
             <h2>{error || "Segment nenalezen"}</h2>
             <button onClick={() => router.push("/uceni")} className="segment-back-btn">
@@ -268,8 +279,8 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
     
     if (!testStarted && !showResults) {
       return (
-        <div className="segment-detail-page">
-          <div className="segment-container">
+        <div className="profil-page">
+          <div className="lesson-container">
             <button onClick={() => router.push("/uceni")} className="segment-back-link">
               <ArrowLeft size={18} /> Zpět na seznam
             </button>
@@ -279,52 +290,64 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <div className="segment-header">
+              <div className="test-hero" style={{ borderColor: segment.color || "#684d89" }}>
                 <div 
-                  className="segment-icon"
-                  style={{ background: segment.color || "#9872C7" }}
+                  className="test-hero-icon"
+                  style={{ background: `linear-gradient(135deg, ${segment.color || "#684d89"}, ${segment.color || "#684d89"}cc)` }}
                 >
-                  <IconComponent size={40} color="white" />
+                  <FileQuestion size={48} color="white" />
                 </div>
-                <div className="segment-title-area">
-                  <div className="segment-badges">
-                    <span className="segment-type-badge test">
-                      <FileQuestion size={14} /> Test
+                <h1 className="test-hero-title">{segment.title}</h1>
+                <div className="segment-badges" style={{ justifyContent: "center" }}>
+                  <span className="segment-type-badge test">
+                    <FileQuestion size={14} /> Test
+                  </span>
+                  <span 
+                    className="segment-diff-badge"
+                    style={{ background: diffColors.bg, color: diffColors.text }}
+                  >
+                    {difficultyLabels[segmentDifficulty]}
+                  </span>
+                  {segment.duration && (
+                    <span className="segment-duration">
+                      <Clock size={14} /> {segment.duration}
                     </span>
-                    <span 
-                      className="segment-diff-badge"
-                      style={{ background: diffColors.bg, color: diffColors.text }}
-                    >
-                      {difficultyLabels[segmentDifficulty]}
-                    </span>
-                    {segment.duration && (
-                      <span className="segment-duration">
-                        <Clock size={14} /> {segment.duration}
-                      </span>
-                    )}
-                  </div>
-                  <h1 className="segment-title">{segment.title}</h1>
+                  )}
                 </div>
               </div>
 
               {segment.description && (
-                <p className="segment-description">{segment.description}</p>
+                <p className="segment-description" style={{ textAlign: "center" }}>{segment.description}</p>
               )}
 
+              <div className="test-stats-row">
+                <div className="test-stat-card">
+                  <span className="test-stat-num">{questions.length}</span>
+                  <span className="test-stat-label">Otázek</span>
+                </div>
+                <div className="test-stat-card">
+                  <span className="test-stat-num">60%</span>
+                  <span className="test-stat-label">K úspěchu</span>
+                </div>
+                <div className="test-stat-card">
+                  <span className="test-stat-num">{segment.duration || "—"}</span>
+                  <span className="test-stat-label">Doba trvání</span>
+                </div>
+              </div>
+
               <div className="test-info-box">
-                <h3>Informace o testu</h3>
+                <h3>Pravidla testu</h3>
                 <ul>
-                  <li><strong>Počet otázek:</strong> {questions.length}</li>
-                  <li><strong>Typ:</strong> Výběr z možností</li>
-                  <li><strong>Můžeš se vracet</strong> k předchozím otázkám</li>
+                  <li><CheckCircle size={16} /> Výběr z více možností</li>
+                  <li><CheckCircle size={16} /> Můžeš se vracet k předchozím otázkám</li>
+                  <li><CheckCircle size={16} /> Výsledek se zobrazí ihned po dokončení</li>
                 </ul>
               </div>
 
               <motion.button
-                onClick={() => setTestStarted(true)}
-                className="test-start-btn"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                className="test-start-btn disabled"
+                disabled
+                style={{ opacity: 0.45, cursor: 'not-allowed' }}
               >
                 Spustit test
               </motion.button>
@@ -339,8 +362,8 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
       const passed = percentage >= 60
       
       return (
-        <div className="segment-detail-page">
-          <div className="segment-container">
+        <div className="profil-page">
+          <div className="lesson-container">
             <motion.div 
               className="test-results"
               initial={{ opacity: 0, scale: 0.9 }}
@@ -415,8 +438,8 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
     const currentQuestion = questions[currentQuestionIndex]
     
     return (
-      <div className="segment-detail-page">
-        <div className="segment-container">
+      <div className="profil-page">
+        <div className="lesson-container">
           <div className="test-progress">
             <span>Otázka {currentQuestionIndex + 1} z {questions.length}</span>
             <div className="progress-bar">
@@ -480,14 +503,14 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
 
   // Render Lesson Mode
   return (
-    <div className="segment-detail-page">
-      <div className="segment-container">
+    <div className="profil-page">
+      <div className="lesson-container">
         <div className="segment-top-bar">
           <button onClick={() => router.push("/uceni")} className="segment-back-link">
             <ArrowLeft size={18} /> Zpět na seznam
           </button>
           
-          {isAdmin && !isEditing && (
+          {isAdmin && !isEditing && segment.content && (
             <button 
               onClick={() => setIsEditing(true)} 
               className="segment-edit-btn"
@@ -537,14 +560,18 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
             </div>
           ) : (
             <>
-              <div className="segment-header">
-                <div 
-                  className="segment-icon"
+              {/* Hero banner */}
+              <div
+                className="lesson-hero"
+                style={{ background: `linear-gradient(135deg, ${segment.color || "#9872C7"}33 0%, ${segment.color || "#9872C7"}11 100%)`, borderLeftColor: segment.color || "#9872C7" }}
+              >
+                <div
+                  className="lesson-hero-icon"
                   style={{ background: segment.color || "#9872C7" }}
                 >
-                  <IconComponent size={40} color="white" />
+                  <IconComponent size={36} color="white" />
                 </div>
-                <div className="segment-title-area">
+                <div className="lesson-hero-text">
                   <div className="segment-badges">
                     <span className="segment-type-badge lesson">
                       <BookOpen size={14} /> Lekce
@@ -583,6 +610,7 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
           {isEditing ? (
             <div className="content-editor">
               <div className="editor-toolbar">
+                <input ref={imageInputRef} type="file" accept="image/*" hidden onChange={handleInsertImageFile} />
                 <div className="toolbar-group">
                   <button 
                     onClick={() => insertText("# ", "")} 
@@ -625,8 +653,8 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
                     <Italic size={18} />
                   </button>
                   <button 
-                    onClick={() => insertText("`", "`")} 
-                    title="Kód"
+                    onClick={() => insertText('```\n', '\n```')} 
+                    title="Kódový blok"
                     className="toolbar-btn"
                   >
                     <Code size={18} />
@@ -637,18 +665,11 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
                 
                 <div className="toolbar-group">
                   <button 
-                    onClick={handleInsertImage} 
+                    onClick={() => imageInputRef.current?.click()}
                     title="Vložit obrázek"
                     className="toolbar-btn"
                   >
                     <ImagePlus size={18} />
-                  </button>
-                  <button 
-                    onClick={handleInsertLink} 
-                    title="Vložit odkaz"
-                    className="toolbar-btn"
-                  >
-                    <Link2 size={18} />
                   </button>
                   <button 
                     onClick={() => insertAtCursor("\n- ")} 
@@ -685,15 +706,13 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
                   value={editContent}
                   onChange={(e) => setEditContent(e.target.value)}
                   className="content-textarea"
-                  placeholder="Obsah lekce... Použijte Markdown formátování:&#10;# Nadpis 1&#10;## Nadpis 2&#10;**tučný text**&#10;*kurzíva*&#10;![popis](url obrázku)&#10;[text odkazu](url)"
+                  placeholder={"Obsah lekce... Použijte Markdown formátování:\n# Nadpis 1\n## Nadpis 2\n**tučný text**\n*kurzíva*\n```\nkod\n```"}
                 />
-                
                 {showPreview && (
-                  <div className="content-preview">
-                    <div className="preview-label">Náhled</div>
-                    <div 
+                  <div className="preview-pane">
+                    <div
                       className="markdown-content"
-                      dangerouslySetInnerHTML={{ __html: formatContent(editContent) }}
+                      dangerouslySetInnerHTML={{ __html: formatContent(editContent, imageMap) }}
                     />
                   </div>
                 )}
@@ -714,6 +733,8 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
                     setEditTitle(segment.title)
                     setEditDescription(segment.description || "")
                     setEditDuration(segment.duration || "")
+                    setImageMap({})
+                    imageCounter.current = 0
                   }} 
                   className="cancel-btn"
                   disabled={saving}
@@ -759,9 +780,19 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
   )
 }
 
-function formatContent(content: string): string {
-  // Enhanced markdown-like formatting
-  let html = content
+function formatContent(content: string, imageMap: Record<string, string> = {}): string {
+  // Resolve short img:N references to actual data URLs
+  let html = Object.keys(imageMap).length
+    ? content.replace(/\(img:(\d+)\)/g, (_m, n) => {
+        const url = imageMap[`img:${n}`]
+        return url ? `(${url})` : `(img:${n})`
+      })
+    : content
+  html = html
+    // Fenced code blocks first (before inline code)
+    .replace(/```([^\n]*)\n([\s\S]*?)```/g, (_match, _lang, code) =>
+      `<pre><code class="code-block">${code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`
+    )
     // Images: ![alt](url)
     .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="content-image" />')
     // Links: [text](url)
@@ -773,8 +804,8 @@ function formatContent(content: string): string {
     // Bold and italic
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    // Code
-    .replace(/`(.+?)`/g, '<code>$1</code>')
+    // Inline code (not inside pre blocks)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
     // Lists
     .replace(/^- (.+)$/gm, '<li>$1</li>')
     // Blockquotes
@@ -783,16 +814,16 @@ function formatContent(content: string): string {
     .replace(/^---$/gm, '<hr />')
     // Paragraphs
     .replace(/\n\n/g, '</p><p>')
-  
+
   // Wrap consecutive li items in ul
   html = html.replace(/(<li>.*<\/li>(\n)?)+/g, (match) => `<ul>${match}</ul>`)
-  
+
   // Wrap remaining text in paragraphs
   html = html.replace(/^([^<\n].+)$/gm, (match) => {
     if (match.startsWith('<') || match.trim() === '') return match
     return `<p>${match}</p>`
   })
-  
+
   return html.replace(/<p><\/p>/g, '').replace(/<p>\s*<\/p>/g, '')
 }
 

@@ -184,14 +184,8 @@ exports.Prisma.ElementAttributeScalarFieldEnum = {
 
 exports.Prisma.ElementScalarFieldEnum = {
   id: 'id',
-  name: 'name',
-  coordsX: 'coordsX',
-  coordsY: 'coordsY',
-  opacity: 'opacity',
-  rotation: 'rotation',
-  height: 'height',
-  width: 'width',
-  layer: 'layer',
+  fabricJson: 'fabricJson',
+  zIndex: 'zIndex',
   elementTypeId: 'elementTypeId',
   moodboardId: 'moodboardId'
 };
@@ -206,6 +200,13 @@ exports.Prisma.MoodboardScalarFieldEnum = {
   id: 'id',
   name: 'name',
   createdAt: 'createdAt',
+  canvasWidth: 'canvasWidth',
+  canvasHeight: 'canvasHeight',
+  bgColor: 'bgColor',
+  canvasJson: 'canvasJson',
+  viewportX: 'viewportX',
+  viewportY: 'viewportY',
+  viewportScale: 'viewportScale',
   userId: 'userId'
 };
 

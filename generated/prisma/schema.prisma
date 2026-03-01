@@ -71,7 +71,7 @@ model Segment {
 
 model Attribute {
   id          Int     @id @default(autoincrement())
-  name        String  @db.VarChar(32)
+  name        String  @unique @db.VarChar(64)
   description String? @db.VarChar(255)
   isActive    Boolean @default(true)
 
@@ -81,7 +81,7 @@ model Attribute {
 
 model ElementType {
   id          Int     @id @default(autoincrement())
-  name        String  @db.VarChar(32)
+  name        String  @unique @db.VarChar(32)
   description String? @db.VarChar(255)
   isActive    Boolean @default(true)
 
@@ -94,46 +94,47 @@ model ElementAttribute {
   elementTypeId Int
   attributeId   Int
 
-  elementType ElementType @relation(fields: [elementTypeId], references: [id])
-  attribute   Attribute   @relation(fields: [attributeId], references: [id])
+  elementType ElementType @relation(fields: [elementTypeId], references: [id], onDelete: Cascade)
+  attribute   Attribute   @relation(fields: [attributeId], references: [id], onDelete: Cascade)
 
   @@id([elementTypeId, attributeId])
 }
 
 model Element {
-  id       Int    @id @default(autoincrement())
-  name     String @db.VarChar(32)
-  coordsX  Int
-  coordsY  Int
-  opacity  Int    @default(100)
-  rotation Int    @default(0)
-  height   Int
-  width    Int
-  layer    Int    @default(0)
+  id         Int    @id @default(autoincrement())
+  fabricJson String @db.Text // Serializovaný fabric.js objekt
+  zIndex     Int    @default(0) // Pořadí vrstvy
 
   elementTypeId Int
   moodboardId   Int
 
   elementType ElementType    @relation(fields: [elementTypeId], references: [id])
-  moodboard   Moodboard      @relation(fields: [moodboardId], references: [id])
+  moodboard   Moodboard      @relation(fields: [moodboardId], references: [id], onDelete: Cascade)
   values      ElementValue[]
 }
 
 model ElementValue {
   elementId   Int
   attributeId Int
-  value       String @db.VarChar(255)
+  value       String @db.Text
 
-  element   Element   @relation(fields: [elementId], references: [id])
-  attribute Attribute @relation(fields: [attributeId], references: [id])
+  element   Element   @relation(fields: [elementId], references: [id], onDelete: Cascade)
+  attribute Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
 
   @@id([elementId, attributeId])
 }
 
 model Moodboard {
-  id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(255)
-  createdAt DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(255)
+  createdAt     DateTime @default(now())
+  canvasWidth   Int      @default(794)
+  canvasHeight  Int      @default(1123)
+  bgColor       String   @default("#ffffff") @db.VarChar(7)
+  canvasJson    String?  @db.Text
+  viewportX     Float    @default(0)
+  viewportY     Float    @default(0)
+  viewportScale Float    @default(1)
 
   userId   String // Firebase UID, bez foreign key pro jednodušší vývoj
   elements Element[]

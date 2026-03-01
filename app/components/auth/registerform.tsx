@@ -219,7 +219,7 @@ export default function RegisterForm() {
         <div className="checkbox-group">
           <input type="checkbox" id="terms" required />
           <label htmlFor="terms" className="terms">
-            souhlasit s podmínkami <a href="/terms">Terms & Conditions</a>
+            Souhlasím s <a href="/podminky">podmínkami použití</a>
           </label>
         </div>
 

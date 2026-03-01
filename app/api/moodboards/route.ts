@@ -6,11 +6,18 @@ export async function GET(request: NextRequest) {
     const userId = request.nextUrl.searchParams.get('userId') || 'temp-user-id'
     const moodboards = await prisma.moodboard.findMany({
       where: { userId },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        createdAt: true,
+        canvasWidth: true,
+        canvasHeight: true,
+        bgColor: true,
+        userId: true,
         elements: {
-          include: {
-            elementType: true,
-            values: { include: { attribute: true } }
+          select: {
+            id: true,
+            elementType: { select: { name: true } },
           }
         }
       },
@@ -34,7 +41,9 @@ export async function POST(request: NextRequest) {
     const moodboard = await prisma.moodboard.create({
       data: {
         name,
-        userId
+        userId,
+        canvasWidth: body.canvasWidth || 794,
+        canvasHeight: body.canvasHeight || 1123,
       }
     })
 

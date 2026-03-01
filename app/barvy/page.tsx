@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from 'react'
-import { Download, Copy, Shuffle, History, Check, Eye, Lock, Unlock, Sun, Moon } from 'lucide-react'
+import { Copy, Shuffle, History, Check, Sun, Moon } from 'lucide-react'
 import type { ColorScheme, PaletteHistory } from '@/types'
 import { generateColorScheme, generateRandomColor, copyToClipboard, hexToHSL, hslToHex } from '@/lib/colorUtils'
 import ProtectedRoute from '@/app/components/ProtectedRoute'
@@ -12,7 +12,6 @@ function BarvyPageContent() {
   const [generatedColors, setGeneratedColors] = useState<string[]>([])
   const [history, setHistory] = useState<PaletteHistory[]>([])
   const [copiedColor, setCopiedColor] = useState<string | null>(null)
-  const [lockedColors, setLockedColors] = useState<Set<number>>(new Set())
   const [hoverColor, setHoverColor] = useState<number | null>(null)
   const [mounted, setMounted] = useState(false)
 
@@ -21,13 +20,8 @@ function BarvyPageContent() {
 
   const handleGenerateColors = useCallback(() => {
     const colors = generateColorScheme(baseColor, scheme)
-    
-    const finalColors = colors.map((color, idx) => 
-      lockedColors.has(idx) && generatedColors[idx] ? generatedColors[idx] : color
-    )
-    
-    setGeneratedColors(finalColors)
-  }, [baseColor, scheme, lockedColors, generatedColors])
+    setGeneratedColors(colors)
+  }, [baseColor, scheme])
 
   const randomColor = () => {
     setBaseColor(generateRandomColor())
@@ -52,33 +46,6 @@ function BarvyPageContent() {
     const darkest = Math.min(lum1, lum2)
     
     return ((brightest + 0.05) / (darkest + 0.05)).toFixed(2)
-  }
-
-  const exportPalette = (format: 'css' | 'json') => {
-    if (generatedColors.length === 0) return
-
-    let content = ''
-    if (format === 'css') {
-      content = ':root {\n'
-      generatedColors.forEach((color, idx) => {
-        content += `  --color-${idx + 1}: ${color};\n`
-      })
-      content += '}'
-    } else {
-      content = JSON.stringify({
-        scheme,
-        colors: generatedColors,
-        generated: new Date().toISOString()
-      }, null, 2)
-    }
-
-    const blob = new Blob([content], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `palette-${Date.now()}.${format}`
-    a.click()
-    URL.revokeObjectURL(url)
   }
 
   const copyAllColors = async () => {
@@ -106,16 +73,6 @@ function BarvyPageContent() {
       setCopiedColor(color)
       setTimeout(() => setCopiedColor(null), 1500)
     }
-  }
-
-  const toggleLockColor = (index: number) => {
-    const newLocked = new Set(lockedColors)
-    if (newLocked.has(index)) {
-      newLocked.delete(index)
-    } else {
-      newLocked.add(index)
-    }
-    setLockedColors(newLocked)
   }
 
   const adjustBrightness = (color: string, amount: number) => {
@@ -160,20 +117,6 @@ function BarvyPageContent() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mounted])
-
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === ' ' && !e.repeat) {
-        e.preventDefault()
-        handleGenerateColors()
-      } else if (e.key === 'r' && !e.repeat) {
-        randomColor()
-      }
-    }
-    
-    window.addEventListener('keydown', handleKeyPress)
-    return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [handleGenerateColors])
 
   const schemeInfo = {
     complementary: 'Protilehlé barvy na kruhu - silný kontrast',
@@ -300,15 +243,7 @@ function BarvyPageContent() {
               </button>
             </div>
 
-            <a href="/teorie" className="theory-link">
-              <Eye size={16} />
-              Psychologie barev
-            </a>
 
-            <div className="keyboard-hints">
-              <span><kbd>Space</kbd> Generovat</span>
-              <span><kbd>R</kbd> Náhodná barva</span>
-            </div>
           </div>
 
           <div className="palette-section">
@@ -319,27 +254,18 @@ function BarvyPageContent() {
                   <div className="palette-actions">
                     <button onClick={copyAllColors} className="btn-copy-all">
                       {copiedColor === 'all' ? <Check size={16} /> : <Copy size={16} />}
-                      {copiedColor === 'all' ? 'Zkopírováno' : 'Kopírovat'}
-                    </button>
-                    <button onClick={() => exportPalette('css')} className="btn-export" title="Export jako CSS">
-                      <Download size={16} />
-                      CSS
-                    </button>
-                    <button onClick={() => exportPalette('json')} className="btn-export" title="Export jako JSON">
-                      <Download size={16} />
-                      JSON
+                      {copiedColor === 'all' ? 'Zkopírováno' : 'Kopírovat vše'}
                     </button>
                   </div>
                 </div>
 
                 <div className="palette-grid">
                   {generatedColors.map((color, idx) => {
-                    const isLocked = lockedColors.has(idx)
                     const isHovered = hoverColor === idx
                     return (
                       <div
                         key={idx}
-                        className={`color-box ${isLocked ? 'locked' : ''}`}
+                        className="color-box"
                         style={{ backgroundColor: color }}
                         onMouseEnter={() => setHoverColor(idx)}
                         onMouseLeave={() => setHoverColor(null)}
@@ -382,16 +308,7 @@ function BarvyPageContent() {
                             </div>
                             <div className="color-actions">
                               <button onClick={(e) => { e.stopPropagation(); handleCopyColor(color, 'rgb') }}>RGB</button>
-                              <button 
-                                onClick={(e) => { 
-                                  e.stopPropagation(); 
-                                  toggleLockColor(idx);
-                                }}
-                                className={isLocked ? 'locked-btn' : ''}
-                                title={isLocked ? 'Odemknout' : 'Zamknout'}
-                              >
-                                {isLocked ? <Lock size={14} /> : <Unlock size={14} />}
-                              </button>
+                              <button onClick={(e) => { e.stopPropagation(); handleCopyColor(color, 'hsl') }}>HSL</button>
                             </div>
                           </div>
                         )}

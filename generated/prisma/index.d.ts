@@ -9746,68 +9746,38 @@ export namespace Prisma {
 
   export type ElementAvgAggregateOutputType = {
     id: number | null
-    coordsX: number | null
-    coordsY: number | null
-    opacity: number | null
-    rotation: number | null
-    height: number | null
-    width: number | null
-    layer: number | null
+    zIndex: number | null
     elementTypeId: number | null
     moodboardId: number | null
   }
 
   export type ElementSumAggregateOutputType = {
     id: number | null
-    coordsX: number | null
-    coordsY: number | null
-    opacity: number | null
-    rotation: number | null
-    height: number | null
-    width: number | null
-    layer: number | null
+    zIndex: number | null
     elementTypeId: number | null
     moodboardId: number | null
   }
 
   export type ElementMinAggregateOutputType = {
     id: number | null
-    name: string | null
-    coordsX: number | null
-    coordsY: number | null
-    opacity: number | null
-    rotation: number | null
-    height: number | null
-    width: number | null
-    layer: number | null
+    fabricJson: string | null
+    zIndex: number | null
     elementTypeId: number | null
     moodboardId: number | null
   }
 
   export type ElementMaxAggregateOutputType = {
     id: number | null
-    name: string | null
-    coordsX: number | null
-    coordsY: number | null
-    opacity: number | null
-    rotation: number | null
-    height: number | null
-    width: number | null
-    layer: number | null
+    fabricJson: string | null
+    zIndex: number | null
     elementTypeId: number | null
     moodboardId: number | null
   }
 
   export type ElementCountAggregateOutputType = {
     id: number
-    name: number
-    coordsX: number
-    coordsY: number
-    opacity: number
-    rotation: number
-    height: number
-    width: number
-    layer: number
+    fabricJson: number
+    zIndex: number
     elementTypeId: number
     moodboardId: number
     _all: number
@@ -9816,68 +9786,38 @@ export namespace Prisma {
 
   export type ElementAvgAggregateInputType = {
     id?: true
-    coordsX?: true
-    coordsY?: true
-    opacity?: true
-    rotation?: true
-    height?: true
-    width?: true
-    layer?: true
+    zIndex?: true
     elementTypeId?: true
     moodboardId?: true
   }
 
   export type ElementSumAggregateInputType = {
     id?: true
-    coordsX?: true
-    coordsY?: true
-    opacity?: true
-    rotation?: true
-    height?: true
-    width?: true
-    layer?: true
+    zIndex?: true
     elementTypeId?: true
     moodboardId?: true
   }
 
   export type ElementMinAggregateInputType = {
     id?: true
-    name?: true
-    coordsX?: true
-    coordsY?: true
-    opacity?: true
-    rotation?: true
-    height?: true
-    width?: true
-    layer?: true
+    fabricJson?: true
+    zIndex?: true
     elementTypeId?: true
     moodboardId?: true
   }
 
   export type ElementMaxAggregateInputType = {
     id?: true
-    name?: true
-    coordsX?: true
-    coordsY?: true
-    opacity?: true
-    rotation?: true
-    height?: true
-    width?: true
-    layer?: true
+    fabricJson?: true
+    zIndex?: true
     elementTypeId?: true
     moodboardId?: true
   }
 
   export type ElementCountAggregateInputType = {
     id?: true
-    name?: true
-    coordsX?: true
-    coordsY?: true
-    opacity?: true
-    rotation?: true
-    height?: true
-    width?: true
-    layer?: true
+    fabricJson?: true
+    zIndex?: true
     elementTypeId?: true
     moodboardId?: true
     _all?: true
@@ -9971,14 +9911,8 @@ export namespace Prisma {
 
   export type ElementGroupByOutputType = {
     id: number
-    name: string
-    coordsX: number
-    coordsY: number
-    opacity: number
-    rotation: number
-    height: number
-    width: number
-    layer: number
+    fabricJson: string
+    zIndex: number
     elementTypeId: number
     moodboardId: number
     _count: ElementCountAggregateOutputType | null
@@ -10004,14 +9938,8 @@ export namespace Prisma {
 
   export type ElementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
-    coordsX?: boolean
-    coordsY?: boolean
-    opacity?: boolean
-    rotation?: boolean
-    height?: boolean
-    width?: boolean
-    layer?: boolean
+    fabricJson?: boolean
+    zIndex?: boolean
     elementTypeId?: boolean
     moodboardId?: boolean
     elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
@@ -10022,14 +9950,8 @@ export namespace Prisma {
 
   export type ElementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
-    coordsX?: boolean
-    coordsY?: boolean
-    opacity?: boolean
-    rotation?: boolean
-    height?: boolean
-    width?: boolean
-    layer?: boolean
+    fabricJson?: boolean
+    zIndex?: boolean
     elementTypeId?: boolean
     moodboardId?: boolean
     elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
@@ -10038,14 +9960,8 @@ export namespace Prisma {
 
   export type ElementSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
-    coordsX?: boolean
-    coordsY?: boolean
-    opacity?: boolean
-    rotation?: boolean
-    height?: boolean
-    width?: boolean
-    layer?: boolean
+    fabricJson?: boolean
+    zIndex?: boolean
     elementTypeId?: boolean
     moodboardId?: boolean
     elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
@@ -10054,19 +9970,13 @@ export namespace Prisma {
 
   export type ElementSelectScalar = {
     id?: boolean
-    name?: boolean
-    coordsX?: boolean
-    coordsY?: boolean
-    opacity?: boolean
-    rotation?: boolean
-    height?: boolean
-    width?: boolean
-    layer?: boolean
+    fabricJson?: boolean
+    zIndex?: boolean
     elementTypeId?: boolean
     moodboardId?: boolean
   }
 
-  export type ElementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "coordsX" | "coordsY" | "opacity" | "rotation" | "height" | "width" | "layer" | "elementTypeId" | "moodboardId", ExtArgs["result"]["element"]>
+  export type ElementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fabricJson" | "zIndex" | "elementTypeId" | "moodboardId", ExtArgs["result"]["element"]>
   export type ElementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
     moodboard?: boolean | MoodboardDefaultArgs<ExtArgs>
@@ -10091,14 +10001,8 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      name: string
-      coordsX: number
-      coordsY: number
-      opacity: number
-      rotation: number
-      height: number
-      width: number
-      layer: number
+      fabricJson: string
+      zIndex: number
       elementTypeId: number
       moodboardId: number
     }, ExtArgs["result"]["element"]>
@@ -10528,14 +10432,8 @@ export namespace Prisma {
    */
   interface ElementFieldRefs {
     readonly id: FieldRef<"Element", 'Int'>
-    readonly name: FieldRef<"Element", 'String'>
-    readonly coordsX: FieldRef<"Element", 'Int'>
-    readonly coordsY: FieldRef<"Element", 'Int'>
-    readonly opacity: FieldRef<"Element", 'Int'>
-    readonly rotation: FieldRef<"Element", 'Int'>
-    readonly height: FieldRef<"Element", 'Int'>
-    readonly width: FieldRef<"Element", 'Int'>
-    readonly layer: FieldRef<"Element", 'Int'>
+    readonly fabricJson: FieldRef<"Element", 'String'>
+    readonly zIndex: FieldRef<"Element", 'Int'>
     readonly elementTypeId: FieldRef<"Element", 'Int'>
     readonly moodboardId: FieldRef<"Element", 'Int'>
   }
@@ -12068,16 +11966,33 @@ export namespace Prisma {
 
   export type MoodboardAvgAggregateOutputType = {
     id: number | null
+    canvasWidth: number | null
+    canvasHeight: number | null
+    viewportX: number | null
+    viewportY: number | null
+    viewportScale: number | null
   }
 
   export type MoodboardSumAggregateOutputType = {
     id: number | null
+    canvasWidth: number | null
+    canvasHeight: number | null
+    viewportX: number | null
+    viewportY: number | null
+    viewportScale: number | null
   }
 
   export type MoodboardMinAggregateOutputType = {
     id: number | null
     name: string | null
     createdAt: Date | null
+    canvasWidth: number | null
+    canvasHeight: number | null
+    bgColor: string | null
+    canvasJson: string | null
+    viewportX: number | null
+    viewportY: number | null
+    viewportScale: number | null
     userId: string | null
   }
 
@@ -12085,6 +12000,13 @@ export namespace Prisma {
     id: number | null
     name: string | null
     createdAt: Date | null
+    canvasWidth: number | null
+    canvasHeight: number | null
+    bgColor: string | null
+    canvasJson: string | null
+    viewportX: number | null
+    viewportY: number | null
+    viewportScale: number | null
     userId: string | null
   }
 
@@ -12092,6 +12014,13 @@ export namespace Prisma {
     id: number
     name: number
     createdAt: number
+    canvasWidth: number
+    canvasHeight: number
+    bgColor: number
+    canvasJson: number
+    viewportX: number
+    viewportY: number
+    viewportScale: number
     userId: number
     _all: number
   }
@@ -12099,16 +12028,33 @@ export namespace Prisma {
 
   export type MoodboardAvgAggregateInputType = {
     id?: true
+    canvasWidth?: true
+    canvasHeight?: true
+    viewportX?: true
+    viewportY?: true
+    viewportScale?: true
   }
 
   export type MoodboardSumAggregateInputType = {
     id?: true
+    canvasWidth?: true
+    canvasHeight?: true
+    viewportX?: true
+    viewportY?: true
+    viewportScale?: true
   }
 
   export type MoodboardMinAggregateInputType = {
     id?: true
     name?: true
     createdAt?: true
+    canvasWidth?: true
+    canvasHeight?: true
+    bgColor?: true
+    canvasJson?: true
+    viewportX?: true
+    viewportY?: true
+    viewportScale?: true
     userId?: true
   }
 
@@ -12116,6 +12062,13 @@ export namespace Prisma {
     id?: true
     name?: true
     createdAt?: true
+    canvasWidth?: true
+    canvasHeight?: true
+    bgColor?: true
+    canvasJson?: true
+    viewportX?: true
+    viewportY?: true
+    viewportScale?: true
     userId?: true
   }
 
@@ -12123,6 +12076,13 @@ export namespace Prisma {
     id?: true
     name?: true
     createdAt?: true
+    canvasWidth?: true
+    canvasHeight?: true
+    bgColor?: true
+    canvasJson?: true
+    viewportX?: true
+    viewportY?: true
+    viewportScale?: true
     userId?: true
     _all?: true
   }
@@ -12217,6 +12177,13 @@ export namespace Prisma {
     id: number
     name: string
     createdAt: Date
+    canvasWidth: number
+    canvasHeight: number
+    bgColor: string
+    canvasJson: string | null
+    viewportX: number
+    viewportY: number
+    viewportScale: number
     userId: string
     _count: MoodboardCountAggregateOutputType | null
     _avg: MoodboardAvgAggregateOutputType | null
@@ -12243,6 +12210,13 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     createdAt?: boolean
+    canvasWidth?: boolean
+    canvasHeight?: boolean
+    bgColor?: boolean
+    canvasJson?: boolean
+    viewportX?: boolean
+    viewportY?: boolean
+    viewportScale?: boolean
     userId?: boolean
     elements?: boolean | Moodboard$elementsArgs<ExtArgs>
     _count?: boolean | MoodboardCountOutputTypeDefaultArgs<ExtArgs>
@@ -12252,6 +12226,13 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     createdAt?: boolean
+    canvasWidth?: boolean
+    canvasHeight?: boolean
+    bgColor?: boolean
+    canvasJson?: boolean
+    viewportX?: boolean
+    viewportY?: boolean
+    viewportScale?: boolean
     userId?: boolean
   }, ExtArgs["result"]["moodboard"]>
 
@@ -12259,6 +12240,13 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     createdAt?: boolean
+    canvasWidth?: boolean
+    canvasHeight?: boolean
+    bgColor?: boolean
+    canvasJson?: boolean
+    viewportX?: boolean
+    viewportY?: boolean
+    viewportScale?: boolean
     userId?: boolean
   }, ExtArgs["result"]["moodboard"]>
 
@@ -12266,10 +12254,17 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     createdAt?: boolean
+    canvasWidth?: boolean
+    canvasHeight?: boolean
+    bgColor?: boolean
+    canvasJson?: boolean
+    viewportX?: boolean
+    viewportY?: boolean
+    viewportScale?: boolean
     userId?: boolean
   }
 
-  export type MoodboardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "userId", ExtArgs["result"]["moodboard"]>
+  export type MoodboardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "canvasWidth" | "canvasHeight" | "bgColor" | "canvasJson" | "viewportX" | "viewportY" | "viewportScale" | "userId", ExtArgs["result"]["moodboard"]>
   export type MoodboardInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     elements?: boolean | Moodboard$elementsArgs<ExtArgs>
     _count?: boolean | MoodboardCountOutputTypeDefaultArgs<ExtArgs>
@@ -12286,6 +12281,13 @@ export namespace Prisma {
       id: number
       name: string
       createdAt: Date
+      canvasWidth: number
+      canvasHeight: number
+      bgColor: string
+      canvasJson: string | null
+      viewportX: number
+      viewportY: number
+      viewportScale: number
       userId: string
     }, ExtArgs["result"]["moodboard"]>
     composites: {}
@@ -12714,6 +12716,13 @@ export namespace Prisma {
     readonly id: FieldRef<"Moodboard", 'Int'>
     readonly name: FieldRef<"Moodboard", 'String'>
     readonly createdAt: FieldRef<"Moodboard", 'DateTime'>
+    readonly canvasWidth: FieldRef<"Moodboard", 'Int'>
+    readonly canvasHeight: FieldRef<"Moodboard", 'Int'>
+    readonly bgColor: FieldRef<"Moodboard", 'String'>
+    readonly canvasJson: FieldRef<"Moodboard", 'String'>
+    readonly viewportX: FieldRef<"Moodboard", 'Float'>
+    readonly viewportY: FieldRef<"Moodboard", 'Float'>
+    readonly viewportScale: FieldRef<"Moodboard", 'Float'>
     readonly userId: FieldRef<"Moodboard", 'String'>
   }
     
@@ -15457,14 +15466,8 @@ export namespace Prisma {
 
   export const ElementScalarFieldEnum: {
     id: 'id',
-    name: 'name',
-    coordsX: 'coordsX',
-    coordsY: 'coordsY',
-    opacity: 'opacity',
-    rotation: 'rotation',
-    height: 'height',
-    width: 'width',
-    layer: 'layer',
+    fabricJson: 'fabricJson',
+    zIndex: 'zIndex',
     elementTypeId: 'elementTypeId',
     moodboardId: 'moodboardId'
   };
@@ -15485,6 +15488,13 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     createdAt: 'createdAt',
+    canvasWidth: 'canvasWidth',
+    canvasHeight: 'canvasHeight',
+    bgColor: 'bgColor',
+    canvasJson: 'canvasJson',
+    viewportX: 'viewportX',
+    viewportY: 'viewportY',
+    viewportScale: 'viewportScale',
     userId: 'userId'
   };
 
@@ -15978,15 +15988,15 @@ export namespace Prisma {
 
   export type AttributeWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    name?: string
     AND?: AttributeWhereInput | AttributeWhereInput[]
     OR?: AttributeWhereInput[]
     NOT?: AttributeWhereInput | AttributeWhereInput[]
-    name?: StringFilter<"Attribute"> | string
     description?: StringNullableFilter<"Attribute"> | string | null
     isActive?: BoolFilter<"Attribute"> | boolean
     elementTypes?: ElementAttributeListRelationFilter
     elementValues?: ElementValueListRelationFilter
-  }, "id">
+  }, "id" | "name">
 
   export type AttributeOrderByWithAggregationInput = {
     id?: SortOrder
@@ -16033,15 +16043,15 @@ export namespace Prisma {
 
   export type ElementTypeWhereUniqueInput = Prisma.AtLeast<{
     id?: number
+    name?: string
     AND?: ElementTypeWhereInput | ElementTypeWhereInput[]
     OR?: ElementTypeWhereInput[]
     NOT?: ElementTypeWhereInput | ElementTypeWhereInput[]
-    name?: StringFilter<"ElementType"> | string
     description?: StringNullableFilter<"ElementType"> | string | null
     isActive?: BoolFilter<"ElementType"> | boolean
     elements?: ElementListRelationFilter
     attributes?: ElementAttributeListRelationFilter
-  }, "id">
+  }, "id" | "name">
 
   export type ElementTypeOrderByWithAggregationInput = {
     id?: SortOrder
@@ -16116,14 +16126,8 @@ export namespace Prisma {
     OR?: ElementWhereInput[]
     NOT?: ElementWhereInput | ElementWhereInput[]
     id?: IntFilter<"Element"> | number
-    name?: StringFilter<"Element"> | string
-    coordsX?: IntFilter<"Element"> | number
-    coordsY?: IntFilter<"Element"> | number
-    opacity?: IntFilter<"Element"> | number
-    rotation?: IntFilter<"Element"> | number
-    height?: IntFilter<"Element"> | number
-    width?: IntFilter<"Element"> | number
-    layer?: IntFilter<"Element"> | number
+    fabricJson?: StringFilter<"Element"> | string
+    zIndex?: IntFilter<"Element"> | number
     elementTypeId?: IntFilter<"Element"> | number
     moodboardId?: IntFilter<"Element"> | number
     elementType?: XOR<ElementTypeScalarRelationFilter, ElementTypeWhereInput>
@@ -16133,14 +16137,8 @@ export namespace Prisma {
 
   export type ElementOrderByWithRelationInput = {
     id?: SortOrder
-    name?: SortOrder
-    coordsX?: SortOrder
-    coordsY?: SortOrder
-    opacity?: SortOrder
-    rotation?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    layer?: SortOrder
+    fabricJson?: SortOrder
+    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
     elementType?: ElementTypeOrderByWithRelationInput
@@ -16153,14 +16151,8 @@ export namespace Prisma {
     AND?: ElementWhereInput | ElementWhereInput[]
     OR?: ElementWhereInput[]
     NOT?: ElementWhereInput | ElementWhereInput[]
-    name?: StringFilter<"Element"> | string
-    coordsX?: IntFilter<"Element"> | number
-    coordsY?: IntFilter<"Element"> | number
-    opacity?: IntFilter<"Element"> | number
-    rotation?: IntFilter<"Element"> | number
-    height?: IntFilter<"Element"> | number
-    width?: IntFilter<"Element"> | number
-    layer?: IntFilter<"Element"> | number
+    fabricJson?: StringFilter<"Element"> | string
+    zIndex?: IntFilter<"Element"> | number
     elementTypeId?: IntFilter<"Element"> | number
     moodboardId?: IntFilter<"Element"> | number
     elementType?: XOR<ElementTypeScalarRelationFilter, ElementTypeWhereInput>
@@ -16170,14 +16162,8 @@ export namespace Prisma {
 
   export type ElementOrderByWithAggregationInput = {
     id?: SortOrder
-    name?: SortOrder
-    coordsX?: SortOrder
-    coordsY?: SortOrder
-    opacity?: SortOrder
-    rotation?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    layer?: SortOrder
+    fabricJson?: SortOrder
+    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
     _count?: ElementCountOrderByAggregateInput
@@ -16192,14 +16178,8 @@ export namespace Prisma {
     OR?: ElementScalarWhereWithAggregatesInput[]
     NOT?: ElementScalarWhereWithAggregatesInput | ElementScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Element"> | number
-    name?: StringWithAggregatesFilter<"Element"> | string
-    coordsX?: IntWithAggregatesFilter<"Element"> | number
-    coordsY?: IntWithAggregatesFilter<"Element"> | number
-    opacity?: IntWithAggregatesFilter<"Element"> | number
-    rotation?: IntWithAggregatesFilter<"Element"> | number
-    height?: IntWithAggregatesFilter<"Element"> | number
-    width?: IntWithAggregatesFilter<"Element"> | number
-    layer?: IntWithAggregatesFilter<"Element"> | number
+    fabricJson?: StringWithAggregatesFilter<"Element"> | string
+    zIndex?: IntWithAggregatesFilter<"Element"> | number
     elementTypeId?: IntWithAggregatesFilter<"Element"> | number
     moodboardId?: IntWithAggregatesFilter<"Element"> | number
   }
@@ -16262,6 +16242,13 @@ export namespace Prisma {
     id?: IntFilter<"Moodboard"> | number
     name?: StringFilter<"Moodboard"> | string
     createdAt?: DateTimeFilter<"Moodboard"> | Date | string
+    canvasWidth?: IntFilter<"Moodboard"> | number
+    canvasHeight?: IntFilter<"Moodboard"> | number
+    bgColor?: StringFilter<"Moodboard"> | string
+    canvasJson?: StringNullableFilter<"Moodboard"> | string | null
+    viewportX?: FloatFilter<"Moodboard"> | number
+    viewportY?: FloatFilter<"Moodboard"> | number
+    viewportScale?: FloatFilter<"Moodboard"> | number
     userId?: StringFilter<"Moodboard"> | string
     elements?: ElementListRelationFilter
   }
@@ -16270,6 +16257,13 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    canvasWidth?: SortOrder
+    canvasHeight?: SortOrder
+    bgColor?: SortOrder
+    canvasJson?: SortOrderInput | SortOrder
+    viewportX?: SortOrder
+    viewportY?: SortOrder
+    viewportScale?: SortOrder
     userId?: SortOrder
     elements?: ElementOrderByRelationAggregateInput
   }
@@ -16281,6 +16275,13 @@ export namespace Prisma {
     NOT?: MoodboardWhereInput | MoodboardWhereInput[]
     name?: StringFilter<"Moodboard"> | string
     createdAt?: DateTimeFilter<"Moodboard"> | Date | string
+    canvasWidth?: IntFilter<"Moodboard"> | number
+    canvasHeight?: IntFilter<"Moodboard"> | number
+    bgColor?: StringFilter<"Moodboard"> | string
+    canvasJson?: StringNullableFilter<"Moodboard"> | string | null
+    viewportX?: FloatFilter<"Moodboard"> | number
+    viewportY?: FloatFilter<"Moodboard"> | number
+    viewportScale?: FloatFilter<"Moodboard"> | number
     userId?: StringFilter<"Moodboard"> | string
     elements?: ElementListRelationFilter
   }, "id">
@@ -16289,6 +16290,13 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    canvasWidth?: SortOrder
+    canvasHeight?: SortOrder
+    bgColor?: SortOrder
+    canvasJson?: SortOrderInput | SortOrder
+    viewportX?: SortOrder
+    viewportY?: SortOrder
+    viewportScale?: SortOrder
     userId?: SortOrder
     _count?: MoodboardCountOrderByAggregateInput
     _avg?: MoodboardAvgOrderByAggregateInput
@@ -16304,6 +16312,13 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Moodboard"> | number
     name?: StringWithAggregatesFilter<"Moodboard"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Moodboard"> | Date | string
+    canvasWidth?: IntWithAggregatesFilter<"Moodboard"> | number
+    canvasHeight?: IntWithAggregatesFilter<"Moodboard"> | number
+    bgColor?: StringWithAggregatesFilter<"Moodboard"> | string
+    canvasJson?: StringNullableWithAggregatesFilter<"Moodboard"> | string | null
+    viewportX?: FloatWithAggregatesFilter<"Moodboard"> | number
+    viewportY?: FloatWithAggregatesFilter<"Moodboard"> | number
+    viewportScale?: FloatWithAggregatesFilter<"Moodboard"> | number
     userId?: StringWithAggregatesFilter<"Moodboard"> | string
   }
 
@@ -16866,14 +16881,8 @@ export namespace Prisma {
   }
 
   export type ElementCreateInput = {
-    name: string
-    coordsX: number
-    coordsY: number
-    opacity?: number
-    rotation?: number
-    height: number
-    width: number
-    layer?: number
+    fabricJson: string
+    zIndex?: number
     elementType: ElementTypeCreateNestedOneWithoutElementsInput
     moodboard: MoodboardCreateNestedOneWithoutElementsInput
     values?: ElementValueCreateNestedManyWithoutElementInput
@@ -16881,28 +16890,16 @@ export namespace Prisma {
 
   export type ElementUncheckedCreateInput = {
     id?: number
-    name: string
-    coordsX: number
-    coordsY: number
-    opacity?: number
-    rotation?: number
-    height: number
-    width: number
-    layer?: number
+    fabricJson: string
+    zIndex?: number
     elementTypeId: number
     moodboardId: number
     values?: ElementValueUncheckedCreateNestedManyWithoutElementInput
   }
 
   export type ElementUpdateInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    coordsX?: IntFieldUpdateOperationsInput | number
-    coordsY?: IntFieldUpdateOperationsInput | number
-    opacity?: IntFieldUpdateOperationsInput | number
-    rotation?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    layer?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
     elementType?: ElementTypeUpdateOneRequiredWithoutElementsNestedInput
     moodboard?: MoodboardUpdateOneRequiredWithoutElementsNestedInput
     values?: ElementValueUpdateManyWithoutElementNestedInput
@@ -16910,14 +16907,8 @@ export namespace Prisma {
 
   export type ElementUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    coordsX?: IntFieldUpdateOperationsInput | number
-    coordsY?: IntFieldUpdateOperationsInput | number
-    opacity?: IntFieldUpdateOperationsInput | number
-    rotation?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    layer?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
     elementTypeId?: IntFieldUpdateOperationsInput | number
     moodboardId?: IntFieldUpdateOperationsInput | number
     values?: ElementValueUncheckedUpdateManyWithoutElementNestedInput
@@ -16925,39 +16916,21 @@ export namespace Prisma {
 
   export type ElementCreateManyInput = {
     id?: number
-    name: string
-    coordsX: number
-    coordsY: number
-    opacity?: number
-    rotation?: number
-    height: number
-    width: number
-    layer?: number
+    fabricJson: string
+    zIndex?: number
     elementTypeId: number
     moodboardId: number
   }
 
   export type ElementUpdateManyMutationInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    coordsX?: IntFieldUpdateOperationsInput | number
-    coordsY?: IntFieldUpdateOperationsInput | number
-    opacity?: IntFieldUpdateOperationsInput | number
-    rotation?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    layer?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
   }
 
   export type ElementUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    coordsX?: IntFieldUpdateOperationsInput | number
-    coordsY?: IntFieldUpdateOperationsInput | number
-    opacity?: IntFieldUpdateOperationsInput | number
-    rotation?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    layer?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
     elementTypeId?: IntFieldUpdateOperationsInput | number
     moodboardId?: IntFieldUpdateOperationsInput | number
   }
@@ -17005,6 +16978,13 @@ export namespace Prisma {
   export type MoodboardCreateInput = {
     name: string
     createdAt?: Date | string
+    canvasWidth?: number
+    canvasHeight?: number
+    bgColor?: string
+    canvasJson?: string | null
+    viewportX?: number
+    viewportY?: number
+    viewportScale?: number
     userId: string
     elements?: ElementCreateNestedManyWithoutMoodboardInput
   }
@@ -17013,6 +16993,13 @@ export namespace Prisma {
     id?: number
     name: string
     createdAt?: Date | string
+    canvasWidth?: number
+    canvasHeight?: number
+    bgColor?: string
+    canvasJson?: string | null
+    viewportX?: number
+    viewportY?: number
+    viewportScale?: number
     userId: string
     elements?: ElementUncheckedCreateNestedManyWithoutMoodboardInput
   }
@@ -17020,6 +17007,13 @@ export namespace Prisma {
   export type MoodboardUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    canvasWidth?: IntFieldUpdateOperationsInput | number
+    canvasHeight?: IntFieldUpdateOperationsInput | number
+    bgColor?: StringFieldUpdateOperationsInput | string
+    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
+    viewportX?: FloatFieldUpdateOperationsInput | number
+    viewportY?: FloatFieldUpdateOperationsInput | number
+    viewportScale?: FloatFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     elements?: ElementUpdateManyWithoutMoodboardNestedInput
   }
@@ -17028,6 +17022,13 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    canvasWidth?: IntFieldUpdateOperationsInput | number
+    canvasHeight?: IntFieldUpdateOperationsInput | number
+    bgColor?: StringFieldUpdateOperationsInput | string
+    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
+    viewportX?: FloatFieldUpdateOperationsInput | number
+    viewportY?: FloatFieldUpdateOperationsInput | number
+    viewportScale?: FloatFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
     elements?: ElementUncheckedUpdateManyWithoutMoodboardNestedInput
   }
@@ -17036,12 +17037,26 @@ export namespace Prisma {
     id?: number
     name: string
     createdAt?: Date | string
+    canvasWidth?: number
+    canvasHeight?: number
+    bgColor?: string
+    canvasJson?: string | null
+    viewportX?: number
+    viewportY?: number
+    viewportScale?: number
     userId: string
   }
 
   export type MoodboardUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    canvasWidth?: IntFieldUpdateOperationsInput | number
+    canvasHeight?: IntFieldUpdateOperationsInput | number
+    bgColor?: StringFieldUpdateOperationsInput | string
+    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
+    viewportX?: FloatFieldUpdateOperationsInput | number
+    viewportY?: FloatFieldUpdateOperationsInput | number
+    viewportScale?: FloatFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -17049,6 +17064,13 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    canvasWidth?: IntFieldUpdateOperationsInput | number
+    canvasHeight?: IntFieldUpdateOperationsInput | number
+    bgColor?: StringFieldUpdateOperationsInput | string
+    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
+    viewportX?: FloatFieldUpdateOperationsInput | number
+    viewportY?: FloatFieldUpdateOperationsInput | number
+    viewportScale?: FloatFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -17722,68 +17744,38 @@ export namespace Prisma {
 
   export type ElementCountOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
-    coordsX?: SortOrder
-    coordsY?: SortOrder
-    opacity?: SortOrder
-    rotation?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    layer?: SortOrder
+    fabricJson?: SortOrder
+    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
   }
 
   export type ElementAvgOrderByAggregateInput = {
     id?: SortOrder
-    coordsX?: SortOrder
-    coordsY?: SortOrder
-    opacity?: SortOrder
-    rotation?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    layer?: SortOrder
+    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
   }
 
   export type ElementMaxOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
-    coordsX?: SortOrder
-    coordsY?: SortOrder
-    opacity?: SortOrder
-    rotation?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    layer?: SortOrder
+    fabricJson?: SortOrder
+    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
   }
 
   export type ElementMinOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
-    coordsX?: SortOrder
-    coordsY?: SortOrder
-    opacity?: SortOrder
-    rotation?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    layer?: SortOrder
+    fabricJson?: SortOrder
+    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
   }
 
   export type ElementSumOrderByAggregateInput = {
     id?: SortOrder
-    coordsX?: SortOrder
-    coordsY?: SortOrder
-    opacity?: SortOrder
-    rotation?: SortOrder
-    height?: SortOrder
-    width?: SortOrder
-    layer?: SortOrder
+    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
   }
@@ -17826,21 +17818,51 @@ export namespace Prisma {
     attributeId?: SortOrder
   }
 
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type MoodboardCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    canvasWidth?: SortOrder
+    canvasHeight?: SortOrder
+    bgColor?: SortOrder
+    canvasJson?: SortOrder
+    viewportX?: SortOrder
+    viewportY?: SortOrder
+    viewportScale?: SortOrder
     userId?: SortOrder
   }
 
   export type MoodboardAvgOrderByAggregateInput = {
     id?: SortOrder
+    canvasWidth?: SortOrder
+    canvasHeight?: SortOrder
+    viewportX?: SortOrder
+    viewportY?: SortOrder
+    viewportScale?: SortOrder
   }
 
   export type MoodboardMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    canvasWidth?: SortOrder
+    canvasHeight?: SortOrder
+    bgColor?: SortOrder
+    canvasJson?: SortOrder
+    viewportX?: SortOrder
+    viewportY?: SortOrder
+    viewportScale?: SortOrder
     userId?: SortOrder
   }
 
@@ -17848,11 +17870,39 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    canvasWidth?: SortOrder
+    canvasHeight?: SortOrder
+    bgColor?: SortOrder
+    canvasJson?: SortOrder
+    viewportX?: SortOrder
+    viewportY?: SortOrder
+    viewportScale?: SortOrder
     userId?: SortOrder
   }
 
   export type MoodboardSumOrderByAggregateInput = {
     id?: SortOrder
+    canvasWidth?: SortOrder
+    canvasHeight?: SortOrder
+    viewportX?: SortOrder
+    viewportY?: SortOrder
+    viewportScale?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
@@ -18392,6 +18442,14 @@ export namespace Prisma {
     connect?: ElementWhereUniqueInput | ElementWhereUniqueInput[]
   }
 
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type ElementUpdateManyWithoutMoodboardNestedInput = {
     create?: XOR<ElementCreateWithoutMoodboardInput, ElementUncheckedCreateWithoutMoodboardInput> | ElementCreateWithoutMoodboardInput[] | ElementUncheckedCreateWithoutMoodboardInput[]
     connectOrCreate?: ElementCreateOrConnectWithoutMoodboardInput | ElementCreateOrConnectWithoutMoodboardInput[]
@@ -18752,6 +18810,22 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
   export type GalleryPinCreateWithoutAuthorInput = {
     title: string
     imageUrl: string
@@ -18939,28 +19013,16 @@ export namespace Prisma {
   }
 
   export type ElementCreateWithoutElementTypeInput = {
-    name: string
-    coordsX: number
-    coordsY: number
-    opacity?: number
-    rotation?: number
-    height: number
-    width: number
-    layer?: number
+    fabricJson: string
+    zIndex?: number
     moodboard: MoodboardCreateNestedOneWithoutElementsInput
     values?: ElementValueCreateNestedManyWithoutElementInput
   }
 
   export type ElementUncheckedCreateWithoutElementTypeInput = {
     id?: number
-    name: string
-    coordsX: number
-    coordsY: number
-    opacity?: number
-    rotation?: number
-    height: number
-    width: number
-    layer?: number
+    fabricJson: string
+    zIndex?: number
     moodboardId: number
     values?: ElementValueUncheckedCreateNestedManyWithoutElementInput
   }
@@ -19014,14 +19076,8 @@ export namespace Prisma {
     OR?: ElementScalarWhereInput[]
     NOT?: ElementScalarWhereInput | ElementScalarWhereInput[]
     id?: IntFilter<"Element"> | number
-    name?: StringFilter<"Element"> | string
-    coordsX?: IntFilter<"Element"> | number
-    coordsY?: IntFilter<"Element"> | number
-    opacity?: IntFilter<"Element"> | number
-    rotation?: IntFilter<"Element"> | number
-    height?: IntFilter<"Element"> | number
-    width?: IntFilter<"Element"> | number
-    layer?: IntFilter<"Element"> | number
+    fabricJson?: StringFilter<"Element"> | string
+    zIndex?: IntFilter<"Element"> | number
     elementTypeId?: IntFilter<"Element"> | number
     moodboardId?: IntFilter<"Element"> | number
   }
@@ -19157,6 +19213,13 @@ export namespace Prisma {
   export type MoodboardCreateWithoutElementsInput = {
     name: string
     createdAt?: Date | string
+    canvasWidth?: number
+    canvasHeight?: number
+    bgColor?: string
+    canvasJson?: string | null
+    viewportX?: number
+    viewportY?: number
+    viewportScale?: number
     userId: string
   }
 
@@ -19164,6 +19227,13 @@ export namespace Prisma {
     id?: number
     name: string
     createdAt?: Date | string
+    canvasWidth?: number
+    canvasHeight?: number
+    bgColor?: string
+    canvasJson?: string | null
+    viewportX?: number
+    viewportY?: number
+    viewportScale?: number
     userId: string
   }
 
@@ -19232,6 +19302,13 @@ export namespace Prisma {
   export type MoodboardUpdateWithoutElementsInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    canvasWidth?: IntFieldUpdateOperationsInput | number
+    canvasHeight?: IntFieldUpdateOperationsInput | number
+    bgColor?: StringFieldUpdateOperationsInput | string
+    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
+    viewportX?: FloatFieldUpdateOperationsInput | number
+    viewportY?: FloatFieldUpdateOperationsInput | number
+    viewportScale?: FloatFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -19239,6 +19316,13 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    canvasWidth?: IntFieldUpdateOperationsInput | number
+    canvasHeight?: IntFieldUpdateOperationsInput | number
+    bgColor?: StringFieldUpdateOperationsInput | string
+    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
+    viewportX?: FloatFieldUpdateOperationsInput | number
+    viewportY?: FloatFieldUpdateOperationsInput | number
+    viewportScale?: FloatFieldUpdateOperationsInput | number
     userId?: StringFieldUpdateOperationsInput | string
   }
 
@@ -19259,28 +19343,16 @@ export namespace Prisma {
   }
 
   export type ElementCreateWithoutValuesInput = {
-    name: string
-    coordsX: number
-    coordsY: number
-    opacity?: number
-    rotation?: number
-    height: number
-    width: number
-    layer?: number
+    fabricJson: string
+    zIndex?: number
     elementType: ElementTypeCreateNestedOneWithoutElementsInput
     moodboard: MoodboardCreateNestedOneWithoutElementsInput
   }
 
   export type ElementUncheckedCreateWithoutValuesInput = {
     id?: number
-    name: string
-    coordsX: number
-    coordsY: number
-    opacity?: number
-    rotation?: number
-    height: number
-    width: number
-    layer?: number
+    fabricJson: string
+    zIndex?: number
     elementTypeId: number
     moodboardId: number
   }
@@ -19322,28 +19394,16 @@ export namespace Prisma {
   }
 
   export type ElementUpdateWithoutValuesInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    coordsX?: IntFieldUpdateOperationsInput | number
-    coordsY?: IntFieldUpdateOperationsInput | number
-    opacity?: IntFieldUpdateOperationsInput | number
-    rotation?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    layer?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
     elementType?: ElementTypeUpdateOneRequiredWithoutElementsNestedInput
     moodboard?: MoodboardUpdateOneRequiredWithoutElementsNestedInput
   }
 
   export type ElementUncheckedUpdateWithoutValuesInput = {
     id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    coordsX?: IntFieldUpdateOperationsInput | number
-    coordsY?: IntFieldUpdateOperationsInput | number
-    opacity?: IntFieldUpdateOperationsInput | number
-    rotation?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    layer?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
     elementTypeId?: IntFieldUpdateOperationsInput | number
     moodboardId?: IntFieldUpdateOperationsInput | number
   }
@@ -19375,28 +19435,16 @@ export namespace Prisma {
   }
 
   export type ElementCreateWithoutMoodboardInput = {
-    name: string
-    coordsX: number
-    coordsY: number
-    opacity?: number
-    rotation?: number
-    height: number
-    width: number
-    layer?: number
+    fabricJson: string
+    zIndex?: number
     elementType: ElementTypeCreateNestedOneWithoutElementsInput
     values?: ElementValueCreateNestedManyWithoutElementInput
   }
 
   export type ElementUncheckedCreateWithoutMoodboardInput = {
     id?: number
-    name: string
-    coordsX: number
-    coordsY: number
-    opacity?: number
-    rotation?: number
-    height: number
-    width: number
-    layer?: number
+    fabricJson: string
+    zIndex?: number
     elementTypeId: number
     values?: ElementValueUncheckedCreateNestedManyWithoutElementInput
   }
@@ -19722,14 +19770,8 @@ export namespace Prisma {
 
   export type ElementCreateManyElementTypeInput = {
     id?: number
-    name: string
-    coordsX: number
-    coordsY: number
-    opacity?: number
-    rotation?: number
-    height: number
-    width: number
-    layer?: number
+    fabricJson: string
+    zIndex?: number
     moodboardId: number
   }
 
@@ -19738,42 +19780,24 @@ export namespace Prisma {
   }
 
   export type ElementUpdateWithoutElementTypeInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    coordsX?: IntFieldUpdateOperationsInput | number
-    coordsY?: IntFieldUpdateOperationsInput | number
-    opacity?: IntFieldUpdateOperationsInput | number
-    rotation?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    layer?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
     moodboard?: MoodboardUpdateOneRequiredWithoutElementsNestedInput
     values?: ElementValueUpdateManyWithoutElementNestedInput
   }
 
   export type ElementUncheckedUpdateWithoutElementTypeInput = {
     id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    coordsX?: IntFieldUpdateOperationsInput | number
-    coordsY?: IntFieldUpdateOperationsInput | number
-    opacity?: IntFieldUpdateOperationsInput | number
-    rotation?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    layer?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
     moodboardId?: IntFieldUpdateOperationsInput | number
     values?: ElementValueUncheckedUpdateManyWithoutElementNestedInput
   }
 
   export type ElementUncheckedUpdateManyWithoutElementTypeInput = {
     id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    coordsX?: IntFieldUpdateOperationsInput | number
-    coordsY?: IntFieldUpdateOperationsInput | number
-    opacity?: IntFieldUpdateOperationsInput | number
-    rotation?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    layer?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
     moodboardId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -19811,54 +19835,30 @@ export namespace Prisma {
 
   export type ElementCreateManyMoodboardInput = {
     id?: number
-    name: string
-    coordsX: number
-    coordsY: number
-    opacity?: number
-    rotation?: number
-    height: number
-    width: number
-    layer?: number
+    fabricJson: string
+    zIndex?: number
     elementTypeId: number
   }
 
   export type ElementUpdateWithoutMoodboardInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    coordsX?: IntFieldUpdateOperationsInput | number
-    coordsY?: IntFieldUpdateOperationsInput | number
-    opacity?: IntFieldUpdateOperationsInput | number
-    rotation?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    layer?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
     elementType?: ElementTypeUpdateOneRequiredWithoutElementsNestedInput
     values?: ElementValueUpdateManyWithoutElementNestedInput
   }
 
   export type ElementUncheckedUpdateWithoutMoodboardInput = {
     id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    coordsX?: IntFieldUpdateOperationsInput | number
-    coordsY?: IntFieldUpdateOperationsInput | number
-    opacity?: IntFieldUpdateOperationsInput | number
-    rotation?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    layer?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
     elementTypeId?: IntFieldUpdateOperationsInput | number
     values?: ElementValueUncheckedUpdateManyWithoutElementNestedInput
   }
 
   export type ElementUncheckedUpdateManyWithoutMoodboardInput = {
     id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    coordsX?: IntFieldUpdateOperationsInput | number
-    coordsY?: IntFieldUpdateOperationsInput | number
-    opacity?: IntFieldUpdateOperationsInput | number
-    rotation?: IntFieldUpdateOperationsInput | number
-    height?: IntFieldUpdateOperationsInput | number
-    width?: IntFieldUpdateOperationsInput | number
-    layer?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
     elementTypeId?: IntFieldUpdateOperationsInput | number
   }
 

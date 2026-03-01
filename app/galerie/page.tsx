@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Heart, Plus, X, Trash2 } from "lucide-react"
+import { Heart, Plus, X, Trash2, Image as ImageIcon } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import Loading from "@/app/loading"
 import ProtectedRoute from '@/app/components/ProtectedRoute'
@@ -245,6 +245,19 @@ function GaleriePageContent() {
             )
           })}
         </div>
+
+        {filteredPosts.length === 0 && !loading && (
+          <motion.div
+            className="moodboard-empty"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <ImageIcon size={56} className="moodboard-empty-icon" />
+            <h2 className="moodboard-empty-title">Žádné příspěvky</h2>
+            <p className="moodboard-empty-subtitle">Zatím tu nic není. Buď první, kdo sdílí svou práci!</p>
+          </motion.div>
+        )}
       </div>
 
       <AnimatePresence>

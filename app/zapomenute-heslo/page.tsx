@@ -55,22 +55,11 @@ export default function ZapomenuteHesloPage() {
   }
 
   return (
+    <div className="page-container">
     <div className="login-container">
       <button
         onClick={() => router.push("/prihlaseni")}
-        style={{
-          background: "transparent",
-          border: "none",
-          color: "rgba(255, 255, 255, 0.7)",
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-          transition: "color 0.2s",
-          padding: 0
-        }}
+        className="auth-back-link"
       >
         <ArrowLeft size={20} />
         Zpět
@@ -104,6 +93,7 @@ export default function ZapomenuteHesloPage() {
       <p className="signup-link" style={{ marginTop: "1.5rem" }}>
         Vzpomněl sis? <a href="/prihlaseni">Přihlásit se!</a>
       </p>
+    </div>
     </div>
   )
 }

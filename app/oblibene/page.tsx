@@ -81,11 +81,16 @@ function OblibeneContent() {
         </div>
 
         {pins.length === 0 ? (
-          <div className="empty-favorites">
-            <Heart size={64} className="empty-heart" />
-            <h2>Zatím nemáš žádné oblíbené piny</h2>
-            <p>Začni prozkoumávat galerii a označuj si piny, které se ti líbí!</p>
-          </div>
+          <motion.div 
+            className='moodboard-empty'
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Heart size={56} className='moodboard-empty-icon' />
+            <h2 className='moodboard-empty-title'>Zatím nemáš žádné oblíbené piny</h2>
+            <p className='moodboard-empty-subtitle'>Začni prozkoumávat galerii a označuj si piny, které se ti líbí!</p>
+          </motion.div>
         ) : (
           <div className="favorites-grid">
             {pins.map((pin) => {

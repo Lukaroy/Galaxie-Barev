@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react"
 import ProtectedRoute from "@/app/components/ProtectedRoute"
 import { motion } from "framer-motion"
-import { Search, Download, Type, Filter, X } from "lucide-react"
+import { Search, Download, Type, X } from "lucide-react"
 import Loading from "@/app/loading"
 
 type Font = {
@@ -21,7 +21,6 @@ function FontyContent() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [customText, setCustomText] = useState("Zkus si vlastní text")
-  const [showFilters, setShowFilters] = useState(false)
 
   const MAX_CUSTOM_TEXT_LENGTH = 50
 
@@ -76,7 +75,6 @@ function FontyContent() {
     setSearchQuery("")
     setSelectedCategory("Vše")
   }
-
   const hasActiveFilters = searchQuery !== "" || selectedCategory !== "Vše"
 
   if (loading) return <Loading />
@@ -98,75 +96,56 @@ function FontyContent() {
           <p className="page-subtitle">Procházej a vybírej z naší kolekce fontů</p>
         </div>
 
-        {/* Search and Filter Bar */}
-        <div className="fonty-toolbar">
+        {/* Search Bar */}
+        <div className="fonty-search-section">
           <div className="fonty-search-wrapper">
-            <Search size={18} className="fonty-search-icon" />
+            <Search size={20} className="fonty-search-icon" />
             <input
               type="text"
-              placeholder="Hledat font..."
+              placeholder="Hledat font podle názvu..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="fonty-search-input"
             />
             {searchQuery && (
-              <button className="fonty-clear-btn" onClick={() => setSearchQuery("")}>
+              <button className="fonty-clear-btn" onClick={() => setSearchQuery("")} title="Vymazat">
                 <X size={16} />
               </button>
             )}
           </div>
+        </div>
 
-          <button 
-            className={`fonty-filter-toggle ${showFilters ? 'active' : ''}`}
-            onClick={() => setShowFilters(!showFilters)}
-          >
-            <Filter size={18} />
-            Kategorie
-            {selectedCategory !== "Vše" && <span className="filter-badge">1</span>}
-          </button>
-
+        {/* Category Pills */}
+        <div className="fonty-categories-bar">
+          {categories.map(category => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`fonty-category-pill ${selectedCategory === category ? "active" : ""}`}
+            >
+              {category}
+            </button>
+          ))}
           {hasActiveFilters && (
             <button className="fonty-clear-all" onClick={clearFilters}>
-              Vymazat filtry
+              <X size={14} /> Resetovat
             </button>
           )}
         </div>
 
-        {/* Category Filter Panel */}
-        {showFilters && (
-          <motion.div 
-            className="fonty-filter-panel"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-          >
-            <div className="fonty-categories">
-              {categories.map(category => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`fonty-category-btn ${selectedCategory === category ? "active" : ""}`}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
         {/* Custom Text Preview */}
-        <div className="fonty-custom-text">
-          <div className="fonty-custom-header">
-            <Type size={18} />
-            <span>Vlastní náhled textu</span>
-            <span className="fonty-char-count">{customText.length}/{MAX_CUSTOM_TEXT_LENGTH}</span>
-          </div>
+        <div className="fonty-preview-box">
+          <label className="fonty-preview-label">
+            <Type size={16} />
+            <span>Vlastní text pro náhled</span>
+            <span className="fonty-char-count">{customText.length}<span className="fonty-char-max">/{MAX_CUSTOM_TEXT_LENGTH}</span></span>
+          </label>
           <input
             type="text"
             value={customText}
             onChange={handleCustomTextChange}
             placeholder="Napiš vlastní text..."
-            className="fonty-custom-input"
+            className="fonty-preview-input"
             maxLength={MAX_CUSTOM_TEXT_LENGTH}
           />
         </div>
@@ -221,11 +200,16 @@ function FontyContent() {
         </div>
 
         {filteredFonts.length === 0 && (
-          <div className="fonty-empty">
-            <Type size={48} />
-            <h3>Žádné fonty nenalezeny</h3>
-            <p>Zkus upravit vyhledávání nebo filtry</p>
-          </div>
+          <motion.div
+            className="moodboard-empty"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <Type size={56} className="moodboard-empty-icon" />
+            <h2 className="moodboard-empty-title">Žádné fonty nenalezeny</h2>
+            <p className="moodboard-empty-subtitle">Zkus upravit vyhledávání nebo filtry</p>
+          </motion.div>
         )}
       </div>
     </div>
