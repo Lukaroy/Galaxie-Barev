@@ -8537,7 +8537,7 @@ body.menu-open {
 }
 
 .test-intro .test-start-btn {
-  width: auto;
+  width: calc(100% - 4rem);
   margin-bottom: 2rem;
 }
 
@@ -8608,6 +8608,28 @@ body.menu-open {
 
 .test-start-btn:hover {
   box-shadow: 0 8px 32px rgba(152, 114, 199, 0.5);
+}
+
+.test-exit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.test-exit-btn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #f87171;
 }
 
 .test-progress {

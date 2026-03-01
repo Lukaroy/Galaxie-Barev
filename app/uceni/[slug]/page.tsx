@@ -442,6 +442,9 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
       <div className="profil-page">
         <div className="lesson-container">
           <div className="test-progress">
+            <button onClick={resetTest} className="test-exit-btn" title="Odejít z testu">
+              <ArrowLeft size={16} /> Odejít
+            </button>
             <span>Otázka {currentQuestionIndex + 1} z {questions.length}</span>
             <div className="progress-bar">
               <div 
