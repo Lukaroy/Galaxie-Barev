@@ -345,9 +345,10 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
               </div>
 
               <motion.button
-                className="test-start-btn disabled"
-                disabled
-                style={{ opacity: 0.45, cursor: 'not-allowed' }}
+                onClick={() => setTestStarted(true)}
+                className="test-start-btn"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 Spustit test
               </motion.button>

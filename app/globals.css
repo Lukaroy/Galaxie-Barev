@@ -8530,14 +8530,15 @@ body.menu-open {
 }
 
 .test-intro .test-stats-row,
-.test-intro .test-info-box {
+.test-intro .test-info-box,
+.test-intro .test-start-btn {
   margin-left: 2rem;
   margin-right: 2rem;
 }
 
 .test-intro .test-start-btn {
-  margin: 0 2rem 2rem;
   width: auto;
+  margin-bottom: 2rem;
 }
 
 .test-info-box {
