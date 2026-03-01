@@ -8,12 +8,14 @@ const montserrat = Montserrat({
   subsets: ['latin'],
   weight: ['400', '700', '900'],
   variable: '--font-montserrat',
+  display: 'swap',
 })
 
 const inder = Inder({
   weight: '400',
   variable: '--font-inder',
   subsets: ['latin'],
+  display: 'swap',
 })
 
 export const metadata = {
@@ -110,6 +112,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="cs" className={`${inder.variable} ${montserrat.variable}`}>
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preload" href="/background.webp" as="image" type="image/webp" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

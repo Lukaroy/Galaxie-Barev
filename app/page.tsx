@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
-import { ArrowRight } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import Loading from "@/app/loading"
 
@@ -32,7 +31,7 @@ export default function HomePage() {
             damping: 15
         }}
       >
-  <img src="/Logo.svg" alt="Logo" width={120} height={120} />
+  <img src="/Logo.svg" alt="Logo" width={120} height={120} fetchPriority="high" />
 </motion.div>
         <div className="hero-heading">
           <motion.h1 

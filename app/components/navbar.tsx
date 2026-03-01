@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAuth } from '@/hooks/useAuth'
 import { logoutUser } from '@/lib/auth'
 
@@ -35,7 +36,7 @@ export default function Navbar() {
     <>
       <nav className="navbar">
         <div className="nav-left">
-          <img src="/naicon.svg" alt="Logo" width={32} height={32} />
+          <Image src="/naicon.svg" alt="Logo" width={32} height={32} priority />
         </div>
 
         <div className="nav-center">

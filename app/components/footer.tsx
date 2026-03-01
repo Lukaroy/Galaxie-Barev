@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -7,7 +8,7 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="footer-inner">
         <div className="footer-brand">
-          <img src="/naicon.svg" alt="Logo" width={24} height={24} />
+          <Image src="/naicon.svg" alt="Logo" width={24} height={24} loading="lazy" />
           <span className="footer-brand-name">Galaxie Barev</span>
         </div>
 
