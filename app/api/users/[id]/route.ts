@@ -1,15 +1,16 @@
+// API pro konkrétního uživatele - načtení (GET), úprava (PUT/PATCH), smazání (DELETE)
+
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-async function resolveParams(context: any) {
-  let params = context?.params;
-  if (!params) return {};
-  if (typeof params.then === 'function') params = await params;
-  return params;
+type RouteContext = { params: Promise<{ id: string }> };
+
+function isPrismaError(error: unknown): error is { code: string; message: string } {
+  return typeof error === 'object' && error !== null && 'code' in error;
 }
 
-export async function GET(_request: Request, context: any) {
-  const { id } = await resolveParams(context);
+export async function GET(_request: Request, context: RouteContext) {
+  const { id } = await context.params;
   try {
     const user = await prisma.user.findUnique({
       where: { id: id as string },
@@ -31,8 +32,8 @@ export async function GET(_request: Request, context: any) {
   }
 }
 
-export async function PUT(request: Request, context: any) {
-  const { id } = await resolveParams(context);
+export async function PUT(request: Request, context: RouteContext) {
+  const { id } = await context.params;
   try {
     const data = await request.json();
     const updated = await prisma.user.update({
@@ -40,15 +41,15 @@ export async function PUT(request: Request, context: any) {
       data
     });
     return NextResponse.json(updated);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`API PUT /api/users/${id} error:`, error);
-    if (error?.code === 'P2025') return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    if (isPrismaError(error) && error.code === 'P2025') return NextResponse.json({ error: 'User not found' }, { status: 404 });
     return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
   }
 }
 
-export async function PATCH(request: Request, context: any) {
-  const { id } = await resolveParams(context);
+export async function PATCH(request: Request, context: RouteContext) {
+  const { id } = await context.params;
   try {
     const data = await request.json();
     
@@ -76,31 +77,31 @@ export async function PATCH(request: Request, context: any) {
       data
     });
     return NextResponse.json(updated);
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`API PATCH /api/users/${id} error:`, error);
-    if (error?.code === 'P2025') {
+    if (isPrismaError(error) && error.code === 'P2025') {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
-    if (error?.code === 'P2002') {
+    if (isPrismaError(error) && error.code === 'P2002') {
       return NextResponse.json({ error: 'Uživatelské jméno je již používáno' }, { status: 409 });
     }
     return NextResponse.json({ 
       error: 'Failed to update user',
-      details: error.message 
+      details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   }
 }
 
-export async function DELETE(_request: Request, context: any) {
-  const { id } = await resolveParams(context);
+export async function DELETE(_request: Request, context: RouteContext) {
+  const { id } = await context.params;
   try {
     await prisma.user.delete({
       where: { id: id as string }
     });
     return new NextResponse(null, { status: 204 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(`API DELETE /api/users/${id} error:`, error);
-    if (error?.code === 'P2025') return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    if (isPrismaError(error) && error.code === 'P2025') return NextResponse.json({ error: 'User not found' }, { status: 404 });
     return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
   }
 }

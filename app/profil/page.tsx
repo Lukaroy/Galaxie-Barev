@@ -1,7 +1,9 @@
 "use client"
 
+// Profilová stránka - úprava uživatelského jména, jména a příjmení
+
 import { useAuth } from "@/hooks/useAuth"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { updateProfile } from "firebase/auth"
 import { auth } from "@/lib/firebase"
@@ -49,12 +51,7 @@ export default function ProfilePage() {
   const [lastNameHintType, setLastNameHintType] = useState<HintType>("info")
 
 
-  useEffect(() => {
-    if (!authLoading && !user) router.push("/prihlaseni")
-    if (user) loadProfile()
-  }, [user, authLoading])
-
-  const loadProfile = async () => {
+  const loadProfile = useCallback(async () => {
     if (!user) return
     try {
       const response = await fetch(`/api/users/${user.uid}`)
@@ -69,47 +66,55 @@ export default function ProfilePage() {
       } else {
         setError("Nepodařilo se načíst profil. Zkus stránku obnovit.")
       }
-    } catch (err) {
+    } catch {
       setError("Něco se pokazilo při načítání profilu. Zkontroluj připojení.")
     } finally {
       setLoading(false)
     }
+  }, [user])
+
+  useEffect(() => {
+    if (!authLoading && !user) router.push("/prihlaseni")
+    if (user) loadProfile()
+  }, [user, authLoading, router, loadProfile])
+
+
+  // Společná validace uživatelského jména - vrací chybovou hlášku nebo null
+  const getUsernameError = (username: string): string | null => {
+    if (!username) return "Uživatelské jméno nemůže být prázdné"
+    if (username.length < 3) return "Uživatelské jméno je moc krátké"
+    if (username.length >= 12) return "Uživatelské jméno je moc dlouhé"
+    if (!/^[a-z0-9_.-]+$/.test(username)) return "Použij jen malá písmena, čísla a znaky _ . -"
+    if (username.startsWith(".") || username.startsWith("-")) return "Uživatelské jméno nemůže začínat tečkou nebo pomlčkou"
+    return null
   }
 
+  // Společná validace jména/příjmení - vrací chybovou hlášku nebo null
+  const getNameError = (name: string, label: string): string | null => {
+    if (!name) return `${label} nemůže být prázdné`
+    if (!isValidName(name)) return `${label} může obsahovat jen písmena`
+    if (name.length < 3) return `${label} je moc krátké`
+    if (name.length > 20) return `${label} je moc dlouhé`
+    return null
+  }
 
+  // Živá validace při psaní (s hinty)
   const validateUsername = (username: string) => {
     setIsDirty(true)
-
-    if (!username) {
-      setUsernameHint("")
-      setUsernameHintType("info")
+    if (!username) { setUsernameHint(""); setUsernameHintType("info"); return }
+    
+    const error = getUsernameError(username)
+    if (error) {
+      // Speciální případ: ukazujeme zbývající znaky místo chybové hlášky
+      if (username.length < 3) {
+        setUsernameHint(`Ještě ${3 - username.length} znaky`)
+        setUsernameHintType("info")
+      } else {
+        setUsernameHint(error)
+        setUsernameHintType("error")
+      }
       return
     }
-
-    if (username.length < 3) {
-      setUsernameHint(`Ještě ${3 - username.length} znaky`)
-      setUsernameHintType("info")
-      return
-    }
-
-    if (username.length >= 12) {
-      setUsernameHint("Uživatelské jméno je moc dlouhé")
-      setUsernameHintType("error")
-      return
-    }
-
-    if (!/^[a-z0-9_.-]+$/.test(username)) {
-      setUsernameHint("Použij jen malá písmena, čísla a znaky _ . -")
-      setUsernameHintType("error")
-      return
-    }
-
-    if (username.startsWith(".") || username.startsWith("-")) {
-      setUsernameHint("Uživatelské jméno nemůže začínat tečkou nebo pomlčkou")
-      setUsernameHintType("error")
-      return
-    }
-
     setUsernameHint("✓ Vypadá dobře")
     setUsernameHintType("success")
   }
@@ -121,31 +126,19 @@ export default function ProfilePage() {
     label: string
   ) => {
     setIsDirty(true)
+    if (!name) { setHint(""); setHintType("info"); return }
 
-    if (!name) {
-      setHint("")
-      setHintType("info")
+    const error = getNameError(name, label)
+    if (error) {
+      if (name.length < 3) {
+        setHint(`Ještě ${3 - name.length} znaky`)
+        setHintType("info")
+      } else {
+        setHint(error)
+        setHintType("error")
+      }
       return
     }
-
-    if (!isValidName(name)) {
-      setHint(`${label} může obsahovat jen písmena`)
-      setHintType("error")
-      return
-    }
-
-    if (name.length < 3) {
-      setHint(`Ještě ${3 - name.length} znaky`)
-      setHintType("info")
-      return
-    }
-
-    if (name.length > 20) {
-      setHint(`${label} je moc dlouhé`)
-      setHintType("error")
-      return
-    }
-
     setHint("✓ Vypadá dobře")
     setHintType("success")
   }
@@ -162,71 +155,15 @@ export default function ProfilePage() {
     const trimmedFirstName = editData.firstName.trim()
     const trimmedLastName = editData.lastName.trim()
 
-    if (!trimmedUsername) {
-      setError("Uživatelské jméno nemůže být prázdné")
-      setSaving(false)
-      return
-    }
+    // Validace všech polí pomocí sdílených funkcí
+    const usernameError = getUsernameError(trimmedUsername)
+    if (usernameError) { setError(usernameError); setSaving(false); return }
 
-    if (trimmedUsername.length < 3) {
-      setError("Uživatelské jméno je moc krátké")
-      setSaving(false)
-      return
-    }
+    const firstNameError = getNameError(trimmedFirstName, "Jméno")
+    if (firstNameError) { setError(firstNameError); setSaving(false); return }
 
-    if (trimmedUsername.length >= 12) {
-      setError("Uživatelské jméno je moc dlouhé")
-      setSaving(false)
-      return
-    }
-
-    if (!/^[a-z0-9_.-]+$/.test(trimmedUsername)) {
-      setError("Použij jen malá písmena, čísla a znaky _ . -")
-      setSaving(false)
-      return
-    }
-
-    if (trimmedUsername.startsWith(".") || trimmedUsername.startsWith("-")) {
-      setError("Uživatelské jméno nemůže začínat tečkou nebo pomlčkou")
-      setSaving(false)
-      return
-    }
-
-    if (!isValidName(trimmedFirstName)) {
-      setError("Jméno může obsahovat jen písmena")
-      setSaving(false)
-      return
-    }
-
-    if (trimmedFirstName.length < 3) {
-      setError("Vaše jméno je moc krátké")
-      setSaving(false)
-      return
-    }
-
-    if (trimmedFirstName.length > 20) {
-      setError("Vaše jméno je moc dlouhé")
-      setSaving(false)
-      return
-    }
-
-    if (!isValidName(trimmedLastName)) {
-      setError("Příjmení může obsahovat jen písmena")
-      setSaving(false)
-      return
-    }
-
-    if (trimmedLastName.length < 3) {
-      setError("Vaše příjmení je moc krátké")
-      setSaving(false)
-      return
-    }
-
-    if (trimmedLastName.length > 20) {
-      setError("Vaše příjmení je moc dlouhé")
-      setSaving(false)
-      return
-    }
+    const lastNameError = getNameError(trimmedLastName, "Příjmení")
+    if (lastNameError) { setError(lastNameError); setSaving(false); return }
 
     try {
       const response = await fetch(`/api/users/${user.uid}`, {
@@ -255,8 +192,9 @@ export default function ProfilePage() {
       }
 
       setTimeout(() => setSuccess(""), 3000)
-    } catch (err: any) {
-      const message = err.code?.startsWith("auth/")
+    } catch (err: unknown) {
+      const errObj = err as { code?: string }
+      const message = errObj.code?.startsWith("auth/")
         ? handleAuthError(err)
         : handleApiError(err)
       setError(message)

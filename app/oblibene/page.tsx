@@ -1,6 +1,9 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+// Stránka Oblíbené - zobrazuje piny z galerie, které si uživatel označil srdíčkem
+// Umožňuje odebrat z oblíbených, otevřít detail obrázku a stáhnout ho
+
+import React, { useState, useEffect, useCallback } from 'react'
 import ProtectedRoute from '@/app/components/ProtectedRoute'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Heart, X } from 'lucide-react'
@@ -27,11 +30,7 @@ function OblibeneContent() {
   const [loading, setLoading] = useState(true)
   const [imageModal, setImageModal] = useState<{ show: boolean, imageUrl: string, title: string } | null>(null)
 
-  useEffect(() => {
-    if (user) fetchLikedPins()
-  }, [user])
-
-  const fetchLikedPins = async () => {
+  const fetchLikedPins = useCallback(async () => {
     try {
       const response = await fetch(`/api/gallery-pins/liked?userId=${user?.uid}`)
       if (!response.ok) throw new Error('Failed to fetch liked pins')
@@ -42,7 +41,11 @@ function OblibeneContent() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user?.uid])
+
+  useEffect(() => {
+    if (user) fetchLikedPins()
+  }, [user, fetchLikedPins])
 
   const handleUnlike = async (pinId: number) => {
     if (!user) return
@@ -108,6 +111,7 @@ function OblibeneContent() {
                   onClick={() => openImageModal(pin.imageUrl, pin.title)}
                 >
                   <div className="pin-image-wrapper">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={pin.imageUrl} alt={pin.title} className="pin-image" />
                     <button
                       className="pin-unlike-btn"
@@ -152,6 +156,7 @@ function OblibeneContent() {
               <button className="image-modal-download" onClick={() => downloadImage(imageModal.imageUrl, imageModal.title)}>
                 Stáhnout
               </button>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={imageModal.imageUrl} alt={imageModal.title} className="modal-image" />
             </motion.div>
           </motion.div>

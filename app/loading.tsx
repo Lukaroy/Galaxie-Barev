@@ -1,6 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+// Načítací komponenta - zobrazí animovaný spinner s náhodným českým textem
+
+import { useState } from "react"
 
 const loadingTexts = [
   "Načítám...",
@@ -12,11 +14,9 @@ const loadingTexts = [
 ]
 
 export default function Loading() {
-  const [text, setText] = useState(loadingTexts[0])
-  
-  useEffect(() => {
-    setText(loadingTexts[Math.floor(Math.random() * loadingTexts.length)])
-  }, [])
+  const [text] = useState(
+    () => loadingTexts[Math.floor(Math.random() * loadingTexts.length)]
+  )
   
   return (
     <div className="loading-container">

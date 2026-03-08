@@ -1,3 +1,5 @@
+// Layout pro registraci - metadata, stránka není indexována
+
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {

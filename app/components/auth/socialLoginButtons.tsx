@@ -1,7 +1,10 @@
 "use client"
 
+// Tlačítka pro přihlášení přes sociální sítě (Google, Apple)
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { loginWithGoogle, loginWithApple } from "@/lib/auth"
 import { handleAuthError } from "@/lib/errorHandling"
 
@@ -18,7 +21,7 @@ export default function SocialLoginButtons({ onError }: SocialLoginButtonsProps)
     try {
       await loginWithGoogle()
       router.push("/")
-    } catch (err: any) {
+    } catch (err: unknown) {
       onError(handleAuthError(err))
     } finally {
       setLoading(false)
@@ -30,7 +33,7 @@ export default function SocialLoginButtons({ onError }: SocialLoginButtonsProps)
     try {
       await loginWithApple()
       router.push("/")
-    } catch (err: any) {
+    } catch (err: unknown) {
       onError(handleAuthError(err))
     } finally {
       setLoading(false)
@@ -40,10 +43,10 @@ export default function SocialLoginButtons({ onError }: SocialLoginButtonsProps)
   return (
     <div className="social-login">
       <button onClick={handleGoogleLogin} disabled={loading}>
-        {loading ? ("Načítám...") : (<><img src="google.svg" width={20} height={20} alt="Google" />Google</>)}
+        {loading ? ("Načítám...") : (<><Image src="/google.svg" width={20} height={20} alt="Google" />Google</>)}
       </button>
       <button onClick={handleAppleLogin} disabled={loading}>
-        {loading ? ("Načítám...") : (<><img src="apple.svg" width={20} height={20} alt="Google" />Apple</>)}
+        {loading ? ("Načítám...") : (<><Image src="/apple.svg" width={20} height={20} alt="Apple" />Apple</>)}
       </button>
     </div>
   )

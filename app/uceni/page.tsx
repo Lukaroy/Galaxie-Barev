@@ -3,8 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
-  Trash2, Plus, BookOpen, FileQuestion, ChevronRight, 
-  Palette, Type as TypeIcon, Image, Layout, Sparkles
+  Trash2, Plus, ChevronRight
 } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import { useRouter } from "next/navigation"
@@ -12,50 +11,9 @@ import slugify from "slugify"
 import Loading from "@/app/loading"
 import { useToast } from "@/app/components/Toast"
 import ProtectedRoute from "@/app/components/ProtectedRoute"
-
-type Segment = {
-  id: number
-  title: string
-  slug: string
-  description?: string
-  content?: string
-  type: "LESSON" | "TEST"
-  difficulty: "BEGINNER" | "INTERMEDIATE" | "EXPERT"
-  duration?: string
-  icon?: string
-  color?: string
-  tags: string[]
-  questions?: TestQuestion[]
-  createdAt: string
-}
-
-type TestQuestion = {
-  question: string
-  options: string[]
-  correctIndex: number
-}
-
-const iconMap: Record<string, React.ElementType> = {
-  Palette,
-  Type: TypeIcon,
-  Image,
-  Layout,
-  Sparkles,
-  BookOpen,
-  FileQuestion
-}
-
-const difficultyLabels: Record<string, string> = {
-  BEGINNER: "Začátečník",
-  INTERMEDIATE: "Pokročilý",
-  EXPERT: "Expert"
-}
-
-const difficultyColors: Record<string, { bg: string; text: string }> = {
-  BEGINNER: { bg: "rgba(74, 222, 128, 0.2)", text: "#4ade80" },
-  INTERMEDIATE: { bg: "rgba(251, 191, 36, 0.2)", text: "#fbbf24" },
-  EXPERT: { bg: "rgba(239, 68, 68, 0.2)", text: "#ef4444" }
-}
+import DeleteConfirmModal from "@/app/components/DeleteConfirmModal"
+import { PRIMARY_PURPLE } from "@/lib/colors"
+import { Segment, TestQuestion, iconMap, difficultyLabels, BookOpen, FileQuestion } from "@/lib/segmentConstants"
 
 function UceniPageContent() {
   const { user, loading: authLoading } = useAuth()
@@ -82,7 +40,7 @@ function UceniPageContent() {
     difficulty: "BEGINNER" as "BEGINNER" | "INTERMEDIATE" | "EXPERT",
     duration: "",
     icon: "BookOpen",
-    color: "#9872C7",
+    color: PRIMARY_PURPLE,
     tags: ""
   })
   const [questions, setQuestions] = useState<TestQuestion[]>([])
@@ -184,7 +142,7 @@ function UceniPageContent() {
       difficulty: "BEGINNER",
       duration: "",
       icon: "BookOpen",
-      color: "#9872C7",
+      color: PRIMARY_PURPLE,
       tags: ""
     })
     setQuestions([])
@@ -276,9 +234,7 @@ function UceniPageContent() {
           <AnimatePresence>
             {filteredSegments.map((segment, index) => {
               const IconComponent = getIcon(segment.icon)
-              const segmentDifficulty = segment.difficulty || "BEGINNER"
               const segmentType = segment.type || "LESSON"
-              const diffColors = difficultyColors[segmentDifficulty] || difficultyColors.BEGINNER
               
               return (
                 <motion.div
@@ -308,7 +264,7 @@ function UceniPageContent() {
                   <div className="uceni-module-top">
                     <div
                       className="uceni-module-icon"
-                      style={{ background: segment.color || "#9872C7" }}
+                      style={{ background: segment.color || PRIMARY_PURPLE }}
                     >
                       <IconComponent size={22} color="white" />
                     </div>
@@ -583,38 +539,13 @@ function UceniPageContent() {
         )}
       </AnimatePresence>
 
-      {/* Delete Modal */}
-      <AnimatePresence>
-        {showDeleteModal && (
-          <motion.div
-            className="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowDeleteModal(false)}
-          >
-            <motion.div
-              className="modal-content modal-content-small"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={e => e.stopPropagation()}
-            >
-              <Trash2 size={48} color="#ff4444" className="modal-icon" />
-              <h2 className="modal-title">Smazat segment?</h2>
-              <p className="modal-text">Tato akce je nevratná.</p>
-              <div className="modal-buttons modal-buttons-center">
-                <button onClick={() => setShowDeleteModal(false)} className="modal-btn-cancel">
-                  Zrušit
-                </button>
-                <button onClick={handleDeleteSegment} className="modal-btn-delete">
-                  Smazat
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Modální dialog pro potvrzení smazání */}
+      <DeleteConfirmModal
+        isOpen={showDeleteModal}
+        onCancel={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteSegment}
+        title="Smazat segment?"
+      />
     </div>
   )
 }

@@ -1,3 +1,5 @@
+// Generování sitemap.xml pro vyhledávače - seznam všech veřejných stránek
+
 import { MetadataRoute } from 'next'
 
 export default function sitemap(): MetadataRoute.Sitemap {

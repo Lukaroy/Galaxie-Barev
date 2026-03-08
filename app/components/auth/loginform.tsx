@@ -1,9 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
+// Přihlašovací formulář - email + heslo, sociální přihlášení
+
+import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { loginUser } from "@/lib/auth"
 import { handleAuthError } from "@/lib/errorHandling"
+import { isValidEmail } from "@/lib/validator"
 import Alert from "../alert"
 import SocialLoginButtons from "./socialLoginButtons"
 import Loading from "@/app/loading"
@@ -16,20 +19,14 @@ export default function LoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
+  const [success] = useState(() =>
+    searchParams.get("registered") === "true"
+      ? "Registrace byla úspěšná! Nyní se můžeš přihlásit."
+      : ""
+  )
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [touched, setTouched] = useState({ email: false, password: false })
-
-  useEffect(() => {
-    if (searchParams.get("registered") === "true") {
-      setSuccess("Registrace byla úspěšná! Nyní se můžeš přihlásit.")
-    }
-  }, [searchParams])
-
-  const isEmailValid = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -40,7 +37,7 @@ export default function LoginForm() {
       return
     }
     
-    if (!isEmailValid(email)) {
+    if (!isValidEmail(email)) {
       setError("Tohle nevypadá jako platný email")
       return
     }
@@ -55,7 +52,7 @@ export default function LoginForm() {
     try {
       await loginUser(email, password)
       router.push("/")
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorMsg = handleAuthError(err)
       if (errorMsg.includes("user-not-found") || errorMsg.includes("wrong-password")) {
         setError("Neplatný email nebo heslo. Zkontroluj údaje a zkus to znovu.")
@@ -94,7 +91,7 @@ export default function LoginForm() {
             if (touched.email && error) setError("")
           }}
           onBlur={() => setTouched({...touched, email: true})}
-          className={touched.email && email && !isEmailValid(email) ? "input-warning" : ""}
+          className={touched.email && email && !isValidEmail(email) ? "input-warning" : ""}
         />
 
         <div className="password-input-wrapper">

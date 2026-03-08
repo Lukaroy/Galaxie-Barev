@@ -1,5 +1,8 @@
 "use client"
 
+// Toast notifikace - globální systém pro zobrazení zpráv (success, error, warning, info)
+// Použití: const { showToast } = useToast(); showToast("Zpráva", "success")
+
 import { useState, useEffect, createContext, useContext, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react'

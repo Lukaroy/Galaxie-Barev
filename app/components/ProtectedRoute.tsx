@@ -1,5 +1,7 @@
 "use client"
 
+// Chráněná cesta - přesměruje nepřihlášené uživatele na přihlašovací stránku
+
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/hooks/useAuth"

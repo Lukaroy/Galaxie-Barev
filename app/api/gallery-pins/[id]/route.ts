@@ -1,3 +1,5 @@
+// API pro správu konkrétního pinu - smazání (DELETE)
+
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 

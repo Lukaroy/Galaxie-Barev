@@ -1,3 +1,5 @@
+// Podmínky použití - statická stránka s právními podmínkami platformy
+
 import { Metadata } from "next"
 import Link from "next/link"
 
@@ -24,8 +26,8 @@ export default function PodminkyPage() {
           <section className="terms-section">
             <h2>1. Úvodní ustanovení</h2>
             <p>
-              Tyto podmínky použití (dále jen „Podmínky") upravují vztah mezi provozovatelem
-              platformy <strong>Galaxie Barev</strong> (dále jen „Platforma") a jejími uživateli.
+              Tyto podmínky použití (dále jen &bdquo;Podmínky&ldquo;) upravují vztah mezi provozovatelem
+              platformy <strong>Galaxie Barev</strong> (dále jen &bdquo;Platforma&ldquo;) a jejími uživateli.
               Používáním Platformy souhlasíš s těmito Podmínkami v plném rozsahu.
             </p>
             <p>
@@ -46,7 +48,7 @@ export default function PodminkyPage() {
               <li>Vzdělávací obsah a lekce o designu</li>
             </ul>
             <p>
-              Platforma je poskytována ve stavu „jak stojí a leží" a provozovatel si vyhrazuje
+              Platforma je poskytována ve stavu &bdquo;jak stojí a leží&ldquo; a provozovatel si vyhrazuje
               právo kdykoli změnit, pozastavit nebo ukončit jakoukoli část služby.
             </p>
           </section>

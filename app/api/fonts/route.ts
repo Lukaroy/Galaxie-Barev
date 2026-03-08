@@ -1,3 +1,5 @@
+// API pro fonty - načtení všech fontů (GET) a vytvoření nového (POST)
+
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 

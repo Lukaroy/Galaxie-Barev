@@ -1,7 +1,10 @@
 "use client"
 
+// Domovská stránka - hero sekce s logem a CTA tlačítky
+
 import { useRouter } from "next/navigation"
 import { motion } from "framer-motion"
+import Image from "next/image"
 import { useAuth } from "@/hooks/useAuth"
 import Loading from "@/app/loading"
 
@@ -31,7 +34,7 @@ export default function HomePage() {
             damping: 15
         }}
       >
-  <img src="/Logo.svg" alt="Logo" width={120} height={120} fetchPriority="high" />
+  <Image src="/Logo.svg" alt="Logo" width={120} height={120} priority />
 </motion.div>
         <div className="hero-heading">
           <motion.h1 

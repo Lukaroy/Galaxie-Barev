@@ -1,3 +1,5 @@
+// API pro moodboardy - seznam uživatelských moodboardů (GET) a vytvoření nového (POST)
+
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
@@ -46,8 +48,6 @@ export async function POST(request: NextRequest) {
         canvasHeight: body.canvasHeight || 1123,
       }
     })
-
-    console.log('Created moodboard:', moodboard)
 
     return NextResponse.json(moodboard, { status: 201 })
   } catch (error) {

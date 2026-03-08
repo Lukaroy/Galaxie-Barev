@@ -1,3 +1,5 @@
+// Layout pro stránku Galerie - metadata pro SEO
+
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {

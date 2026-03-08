@@ -1,9 +1,12 @@
-export interface HSL {
+// Nástroje pro práci s barvami - konverze HEX/HSL, generování barevných schémat
+
+interface HSL {
   h: number
   s: number
   l: number
 }
 
+// Převod HEX barvy na HSL (odstín, sytost, světlost)
 export const hexToHSL = (hex: string): HSL => {
   const r = parseInt(hex.slice(1, 3), 16) / 255
   const g = parseInt(hex.slice(3, 5), 16) / 255
@@ -11,7 +14,8 @@ export const hexToHSL = (hex: string): HSL => {
 
   const max = Math.max(r, g, b)
   const min = Math.min(r, g, b)
-  let h = 0, s = 0, l = (max + min) / 2
+  let h = 0, s = 0
+  const l = (max + min) / 2
 
   if (max !== min) {
     const d = max - min
@@ -27,6 +31,7 @@ export const hexToHSL = (hex: string): HSL => {
   return { h: h * 360, s: s * 100, l: l * 100 }
 }
 
+// Převod HSL zpět na HEX řetězec
 export const hslToHex = (h: number, s: number, l: number): string => {
   h = h / 360
   s = s / 100
@@ -53,9 +58,11 @@ export const hslToHex = (h: number, s: number, l: number): string => {
   }).join('')
 }
 
+// Generování barevného schématu ze základní barvy
+// Podporovaná schémata: komplementární, monochromatické, analogické, triadické, tetradické
 export const generateColorScheme = (baseColor: string, scheme: 'complementary' | 'monochromatic' | 'analogous' | 'triadic' | 'tetradic'): string[] => {
   const { h, s, l } = hexToHSL(baseColor)
-  let colors: string[] = [baseColor]
+  const colors: string[] = [baseColor]
 
   switch (scheme) {
     case 'complementary':
@@ -97,10 +104,12 @@ export const generateColorScheme = (baseColor: string, scheme: 'complementary' |
   return colors
 }
 
+// Vygenerování náhodné barvy v HEX formátu
 export const generateRandomColor = (): string => {
   return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')
 }
 
+// Zkopírování textu do schránky
 export const copyToClipboard = async (text: string): Promise<boolean> => {
   try {
     await navigator.clipboard.writeText(text)

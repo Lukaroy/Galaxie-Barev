@@ -1,5 +1,7 @@
 "use client"
 
+// Nastavení - změna hesla a smazání účtu
+
 import { useState } from "react"
 import { useAuth } from "@/hooks/useAuth"
 import { useRouter } from "next/navigation"
@@ -72,10 +74,11 @@ function NastaveniContent() {
       setCurrentPassword("")
       setNewPassword("")
       setConfirmPassword("")
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
-      if (err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") setError("Nesprávné současné heslo")
-      else if (err.code === "auth/weak-password") setError("Nové heslo je příliš slabé")
+      const errCode = (err as { code?: string })?.code
+      if (errCode === "auth/wrong-password" || errCode === "auth/invalid-credential") setError("Nesprávné současné heslo")
+      else if (errCode === "auth/weak-password") setError("Nové heslo je příliš slabé")
       else setError("Nepodařilo se změnit heslo")
     } finally {
       setSaving(false)
@@ -91,9 +94,10 @@ function NastaveniContent() {
       await sendPasswordResetEmail(auth, user.email)
       setResetEmailSent(true)
       setSuccess(`Na ${user.email} byl odeslán odkaz pro obnovení hesla.`)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
-      if (err.code === "auth/too-many-requests") setError("Příliš mnoho pokusů. Zkus to později.")
+      const errCode = (err as { code?: string })?.code
+      if (errCode === "auth/too-many-requests") setError("Příliš mnoho pokusů. Zkus to později.")
       else setError("Nepodařilo se odeslat email. Zkus to znovu.")
     } finally {
       setResetEmailLoading(false)
@@ -119,9 +123,10 @@ function NastaveniContent() {
       await deleteUser(firebaseUser)
 
       router.push("/")
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err)
-      if (err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") setError("Nesprávné heslo")
+      const errCode = (err as { code?: string })?.code
+      if (errCode === "auth/wrong-password" || errCode === "auth/invalid-credential") setError("Nesprávné heslo")
       else setError("Nepodařilo se smazat účet")
       setSaving(false)
     }
@@ -160,42 +165,42 @@ function NastaveniContent() {
             <div className="form-row">
               <div className="form-field">
                 <label>Současné heslo</label>
-                <div className="pw-input-wrapper">
+                <div className="password-input-wrapper">
                   <input
                     type={showCurrent ? "text" : "password"}
                     placeholder="••••••••"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                   />
-                  <button type="button" className="pw-toggle-btn" onClick={() => setShowCurrent(v => !v)}>
+                  <button type="button" className="password-toggle" onClick={() => setShowCurrent(v => !v)}>
                     {showCurrent ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
               </div>
               <div className="form-field">
                 <label>Nové heslo</label>
-                <div className="pw-input-wrapper">
+                <div className="password-input-wrapper">
                   <input
                     type={showNew ? "text" : "password"}
                     placeholder="••••••••"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                   />
-                  <button type="button" className="pw-toggle-btn" onClick={() => setShowNew(v => !v)}>
+                  <button type="button" className="password-toggle" onClick={() => setShowNew(v => !v)}>
                     {showNew ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
               </div>
               <div className="form-field">
                 <label>Potvrdit nové heslo</label>
-                <div className="pw-input-wrapper">
+                <div className="password-input-wrapper">
                   <input
                     type={showConfirm ? "text" : "password"}
                     placeholder="••••••••"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
-                  <button type="button" className="pw-toggle-btn" onClick={() => setShowConfirm(v => !v)}>
+                  <button type="button" className="password-toggle" onClick={() => setShowConfirm(v => !v)}>
                     {showConfirm ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
@@ -244,14 +249,14 @@ function NastaveniContent() {
             ) : (
               <div className="form-field">
                 <label>Potvrď heslem</label>
-                <div className="pw-input-wrapper">
+                <div className="password-input-wrapper">
                   <input
                     type={showDeletePw ? "text" : "password"}
                     placeholder="Zadej heslo pro potvrzení"
                     value={deletePassword}
                     onChange={(e) => setDeletePassword(e.target.value)}
                   />
-                  <button type="button" className="pw-toggle-btn" onClick={() => setShowDeletePw(v => !v)}>
+                  <button type="button" className="password-toggle" onClick={() => setShowDeletePw(v => !v)}>
                     {showDeletePw ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>

@@ -1,8 +1,10 @@
+// Layout pro přihlášení - metadata, stránka není indexována
+
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Přihlášení',
-  description: 'Přihlaste se do Galaxie Barev a získejte přístup ke všem kreativním nástrojům, moodboardům a komunitním funkcím.',
+  description: 'Přihlašte se do Galaxie Barev a získejte přístup ke všem kreativním nástrojům, moodboardům a komunitním funkcím.',
   robots: {
     index: false,
     follow: true,

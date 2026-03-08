@@ -1,6 +1,9 @@
+// Middleware pro autorizaci API rout - ověření uživatele a admin role
+
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from './prisma'
 
+// Ověření, že uživatel je přihlášený (má platný token)
 export async function requireAuth(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
   
@@ -27,6 +30,7 @@ export async function requireAuth(request: NextRequest) {
   }
 }
 
+// Ověření, že uživatel má roli ADMIN
 export async function requireAdmin(request: NextRequest) {
   const authResult = await requireAuth(request)
   

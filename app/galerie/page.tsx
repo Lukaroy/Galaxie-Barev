@@ -1,12 +1,15 @@
 "use client"
 
+// Galerie příspěvků - uživatelé sdílí obrázky, lajkují a komentují
+
 import React, { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Heart, Plus, X, Trash2, Image as ImageIcon } from "lucide-react"
+import { Heart, Plus, X, Image as ImageIcon } from "lucide-react"
 import { useAuth } from "@/hooks/useAuth"
 import Loading from "@/app/loading"
 import ProtectedRoute from '@/app/components/ProtectedRoute'
 import { useToast } from '@/app/components/Toast'
+import DeleteConfirmModal from '@/app/components/DeleteConfirmModal'
 
 type Post = {
   id: number
@@ -34,7 +37,6 @@ function GaleriePageContent() {
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [pinToDelete, setPinToDelete] = useState<number | null>(null)
   const [newPost, setNewPost] = useState({ title: "", description: "", imageUrl: "" })
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState("")
   const [uploading, setUploading] = useState(false)
   const [imageModal, setImageModal] = useState<{ show: boolean; imageUrl: string; title: string } | null>(null)
@@ -58,8 +60,6 @@ function GaleriePageContent() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    setSelectedFile(file)
-
     const reader = new FileReader()
     reader.onloadend = () => {
       setPreviewUrl(reader.result as string)
@@ -91,7 +91,6 @@ function GaleriePageContent() {
       setPosts([createdPost, ...posts])
       setShowAddModal(false)
       setNewPost({ title: "", description: "", imageUrl: "" })
-      setSelectedFile(null)
       setPreviewUrl("")
       showToast("Příspěvek byl úspěšně přidán", "success")
     } catch (err) {
@@ -205,6 +204,7 @@ function GaleriePageContent() {
                   className="post-image-wrapper"
                   onClick={() => setImageModal({ show: true, imageUrl: post.imageUrl, title: post.title })}
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={post.imageUrl} alt={post.title} className="post-image" />
 
                   {isAuthor && (
@@ -296,11 +296,12 @@ function GaleriePageContent() {
                   <div className="modal-file-dropzone">
                     {previewUrl ? (
                       <div className="modal-file-preview">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={previewUrl} alt="Preview" />
                         <button 
                           type="button" 
                           className="modal-file-remove"
-                          onClick={() => { setSelectedFile(null); setPreviewUrl(""); setNewPost(prev => ({ ...prev, imageUrl: "" })) }}
+                          onClick={() => { setPreviewUrl(""); setNewPost(prev => ({ ...prev, imageUrl: "" })) }}
                         >
                           <X size={16} />
                         </button>
@@ -359,6 +360,7 @@ function GaleriePageContent() {
               <button className="image-modal-close" onClick={() => setImageModal(null)}>
                 <X size={24} color="white" />
               </button>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={imageModal.imageUrl} alt={imageModal.title} className="modal-image" />
             </motion.div>
           </motion.div>
@@ -366,45 +368,13 @@ function GaleriePageContent() {
       </AnimatePresence>
 
       {/* Delete Confirmation Modal */}
-      <AnimatePresence>
-        {showDeleteModal && (
-          <motion.div
-            className="modal-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowDeleteModal(false)}
-          >
-            <motion.div
-              className="modal-content modal-content-small"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              onClick={e => e.stopPropagation()}
-            >
-              <Trash2 size={48} color="#ff4444" className="modal-icon" />
-              <h2 className="modal-title">Smazat příspěvek?</h2>
-              <p className="modal-text">Tato akce je nevratná.</p>
-              <div className="modal-buttons modal-buttons-center">
-                <motion.button
-                  onClick={() => setShowDeleteModal(false)}
-                  className="modal-btn-cancel"
-                  whileHover={{ backgroundColor: "rgba(255,255,255,0.2)" }}
-                >
-                  Zrušit
-                </motion.button>
-                <motion.button
-                  onClick={confirmDeletePin}
-                  className="modal-btn-delete"
-                  whileHover={{ backgroundColor: "#cc0000" }}
-                >
-                  Smazat
-                </motion.button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Modální dialog pro potvrzení smazání */}
+      <DeleteConfirmModal
+        isOpen={showDeleteModal}
+        onCancel={() => setShowDeleteModal(false)}
+        onConfirm={confirmDeletePin}
+        title="Smazat příspěvek?"
+      />
     </div>
   )
 }

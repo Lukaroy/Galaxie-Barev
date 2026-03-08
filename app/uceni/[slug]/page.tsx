@@ -1,66 +1,30 @@
 "use client"
 
-import { useState, useEffect, use, useRef } from "react"
+// Detail výukového segmentu - zobrazení obsahu lekce, editace (admin),
+// markdown parser s podporou obrázků a testová část s otázkami
+
+import { useState, useEffect, use, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
-  ArrowLeft, Clock, BookOpen, FileQuestion, CheckCircle, XCircle,
-  Palette, Type as TypeIcon, Image, Layout, Sparkles, Award, RotateCcw,
+  ArrowLeft, Clock, CheckCircle, XCircle,
+  Award, RotateCcw,
   Edit3, Save, X, Bold, Italic, Heading1, Heading2, Heading3, 
-  ImagePlus, List, Quote, Code, Eye, EyeOff, Trash2
+  ImagePlus, List, Quote, Code, Eye, EyeOff
 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Loading from "@/app/loading"
 import ProtectedRoute from "@/app/components/ProtectedRoute"
 import { useAuth } from "@/hooks/useAuth"
-
-type TestQuestion = {
-  question: string
-  options: string[]
-  correctIndex: number
-}
-
-type Segment = {
-  id: number
-  title: string
-  slug: string
-  description?: string
-  content?: string
-  type: "LESSON" | "TEST"
-  difficulty: "BEGINNER" | "INTERMEDIATE" | "EXPERT"
-  duration?: string
-  icon?: string
-  color?: string
-  tags: string[]
-  questions?: TestQuestion[]
-}
-
-const iconMap: Record<string, React.ElementType> = {
-  Palette,
-  Type: TypeIcon,
-  Image,
-  Layout,
-  Sparkles,
-  BookOpen,
-  FileQuestion
-}
-
-const difficultyLabels: Record<string, string> = {
-  BEGINNER: "Začátečník",
-  INTERMEDIATE: "Pokročilý",
-  EXPERT: "Expert"
-}
-
-const difficultyColors: Record<string, { bg: string; text: string }> = {
-  BEGINNER: { bg: "rgba(74, 222, 128, 0.2)", text: "#4ade80" },
-  INTERMEDIATE: { bg: "rgba(251, 191, 36, 0.2)", text: "#fbbf24" },
-  EXPERT: { bg: "rgba(239, 68, 68, 0.2)", text: "#ef4444" }
-}
+import { useToast } from "@/app/components/Toast"
+import { Segment, iconMap, difficultyLabels, difficultyColors, BookOpen, FileQuestion } from "@/lib/segmentConstants"
+import { BRAND_PURPLE, PRIMARY_PURPLE } from "@/lib/colors"
 
 function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params)
   const router = useRouter()
   const { user } = useAuth()
   const isAdmin = user?.role === "ADMIN"
+  const { showToast } = useToast()
   
   const [segment, setSegment] = useState<Segment | null>(null)
   const [loading, setLoading] = useState(true)
@@ -86,20 +50,7 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
   const [showResults, setShowResults] = useState(false)
   const [score, setScore] = useState(0)
 
-  useEffect(() => {
-    fetchSegment()
-  }, [resolvedParams.slug])
-  
-  useEffect(() => {
-    if (segment) {
-      setEditContent(segment.content || "")
-      setEditTitle(segment.title)
-      setEditDescription(segment.description || "")
-      setEditDuration(segment.duration || "")
-    }
-  }, [segment])
-
-  const fetchSegment = async () => {
+  const fetchSegment = useCallback(async () => {
     try {
       const res = await fetch(`/api/segments/${resolvedParams.slug}`)
       if (res.ok) {
@@ -116,7 +67,20 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
     } finally {
       setLoading(false)
     }
-  }
+  }, [resolvedParams.slug])
+
+  useEffect(() => {
+    fetchSegment()
+  }, [fetchSegment])
+
+  useEffect(() => {
+    if (segment) {
+      setEditContent(segment.content || "")
+      setEditTitle(segment.title)
+      setEditDescription(segment.description || "")
+      setEditDuration(segment.duration || "")
+    }
+  }, [segment])
 
   const getIcon = (iconName?: string) => {
     return iconMap[iconName || "BookOpen"] || BookOpen
@@ -186,10 +150,10 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
         setImageMap({})
         imageCounter.current = 0
       } else {
-        alert("Chyba při ukládání")
+        showToast("Chyba při ukládání", "error")
       }
     } catch {
-      alert("Chyba při ukládání")
+      showToast("Chyba při ukládání", "error")
     } finally {
       setSaving(false)
     }
@@ -290,10 +254,10 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <div className="test-hero" style={{ borderColor: segment.color || "#684d89" }}>
+              <div className="test-hero" style={{ borderColor: segment.color || BRAND_PURPLE }}>
                 <div 
                   className="test-hero-icon"
-                  style={{ background: `linear-gradient(135deg, ${segment.color || "#684d89"}, ${segment.color || "#684d89"}cc)` }}
+                  style={{ background: `linear-gradient(135deg, ${segment.color || BRAND_PURPLE}, ${segment.color || BRAND_PURPLE}cc)` }}
                 >
                   <FileQuestion size={48} color="white" />
                 </div>
@@ -567,11 +531,11 @@ function SegmentDetailContent({ params }: { params: Promise<{ slug: string }> })
               {/* Hero banner */}
               <div
                 className="lesson-hero"
-                style={{ background: `linear-gradient(135deg, ${segment.color || "#9872C7"}33 0%, ${segment.color || "#9872C7"}11 100%)`, borderLeftColor: segment.color || "#9872C7" }}
+                style={{ background: `linear-gradient(135deg, ${segment.color || PRIMARY_PURPLE}33 0%, ${segment.color || PRIMARY_PURPLE}11 100%)`, borderLeftColor: segment.color || PRIMARY_PURPLE }}
               >
                 <div
                   className="lesson-hero-icon"
-                  style={{ background: segment.color || "#9872C7" }}
+                  style={{ background: segment.color || PRIMARY_PURPLE }}
                 >
                   <IconComponent size={36} color="white" />
                 </div>

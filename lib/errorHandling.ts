@@ -1,36 +1,25 @@
-export class AppError extends Error {
-  constructor(
-    message: string,
-    public code?: string,
-    public statusCode?: number
-  ) {
-    super(message)
-    this.name = 'AppError'
-  }
-}
+// Zpracování chyb z API a Firebase do českých hlášek
 
-export const handleApiError = (error: any): string => {
-  if (error instanceof AppError) {
-    return error.message
-  }
-  
-  if (error?.code === 'P2002') {
+export const handleApiError = (error: unknown): string => {
+  const err = error as Record<string, unknown> | null | undefined
+  if (err?.code === 'P2002') {
     return 'Záznam s těmito údaji již existuje'
   }
   
-  if (error?.code === 'P2025') {
+  if (err?.code === 'P2025') {
     return 'Záznam nenalezen'
   }
   
-  if (error?.message) {
-    return error.message
+  if (typeof err?.message === 'string') {
+    return err.message
   }
   
   return 'Nastala neočekávaná chyba'
 }
 
-export const handleAuthError = (error: any): string => {
-  const code = error?.code || ''
+export const handleAuthError = (error: unknown): string => {
+  const err = error as Record<string, unknown> | null | undefined
+  const code = (err?.code as string) || ''
   
   switch (code) {
     case 'auth/user-not-found':
@@ -47,6 +36,6 @@ export const handleAuthError = (error: any): string => {
     case 'auth/too-many-requests':
       return 'Příliš mnoho pokusů, zkuste to později'
     default:
-      return error?.message || 'Nastala chyba při autentizaci'
+      return (typeof err?.message === 'string' ? err.message : null) || 'Nastala chyba při autentizaci'
   }
 }

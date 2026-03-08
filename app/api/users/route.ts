@@ -1,3 +1,5 @@
+// API pro uživatele - seznam všech (GET, vyžaduje ADMIN) a vytvoření (POST, vyžaduje auth)
+
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth, requireAdmin } from '@/lib/authMiddleware';
 import { prisma } from '@/lib/prisma';
@@ -44,9 +46,9 @@ export async function POST(request: NextRequest) {
       }
     });
     return NextResponse.json(created, { status: 201 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('API POST /api/users error:', error);
-    if (error?.code === 'P2002') return NextResponse.json({ error: 'Unique constraint failed' }, { status: 409 });
+    if (typeof error === 'object' && error !== null && 'code' in error && (error as { code: string }).code === 'P2002') return NextResponse.json({ error: 'Unique constraint failed' }, { status: 409 });
     return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
   }
 }

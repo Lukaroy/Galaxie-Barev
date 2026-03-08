@@ -1,3 +1,5 @@
+// Přihlašovací stránka - zobrazí formulář pro přihlášení
+
 import LoginForm from "../components/auth/loginform"
 
 export default function LoginPage() {

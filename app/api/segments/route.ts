@@ -1,3 +1,5 @@
+// API pro výukové segmenty - seznam všech (GET) a vytvoření nového (POST)
+
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 

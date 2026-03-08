@@ -1,3 +1,5 @@
+// API pro konkrétní segment - načtení (GET), úprava (PUT), smazání (DELETE)
+
 import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 

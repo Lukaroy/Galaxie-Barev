@@ -1,3 +1,5 @@
+// Patička webu - logo, navigace a právní odkazy
+
 import Link from "next/link"
 import Image from "next/image"
 

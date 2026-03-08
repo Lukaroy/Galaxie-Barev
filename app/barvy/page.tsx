@@ -1,27 +1,34 @@
 "use client"
 
-import { useState, useEffect, useCallback } from 'react'
+// Generátor barevných palet - uživatel vybírá barvu na kruhu a generuje harmonické palety
+
+import { useState, useMemo } from 'react'
 import { Copy, Shuffle, History, Check, Sun, Moon } from 'lucide-react'
 import type { ColorScheme, PaletteHistory } from '@/types'
 import { generateColorScheme, generateRandomColor, copyToClipboard, hexToHSL, hslToHex } from '@/lib/colorUtils'
 import ProtectedRoute from '@/app/components/ProtectedRoute'
+import { PRIMARY_PURPLE } from '@/lib/colors'
 
 function BarvyPageContent() {
-  const [baseColor, setBaseColor] = useState('#9872C7')
+  const [baseColor, setBaseColor] = useState(PRIMARY_PURPLE)
   const [scheme, setScheme] = useState<ColorScheme>('complementary')
-  const [generatedColors, setGeneratedColors] = useState<string[]>([])
+  // Paleta se přepočítá automaticky při změně barvy nebo schématu
+  const [colorOverrides, setColorOverrides] = useState<Record<number, string>>({})
+  const computedColors = useMemo(() => generateColorScheme(baseColor, scheme), [baseColor, scheme])
+  // Výsledné barvy - buď přepočítané, nebo s manuálními úpravami jasu
+  const generatedColors = computedColors.map((c, i) => colorOverrides[i] ?? c)
+
   const [history, setHistory] = useState<PaletteHistory[]>([])
   const [copiedColor, setCopiedColor] = useState<string | null>(null)
   const [hoverColor, setHoverColor] = useState<number | null>(null)
-  const [mounted, setMounted] = useState(false)
 
   // Compute wheel angle from base color
   const wheelAngle = hexToHSL(baseColor).h
 
-  const handleGenerateColors = useCallback(() => {
-    const colors = generateColorScheme(baseColor, scheme)
-    setGeneratedColors(colors)
-  }, [baseColor, scheme])
+  // Přegenerování palety (resetuje manuální úpravy jasu)
+  const handleGenerateColors = () => {
+    setColorOverrides({})
+  }
 
   const randomColor = () => {
     setBaseColor(generateRandomColor())
@@ -96,38 +103,12 @@ function BarvyPageContent() {
     setBaseColor(newColor)
   }
 
-  useEffect(() => {
-    if (baseColor && mounted) {
-      const colors = generateColorScheme(baseColor, scheme)
-      setGeneratedColors(colors)
-    }
-  }, [baseColor, scheme, mounted])
-
-  useEffect(() => {
-    setMounted(true)
-    // Generate initial colors - we only run this once on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  // Generate colors when mounted for the first time
-  useEffect(() => {
-    if (mounted && generatedColors.length === 0) {
-      const colors = generateColorScheme(baseColor, scheme)
-      setGeneratedColors(colors)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mounted])
-
   const schemeInfo = {
     complementary: 'Protilehlé barvy na kruhu - silný kontrast',
     monochromatic: 'Variace jedné barvy - harmonický vzhled',
     analogous: 'Sousední barvy - příjemná kombinace',
     triadic: 'Tři rovnoměrně vzdálené barvy',
     tetradic: 'Čtyři rovnoměrně vzdálené barvy'
-  }
-
-  if (!mounted) {
-    return null
   }
 
   return (
@@ -227,6 +208,7 @@ function BarvyPageContent() {
                 Náhodná
               </button>
               
+              {/* Tlačítko pro uložení aktuální palety do historie */}
               <button 
                 onClick={() => {
                   handleGenerateColors()
@@ -284,9 +266,7 @@ function BarvyPageContent() {
                               <button 
                                 onClick={() => {
                                   const newColor = adjustBrightness(color, 10)
-                                  const newColors = [...generatedColors]
-                                  newColors[idx] = newColor
-                                  setGeneratedColors(newColors)
+                                  setColorOverrides(prev => ({ ...prev, [idx]: newColor }))
                                 }}
                                 className="brightness-btn"
                                 title="Zesvětlit"
@@ -296,9 +276,7 @@ function BarvyPageContent() {
                               <button 
                                 onClick={() => {
                                   const newColor = adjustBrightness(color, -10)
-                                  const newColors = [...generatedColors]
-                                  newColors[idx] = newColor
-                                  setGeneratedColors(newColors)
+                                  setColorOverrides(prev => ({ ...prev, [idx]: newColor }))
                                 }}
                                 className="brightness-btn"
                                 title="Ztmavit"
@@ -352,7 +330,10 @@ function BarvyPageContent() {
                           onClick={() => {
                             setBaseColor(item.colors[0])
                             setScheme(item.scheme)
-                            setGeneratedColors(item.colors)
+                            // Obnovit uložené barvy z historie
+                            const overrides: Record<number, string> = {}
+                            item.colors.forEach((c, i) => { overrides[i] = c })
+                            setColorOverrides(overrides)
                           }}
                         >
                           {item.colors.map((color, i) => (

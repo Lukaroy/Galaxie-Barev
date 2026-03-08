@@ -1,5 +1,7 @@
 "use client"
 
+// Seznam moodboardů - vytváření, mazání a otevírání nástěnek
+
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, Trash2, Image as ImageIcon, Palette, Type, Layers, Loader2 } from 'lucide-react'
@@ -7,6 +9,8 @@ import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
 import Loading from '@/app/loading'
 import { useToast } from '@/app/components/Toast'
+import DeleteConfirmModal from '@/app/components/DeleteConfirmModal'
+import { PRIMARY_PURPLE } from '@/lib/colors'
 
 interface MoodboardItem {
   id: number
@@ -163,7 +167,7 @@ export default function MoodboardPage() {
 
       {isFetching && moodboards.length === 0 ? (
         <div style={{ display: 'flex', justifyContent: 'center', padding: '4rem 0' }}>
-          <Loader2 size={36} style={{ color: '#9872C7', animation: 'spin 1s linear infinite' }} />
+          <Loader2 size={36} style={{ color: PRIMARY_PURPLE, animation: 'spin 1s linear infinite' }} />
         </div>
       ) : (
         <>
@@ -272,7 +276,7 @@ export default function MoodboardPage() {
               onClick={e => e.stopPropagation()}
             >
               <div className='modal-header-icon'>
-                <Palette size={28} color="#9872C7" />
+                <Palette size={28} color={PRIMARY_PURPLE} />
               </div>
               <h2 className='modal-title'>Nový Moodboard</h2>
 
@@ -356,21 +360,12 @@ export default function MoodboardPage() {
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {showDeleteModal && (
-          <motion.div className='modal-overlay' initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowDeleteModal(false)}>
-            <motion.div className='modal-content modal-content-small' initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} onClick={e => e.stopPropagation()}>
-              <Trash2 size={48} color="#ff4444" className='modal-icon' />
-              <h2 className='modal-title'>Smazat?</h2>
-              <p className='modal-text'>Tato akce je nevratná.</p>
-              <div className='modal-buttons modal-buttons-center'>
-                <motion.button onClick={() => setShowDeleteModal(false)} className='modal-btn-cancel' whileHover={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>Zrušit</motion.button>
-                <motion.button onClick={confirmDelete} className='modal-btn-delete' whileHover={{ backgroundColor: '#cc0000' }}>Smazat</motion.button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Modální dialog pro potvrzení smazání */}
+      <DeleteConfirmModal
+        isOpen={showDeleteModal}
+        onCancel={() => setShowDeleteModal(false)}
+        onConfirm={confirmDelete}
+      />
     </div>
   )
 }

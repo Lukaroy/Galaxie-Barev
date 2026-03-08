@@ -1,3 +1,5 @@
+// Autentizační funkce - přihlášení, registrace, odhlášení, sociální login
+
 import { auth } from "./firebase"
 import {
   GoogleAuthProvider,
@@ -8,6 +10,11 @@ import {
   signOut,
 } from "firebase/auth"
 import { isValidPassword } from "./validator"
+
+const parseDisplayName = (name: string | null) => ({
+  firstName: name?.split(' ')[0] || '',
+  lastName: name?.split(' ').slice(1).join(' ') || '',
+})
 
 export const registerUser = async (
   firstName: string,
@@ -37,8 +44,7 @@ export const loginUser = async (email: string, password: string) =>
 export const loginWithGoogle = async () => {
   const provider = new GoogleAuthProvider()
   const result = await signInWithPopup(auth, provider)
-  const firstName = result.user.displayName?.split(" ")[0] || ""
-  const lastName = result.user.displayName?.split(" ").slice(1).join(" ") || ""
+  const { firstName, lastName } = parseDisplayName(result.user.displayName)
 
   await syncUserToPrisma(result.user.uid, {
     email: result.user.email!,
@@ -53,8 +59,7 @@ export const loginWithApple = async () => {
   const provider = new OAuthProvider("apple.com")
   const result = await signInWithPopup(auth, provider)
 
-  const firstName = result.user.displayName?.split(" ")[0] || ""
-  const lastName = result.user.displayName?.split(" ").slice(1).join(" ") || ""
+  const { firstName, lastName } = parseDisplayName(result.user.displayName)
 
   await syncUserToPrisma(result.user.uid, {
     email: result.user.email!,

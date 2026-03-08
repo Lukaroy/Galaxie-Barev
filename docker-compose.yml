@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_FIREBASE_API_KEY: "AIzaSyDu2w6iHZ3PPp_lRu1MPq9PYBQR59rCwGg"
+        NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: "galaxiebarev-6594c.firebaseapp.com"
+        NEXT_PUBLIC_FIREBASE_PROJECT_ID: "galaxiebarev-6594c"
+        NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: "galaxiebarev-6594c.firebasestorage.app"
+        NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "169772147916"
+        NEXT_PUBLIC_FIREBASE_APP_ID: "1:169772147916:web:8127e6ec7cbcbc20560e69"
+    container_name: galaxie-barev-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DATABASE_URL: postgres://11b79d1c5c9418d64fe006300287294068b65f4f45575a8587749a5a28219a76:sk_yJTRW6GJQaERGESxXWc1Q@db.prisma.io:5432/postgres?sslmode=require

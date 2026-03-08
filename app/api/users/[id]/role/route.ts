@@ -1,3 +1,5 @@
+// API pro správu rolí uživatelů - načtení role (GET) a změna role (PATCH, vyžaduje ADMIN)
+
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/authMiddleware'
 import { prisma } from '@/lib/prisma'
@@ -38,10 +40,10 @@ export async function PATCH(
       message: 'Role updated successfully',
       user 
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('PATCH /api/users/[id]/role error:', error)
     
-    if (error?.code === 'P2025') {
+    if (typeof error === 'object' && error !== null && 'code' in error && (error as { code: string }).code === 'P2025') {
       return NextResponse.json({ 
         error: 'User not found' 
       }, { status: 404 })

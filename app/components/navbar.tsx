@@ -1,5 +1,7 @@
 'use client'
 
+// Navigační lišta - hlavní menu, profilový dropdown a mobilní slide menu
+
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'

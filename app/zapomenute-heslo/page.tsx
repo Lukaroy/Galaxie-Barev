@@ -1,8 +1,11 @@
 "use client"
 
+// Obnovení hesla - uživatel zadá email a dostane odkaz pro reset hesla
+
 import { useState } from "react"
 import { sendPasswordResetEmail } from "firebase/auth"
 import { auth } from "@/lib/firebase"
+import { isValidEmail } from "@/lib/validator"
 import { useRouter } from "next/navigation"
 import Alert from "../components/alert"
 import Loading from "@/app/loading"
@@ -25,7 +28,7 @@ export default function ZapomenuteHesloPage() {
       return
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!isValidEmail(email)) {
       setError("Zadej platný email")
       return
     }
@@ -36,11 +39,12 @@ export default function ZapomenuteHesloPage() {
       await sendPasswordResetEmail(auth, email)
       setSuccess("Link pro obnovení hesla byl odeslán na tvůj email!")
       setEmail("")
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Password reset error:", err)
-      if (err.code === "auth/user-not-found") {
+      const errCode = (err as { code?: string })?.code
+      if (errCode === "auth/user-not-found") {
         setError("Uživatel s tímto emailem neexistuje")
-      } else if (err.code === "auth/too-many-requests") {
+      } else if (errCode === "auth/too-many-requests") {
         setError("Příliš mnoho pokusů. Zkus to později.")
       } else {
         setError("Nepodařilo se odeslat email. Zkus to znovu.")

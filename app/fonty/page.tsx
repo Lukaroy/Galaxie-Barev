@@ -1,5 +1,9 @@
 "use client"
 
+// Stránka Fonty - prohlížení, filtrování a stahování Google fontů
+// Uživatel může vyhledávat podle názvu, filtrovat podle kategorie
+// a zobrazit si vlastní náhledový text
+
 import React, { useState, useEffect } from "react"
 import ProtectedRoute from "@/app/components/ProtectedRoute"
 import { motion } from "framer-motion"
@@ -24,6 +28,7 @@ function FontyContent() {
 
   const MAX_CUSTOM_TEXT_LENGTH = 50
 
+  // Načtení fontů z API při prvním zobrazení
   useEffect(() => {
     const fetchFonts = async () => {
       try {
@@ -40,6 +45,7 @@ function FontyContent() {
     fetchFonts()
   }, [])
 
+  // Přidání Google Fonts stylesheet do <head> pro každý font
   useEffect(() => {
     fonts.forEach(font => {
       const linkId = `font-${font.id}`
@@ -53,10 +59,13 @@ function FontyContent() {
     })
   }, [fonts])
 
+  // Sestavení CSS font-family řetězce
   const getFontFamily = (name: string) => `'${name}', sans-serif`
+  // URL pro stažení fontu z Google Fonts
   const getDownloadUrl = (fontName: string) =>
     `https://fonts.google.com/download?family=${fontName.replace(/ /g, "+")}`
 
+  // Unikátní kategorie pro filtr
   const categories = ["Vše", ...Array.from(new Set(fonts.map(f => f.category)))]
 
   const filteredFonts = fonts.filter(font =>

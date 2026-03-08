@@ -1,5 +1,7 @@
 "use client"
 
+// Registrační formulář - jméno, email, heslo se silou hesla
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { registerUser } from "@/lib/auth"
@@ -21,6 +23,7 @@ export default function RegisterForm() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  // Kontrola síly hesla (zobrazí se pod polem)
   const [passwordStrength, setPasswordStrength] = useState<{
     strength: string
     color: string
@@ -127,7 +130,7 @@ export default function RegisterForm() {
       await registerUser(trimmedFirstName, trimmedLastName, email, password)
       await signOut(auth)
       router.push("/prihlaseni?registered=true")
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorMsg = handleAuthError(err)
       if (errorMsg.includes("email-already-in-use")) {
         setError("Tento email se už používá. Zkus se spíš přihlásit?")
@@ -215,6 +218,14 @@ export default function RegisterForm() {
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
+
+        {/* Ukazatel síly hesla */}
+        {passwordStrength.strength && (
+          <div className="password-strength-hint" style={{ color: passwordStrength.color, fontSize: "0.8rem", marginTop: "-0.25rem" }}>
+            Síla hesla: {passwordStrength.strength}
+            {passwordStrength.tips && <span> — {passwordStrength.tips}</span>}
+          </div>
+        )}
 
         <div className="checkbox-group">
           <input type="checkbox" id="terms" required />

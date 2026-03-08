@@ -1,22 +1,20 @@
 ﻿'use client';
 
-import { useEffect, useRef, useState, Suspense } from 'react';
+// Moodboard editor - plátno pro tvorbu plakátů pomocí fabric.js
+// Obsahuje: přidávání textu, obrázků, tvarů, vrstvy, export PNG, auto-ukládání
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// fabric.js je dynamicky importován a mnoho jeho interních typů vyžaduje `any`
+
+import { useEffect, useRef, useState, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import Link from 'next/link';
+import { BRAND_PURPLE, PRIMARY_PURPLE } from '@/lib/colors';
 
 // Dynamic import fabric to avoid SSR issues
 let fabric: typeof import('fabric') | null = null;
-
-const PRESETS: Record<string, { w: number; h: number }> = {
-  'A4 na vysku': { w: 595, h: 842 },
-  'A4 na sirku': { w: 842, h: 595 },
-  'Instagram': { w: 1080, h: 1080 },
-  'Story': { w: 1080, h: 1920 },
-  'YouTube': { w: 1280, h: 720 },
-  'Plakat': { w: 800, h: 1200 },
-};
 
 function EditorPageContent() {
   const router = useRouter();
@@ -175,8 +173,8 @@ function EditorPageContent() {
           fabricCanvas.current?.renderAll();
         });
       }
-    } catch (e) {
-      console.error('Error loading saved canvas:', e);
+    } catch {
+      // ignore parse errors
     }
     setSavedCanvasJson(null);
   }, [canvasInitialized, savedCanvasJson]);
@@ -184,8 +182,6 @@ function EditorPageContent() {
   // Initialize canvas after fabric is loaded and user is authenticated
   useEffect(() => {
     if (!fabricLoaded || !fabric || !canvasRef.current || !uid || initialized.current) return;
-    
-    console.log('Initializing fabric canvas...');
     
     const canvas = new fabric.Canvas(canvasRef.current, {
       width: canvasW,
@@ -199,23 +195,11 @@ function EditorPageContent() {
     initialized.current = true;
     setCanvasInitialized(true);
 
-    const syncLayers = () => {
-      const objs: any[] = canvas.getObjects();
-      setLayers([...objs].reverse().map((obj: any, idx: number) => ({
-        uid: (obj.__uid as number) ?? idx,
-        type: obj.type as string,
-        label: obj.type === 'i-text' ? ((obj.text as string)?.substring(0, 20) || 'Text') :
-               obj.type === 'rect' ? 'Obdélník' :
-               obj.type === 'circle' ? 'Kruh' :
-               obj.type === 'image' ? 'Obrázek' : (obj.type as string),
-      })));
-    };
-
     canvas.on('selection:created', (e: any) => { setSelected(e.selected?.[0] || null); });
     canvas.on('selection:updated', (e: any) => { setSelected(e.selected?.[0] || null); });
     canvas.on('selection:cleared', () => { setSelected(null); });
-    canvas.on('object:added', syncLayers);
-    canvas.on('object:removed', syncLayers);
+    canvas.on('object:added', () => syncLayers());
+    canvas.on('object:removed', () => syncLayers());
     
     return () => {
       canvas.dispose();
@@ -223,6 +207,8 @@ function EditorPageContent() {
       initialized.current = false;
       setCanvasInitialized(false);
     };
+    // Canvas is initialized once; canvasW/canvasH/bgColor are only used for initial setup
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fabricLoaded, uid]);
 
   // Cursor-centered wheel zoom on canvas area
@@ -334,7 +320,7 @@ function EditorPageContent() {
   }, [selected]);
 
   // Update layers order after bring/send operations
-  const updateLayers = () => {
+  const syncLayers = () => {
     if (!fabricCanvas.current) return;
     const objs: any[] = fabricCanvas.current.getObjects();
     setLayers([...objs].reverse().map((obj: any, idx: number) => ({
@@ -345,14 +331,6 @@ function EditorPageContent() {
              obj.type === 'circle' ? 'Kruh' :
              obj.type === 'image' ? 'Obrázek' : (obj.type as string),
     })));
-  };
-
-  const handlePreset = (name: string) => {
-    const p = PRESETS[name];
-    if (p) {
-      setCanvasW(p.w);
-      setCanvasH(p.h);
-    }
   };
 
   const addBgImage = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -479,14 +457,14 @@ function EditorPageContent() {
     if (!fabricCanvas.current || !selected) return;
     fabricCanvas.current.bringObjectForward(selected);
     fabricCanvas.current.renderAll();
-    updateLayers();
+    syncLayers();
   };
 
   const sendBackward = () => {
     if (!fabricCanvas.current || !selected) return;
     fabricCanvas.current.sendObjectBackwards(selected);
     fabricCanvas.current.renderAll();
-    updateLayers();
+    syncLayers();
   };
 
   const exportPNG = () => {
@@ -502,7 +480,7 @@ function EditorPageContent() {
     link.click();
   };
 
-  const saveCanvas = async () => {
+  const saveCanvas = useCallback(async () => {
     if (!fabricCanvas.current || !uid || !moodboardId || isSaving) return;
     setIsSaving(true);
     try {
@@ -510,8 +488,6 @@ function EditorPageContent() {
       const objects = fabricCanvas.current.getObjects();
       const elements = objects.map((obj: any) => obj.toJSON(['__uid']));
       const canvasJson = JSON.stringify(fabricCanvas.current.toJSON());
-      
-      console.log(`Saving moodboard ${moodboardId}: ${elements.length} elements, bgColor=${bgColor}`);
       
       const res = await fetch(`/api/moodboards/${moodboardId}?userId=${uid}`, {
         method: 'PATCH',
@@ -528,19 +504,14 @@ function EditorPageContent() {
         }),
       });
       if (res.ok) {
-        const data = await res.json();
-        console.log('Save response:', data);
         setLastSaved(new Date().toLocaleTimeString('cs-CZ', { hour: '2-digit', minute: '2-digit' }));
-      } else {
-        const errData = await res.text();
-        console.error('Save failed:', res.status, errData);
       }
-    } catch (e) {
-      console.error('Save error:', e);
+    } catch {
+      // ignore
     } finally {
       setIsSaving(false);
     }
-  };
+  }, [uid, moodboardId, canvasW, canvasH, bgColor, canvasTransform, isSaving]);
 
   // Ctrl+S save
   useEffect(() => {
@@ -552,7 +523,7 @@ function EditorPageContent() {
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [uid, moodboardId, canvasW, canvasH, isSaving]);
+  }, [saveCanvas]);
 
   // Canvas area panning (middle-click, space+drag, or drag on background)
   const handleCanvasAreaMouseDown = (e: React.MouseEvent) => {
@@ -604,7 +575,7 @@ function EditorPageContent() {
     return (
       <div style={styles.loading}>
         <div style={styles.spinner} />
-        <p style={{ color: '#888', marginTop: 16 }}>Nacitani editoru...</p>
+        <p style={{ color: '#888', marginTop: 16 }}>Načítání editoru...</p>
       </div>
     );
   }
@@ -613,10 +584,10 @@ function EditorPageContent() {
   if (!uid) {
     return (
       <div style={styles.authPage}>
-        <h2 style={{ margin: 0, fontSize: 28, marginBottom: 12 }}>Prihlaste se</h2>
-        <p style={{ color: '#888', marginBottom: 24 }}>Pro pouziti editoru plakatu se musite prihlasit</p>
+        <h2 style={{ margin: 0, fontSize: 28, marginBottom: 12 }}>Přihlašte se</h2>
+        <p style={{ color: '#888', marginBottom: 24 }}>Pro použití editoru plakátu se musíte přihlásit</p>
         <button onClick={() => router.push('/prihlaseni')} style={styles.authBtn}>
-          Prihlasit se
+          Přihlásit se
         </button>
       </div>
     );
@@ -663,7 +634,7 @@ function EditorPageContent() {
           {lastSaved && (
             <span style={{ color: '#555', fontSize: 12 }}>Uloženo {lastSaved}</span>
           )}
-          <button onClick={saveCanvas} disabled={isSaving} style={{ ...styles.exportBtn, background: isSaving ? '#444' : '#684d89' }}>
+          <button onClick={saveCanvas} disabled={isSaving} style={{ ...styles.exportBtn, background: isSaving ? '#444' : BRAND_PURPLE }}>
             {isSaving ? 'Ukládám...' : 'Uložit'}
           </button>
           <button onClick={exportPNG} style={styles.exportBtn}>
@@ -685,7 +656,7 @@ function EditorPageContent() {
             />
             <label style={styles.uploadBtn}>
               <input type="file" accept="image/*" onChange={addBgImage} hidden />
-              Nahrat obrazek pozadi
+              Nahrát obrázek pozadí
             </label>
           </div>
 
@@ -693,7 +664,7 @@ function EditorPageContent() {
             <h3 style={styles.sidebarTitle}>Přidat prvky</h3>
             <label style={styles.uploadBtn}>
               <input type="file" accept="image/*" onChange={addImage} hidden />
-              Nahrat obrazek
+              Nahrát obrázek
             </label>
             <button onClick={addText} style={styles.toolBtn}>T  Text</button>
             <button onClick={addRect} style={styles.toolBtn}>□  Obdélník</button>
@@ -714,7 +685,7 @@ function EditorPageContent() {
                     borderRadius: 6,
                     marginBottom: 4,
                     background: selected?.__uid === layer.uid ? 'rgba(104,77,137,0.25)' : 'transparent',
-                    border: `1px solid ${selected?.__uid === layer.uid ? '#684d89' : '#2a2a3a'}`,
+                    border: `1px solid ${selected?.__uid === layer.uid ? BRAND_PURPLE : '#2a2a3a'}`,
                     cursor: 'pointer',
                     fontSize: 13,
                     color: '#e2e8f0',
@@ -771,7 +742,7 @@ function EditorPageContent() {
         <aside style={{ ...styles.sidebar, borderLeft: '1px solid #222', borderRight: 'none' }}>
           {selected ? (
             <div style={styles.sidebarSection}>
-              <h3 style={styles.sidebarTitle}>Vybrany objekt</h3>
+              <h3 style={styles.sidebarTitle}>Vybraný objekt</h3>
               <button onClick={bringForward} style={styles.toolBtn}> Posunout nahoru</button>
               <button onClick={sendBackward} style={styles.toolBtn}> Posunout dolu</button>
               <button onClick={deleteSelected} style={styles.deleteBtn}>Smazat</button>
@@ -807,7 +778,7 @@ function EditorPageContent() {
                   <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
                     <button
                       title="Tučné"
-                      style={{ ...styles.btn, flex: 1, fontWeight: 'bold', fontSize: 15, background: textBold ? '#684d89' : '#1a1a24', borderColor: textBold ? '#684d89' : '#333' }}
+                      style={{ ...styles.btn, flex: 1, fontWeight: 'bold', fontSize: 15, background: textBold ? BRAND_PURPLE : '#1a1a24', borderColor: textBold ? BRAND_PURPLE : '#333' }}
                       onClick={() => {
                         const next = !textBold;
                         setTextBold(next);
@@ -817,7 +788,7 @@ function EditorPageContent() {
                     >B</button>
                     <button
                       title="Kurzíva"
-                      style={{ ...styles.btn, flex: 1, fontStyle: 'italic', fontSize: 15, background: textItalic ? '#684d89' : '#1a1a24', borderColor: textItalic ? '#684d89' : '#333' }}
+                      style={{ ...styles.btn, flex: 1, fontStyle: 'italic', fontSize: 15, background: textItalic ? BRAND_PURPLE : '#1a1a24', borderColor: textItalic ? BRAND_PURPLE : '#333' }}
                       onClick={() => {
                         const next = !textItalic;
                         setTextItalic(next);
@@ -870,10 +841,10 @@ function EditorPageContent() {
                     }}
                   />
 
-                  <label style={styles.label}>Barva ohračení</label>
+                  <label style={styles.label}>Barva ohraničení</label>
                   <input
                     type="color"
-                    value={shapeStroke === 'transparent' ? '#9872c7' : shapeStroke}
+                    value={shapeStroke === 'transparent' ? PRIMARY_PURPLE : shapeStroke}
                     style={styles.colorPicker}
                     onChange={(e) => {
                       setShapeStroke(e.target.value);
@@ -920,7 +891,7 @@ function EditorPageContent() {
 
               {selected.type === 'image' && fabric && (
                 <div style={{ marginTop: 16 }}>
-                  <h3 style={styles.sidebarTitle}>Obrazek</h3>
+                  <h3 style={styles.sidebarTitle}>Obrázek</h3>
                   <label style={styles.label}>Jas</label>
                   <input
                     type="range"
@@ -957,7 +928,7 @@ function EditorPageContent() {
           ) : (
             <div style={styles.sidebarSection}>
               <p style={{ color: '#666', fontSize: 13, textAlign: 'center' }}>
-                Kliknete na objekt pro upravu
+                Klikněte na objekt pro úpravu
               </p>
             </div>
           )}
@@ -1010,7 +981,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: '#fff',
   },
   authBtn: {
-    background: '#684d89',
+    background: BRAND_PURPLE,
     color: '#fff',
     border: 'none',
     padding: '14px 40px',
@@ -1062,7 +1033,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 16,
   },
   exportBtn: {
-    background: '#684d89',
+    background: BRAND_PURPLE,
     color: '#fff',
     border: 'none',
     padding: '10px 24px',

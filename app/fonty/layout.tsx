@@ -1,3 +1,5 @@
+// Layout pro stránku Fonty - metadata pro SEO
+
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {

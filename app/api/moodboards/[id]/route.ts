@@ -1,3 +1,6 @@
+// API pro konkrétní moodboard - načtení (GET), úprava (PUT/PATCH), smazání (DELETE)
+// PATCH ukládá fabric.js canvas včetně elementů a atributů
+
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
@@ -131,7 +134,7 @@ function fabricTypeToDbType(fabricType: string): string {
 }
 
 // Helper: extract searchable attribute values from a fabric object
-function extractAttributes(fabricObj: Record<string, any>): Record<string, string> {
+function extractAttributes(fabricObj: Record<string, unknown>): Record<string, string> {
   const attrs: Record<string, string> = {}
   const type = fabricObj.type
 
@@ -226,7 +229,7 @@ export async function PATCH(
     }
 
     // Update moodboard metadata
-    const updateData: Record<string, any> = {}
+    const updateData: Record<string, unknown> = {}
     if (canvasJson !== undefined) updateData.canvasJson = canvasJson
     if (canvasWidth !== undefined) updateData.canvasWidth = canvasWidth
     if (canvasHeight !== undefined) updateData.canvasHeight = canvasHeight

@@ -1,3 +1,5 @@
+// Pravidla pro webové roboty - povolení/zakázání indexování stránek
+
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {

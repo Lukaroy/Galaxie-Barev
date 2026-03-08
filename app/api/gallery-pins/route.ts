@@ -1,3 +1,5 @@
+// API pro galerii - načtení všech pinů (GET) a přidání nového (POST)
+
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 

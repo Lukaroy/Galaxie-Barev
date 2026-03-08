@@ -1,3 +1,5 @@
+// Alert komponenta - zobrazí chybovou nebo úspěšnou zprávu
+
 type Props = {
   message: string
   type?: "error" | "success"

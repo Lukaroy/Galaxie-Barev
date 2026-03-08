@@ -1,3 +1,5 @@
+// Hlavní layout aplikace - nastavení fontů, metadat, SEO a struktury stránky
+
 import './globals.css'
 import {Montserrat, Inder } from 'next/font/google'
 import Navbar from './components/navbar'
