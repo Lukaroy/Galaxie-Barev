@@ -1,6 +1,3 @@
-// Hook pro sledování přihlášeného uživatele (Firebase + role z databáze)
-
-
 import { useEffect, useState } from "react"
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth"
 import { auth } from "../lib/firebase"
@@ -28,9 +25,8 @@ export const useAuth = () => {
       }
 
       try {
+        console.log("Načítám profil pro UID:", currentUser?.uid)
         let res = await fetch(`/api/users/${currentUser.uid}`)
-        
-        // If user doesn't exist in DB (404), sync them first
         if (res.status === 404) {
           const syncRes = await fetch('/api/internal/sync-user', {
             method: 'POST',
@@ -42,15 +38,16 @@ export const useAuth = () => {
               lastName: currentUser.displayName?.split(' ').slice(1).join(' ') || '',
             })
           })
-          
           if (syncRes.ok) {
             res = await fetch(`/api/users/${currentUser.uid}`)
           }
         }
-        
-        if (!res.ok) throw new Error("Failed to fetch profile")
+        if (!res.ok) {
+          const errText = await res.text();
+          console.error(`Failed to fetch profile: status=${res.status}, body=`, errText);
+          throw new Error("Failed to fetch profile")
+        }
         const data = await res.json()
-
         setUser({
           uid: currentUser.uid,
           email: currentUser.email,

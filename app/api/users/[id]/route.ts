@@ -3,14 +3,22 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-type RouteContext = { params: Promise<{ id: string }> };
+
 
 function isPrismaError(error: unknown): error is { code: string; message: string } {
   return typeof error === 'object' && error !== null && 'code' in error;
 }
 
-export async function GET(_request: Request, context: RouteContext) {
-  const { id } = await context.params;
+export async function GET(request: Request, context: { params: { id: string } }) {
+  // Next.js 16+ App Router: context.params is a Promise
+  const params = await context.params;
+  console.log("API GET /api/users/[id] params:", params);
+  if (!params || !params.id) {
+    console.error("API GET /api/users/[id] - id is missing in params", params);
+    return NextResponse.json({ error: 'Missing id in params', params }, { status: 400 });
+  }
+  const { id } = params;
+  console.log("API GET /api/users/[id] id:", id);
   try {
     const user = await prisma.user.findUnique({
       where: { id: id as string },
@@ -24,16 +32,19 @@ export async function GET(_request: Request, context: RouteContext) {
         birthday: true,
       }
     });
-    if (!user) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    if (!user) {
+      console.warn(`User not found for id: ${id}`);
+      return NextResponse.json({ error: 'User not found', id }, { status: 404 });
+    }
     return NextResponse.json(user);
   } catch (error) {
-    console.error(`API GET /api/users/${id} error:`, error);
-    return NextResponse.json({ error: 'Failed to fetch user' }, { status: 500 });
+    console.error(`API GET /api/users/${id} error:`, error, 'id:', id);
+    return NextResponse.json({ error: 'Failed to fetch user', details: error instanceof Error ? error.message : String(error), id }, { status: 500 });
   }
 }
 
-export async function PUT(request: Request, context: RouteContext) {
-  const { id } = await context.params;
+export async function PUT(request: Request, context: { params: { id: string } }) {
+  const { id } = context.params;
   try {
     const data = await request.json();
     const updated = await prisma.user.update({
@@ -48,8 +59,8 @@ export async function PUT(request: Request, context: RouteContext) {
   }
 }
 
-export async function PATCH(request: Request, context: RouteContext) {
-  const { id } = await context.params;
+export async function PATCH(request: Request, context: { params: { id: string } }) {
+  const { id } = context.params;
   try {
     const data = await request.json();
     
@@ -92,8 +103,8 @@ export async function PATCH(request: Request, context: RouteContext) {
   }
 }
 
-export async function DELETE(_request: Request, context: RouteContext) {
-  const { id } = await context.params;
+export async function DELETE(request: Request, context: { params: { id: string } }) {
+  const { id } = context.params;
   try {
     await prisma.user.delete({
       where: { id: id as string }

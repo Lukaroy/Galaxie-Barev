@@ -4,20 +4,9 @@
 
 import { useState } from "react"
 
-const loadingTexts = [
-  "Načítám...",
-  "Moment...",
-  "Chvilku strpení...",
-  "Už to bude...",
-  "Připravujem...",
-  "Jen sečku...",
-]
-
 export default function Loading() {
-  const [text] = useState(
-    () => loadingTexts[Math.floor(Math.random() * loadingTexts.length)]
-  )
-  
+  // Hydration fix: vždy stejný text při SSR/CSR
+  const text = "Načítám..."
   return (
     <div className="loading-container">
       <div className="loading-spinner">
