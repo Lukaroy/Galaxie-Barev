@@ -24,12 +24,12 @@ exports.Prisma = Prisma
 exports.$Enums = {}
 
 /**
- * Prisma Client JS version: 7.2.0
- * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+ * Prisma Client JS version: 7.5.0
+ * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
  */
 Prisma.prismaVersion = {
-  client: "7.2.0",
-  engine: "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3"
+  client: "7.5.0",
+  engine: "280c870be64f457428992c43c1f6d557fab6e29e"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -138,29 +138,21 @@ exports.Prisma.FontScalarFieldEnum = {
   tips: 'tips'
 };
 
-exports.Prisma.PaletteScalarFieldEnum = {
-  id: 'id',
-  mainColor: 'mainColor',
-  mixinColors: 'mixinColors',
-  tags: 'tags',
-  description: 'description'
-};
-
 exports.Prisma.SegmentScalarFieldEnum = {
   id: 'id',
   title: 'title',
   slug: 'slug',
   description: 'description',
+  tags: 'tags',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  color: 'color',
   content: 'content',
-  type: 'type',
   difficulty: 'difficulty',
   duration: 'duration',
   icon: 'icon',
-  color: 'color',
-  tags: 'tags',
   questions: 'questions',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  type: 'type'
 };
 
 exports.Prisma.AttributeScalarFieldEnum = {
@@ -184,10 +176,10 @@ exports.Prisma.ElementAttributeScalarFieldEnum = {
 
 exports.Prisma.ElementScalarFieldEnum = {
   id: 'id',
-  fabricJson: 'fabricJson',
-  zIndex: 'zIndex',
   elementTypeId: 'elementTypeId',
-  moodboardId: 'moodboardId'
+  moodboardId: 'moodboardId',
+  fabricJson: 'fabricJson',
+  zIndex: 'zIndex'
 };
 
 exports.Prisma.ElementValueScalarFieldEnum = {
@@ -200,14 +192,14 @@ exports.Prisma.MoodboardScalarFieldEnum = {
   id: 'id',
   name: 'name',
   createdAt: 'createdAt',
+  userId: 'userId',
+  canvasJson: 'canvasJson',
   canvasWidth: 'canvasWidth',
   canvasHeight: 'canvasHeight',
   bgColor: 'bgColor',
-  canvasJson: 'canvasJson',
   viewportX: 'viewportX',
   viewportY: 'viewportY',
-  viewportScale: 'viewportScale',
-  userId: 'userId'
+  viewportScale: 'viewportScale'
 };
 
 exports.Prisma.GalleryPinScalarFieldEnum = {
@@ -255,21 +247,20 @@ exports.UserRole = exports.$Enums.UserRole = {
   ADMIN: 'ADMIN'
 };
 
-exports.SegmentType = exports.$Enums.SegmentType = {
-  LESSON: 'LESSON',
-  TEST: 'TEST'
-};
-
 exports.Difficulty = exports.$Enums.Difficulty = {
   BEGINNER: 'BEGINNER',
   INTERMEDIATE: 'INTERMEDIATE',
   EXPERT: 'EXPERT'
 };
 
+exports.SegmentType = exports.$Enums.SegmentType = {
+  LESSON: 'LESSON',
+  TEST: 'TEST'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Font: 'Font',
-  Palette: 'Palette',
   Segment: 'Segment',
   Attribute: 'Attribute',
   ElementType: 'ElementType',

@@ -24,11 +24,6 @@ export type User = $Result.DefaultSelection<Prisma.$UserPayload>
  */
 export type Font = $Result.DefaultSelection<Prisma.$FontPayload>
 /**
- * Model Palette
- * 
- */
-export type Palette = $Result.DefaultSelection<Prisma.$PalettePayload>
-/**
  * Model Segment
  * 
  */
@@ -122,7 +117,9 @@ export const Difficulty: typeof $Enums.Difficulty
  * Type-safe database client for TypeScript & Node.js
  * @example
  * ```
- * const prisma = new PrismaClient()
+ * const prisma = new PrismaClient({
+ *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+ * })
  * // Fetch zero or more Users
  * const users = await prisma.user.findMany()
  * ```
@@ -143,7 +140,9 @@ export class PrismaClient<
    * Type-safe database client for TypeScript & Node.js
    * @example
    * ```
-   * const prisma = new PrismaClient()
+   * const prisma = new PrismaClient({
+   *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
+   * })
    * // Fetch zero or more Users
    * const users = await prisma.user.findMany()
    * ```
@@ -223,7 +222,7 @@ export class PrismaClient<
    * ])
    * ```
    * 
-   * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
+   * Read more in our [docs](https://www.prisma.io/docs/orm/prisma-client/queries/transactions).
    */
   $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): $Utils.JsPromise<runtime.Types.Utils.UnwrapTuple<P>>
 
@@ -252,16 +251,6 @@ export class PrismaClient<
     * ```
     */
   get font(): Prisma.FontDelegate<ExtArgs, ClientOptions>;
-
-  /**
-   * `prisma.palette`: Exposes CRUD operations for the **Palette** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Palettes
-    * const palettes = await prisma.palette.findMany()
-    * ```
-    */
-  get palette(): Prisma.PaletteDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.segment`: Exposes CRUD operations for the **Segment** model.
@@ -402,8 +391,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 7.2.0
-   * Query Engine version: 0c8ef2ce45c83248ab3df073180d5eda9e8be7a3
+   * Prisma Client JS version: 7.5.0
+   * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
    */
   export type PrismaVersion = {
     client: string
@@ -788,7 +777,6 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     Font: 'Font',
-    Palette: 'Palette',
     Segment: 'Segment',
     Attribute: 'Attribute',
     ElementType: 'ElementType',
@@ -813,7 +801,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "font" | "palette" | "segment" | "attribute" | "elementType" | "elementAttribute" | "element" | "elementValue" | "moodboard" | "galleryPin" | "galleryPinLike"
+      modelProps: "user" | "font" | "segment" | "attribute" | "elementType" | "elementAttribute" | "element" | "elementValue" | "moodboard" | "galleryPin" | "galleryPinLike"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -962,80 +950,6 @@ export namespace Prisma {
           count: {
             args: Prisma.FontCountArgs<ExtArgs>
             result: $Utils.Optional<FontCountAggregateOutputType> | number
-          }
-        }
-      }
-      Palette: {
-        payload: Prisma.$PalettePayload<ExtArgs>
-        fields: Prisma.PaletteFieldRefs
-        operations: {
-          findUnique: {
-            args: Prisma.PaletteFindUniqueArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PalettePayload> | null
-          }
-          findUniqueOrThrow: {
-            args: Prisma.PaletteFindUniqueOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PalettePayload>
-          }
-          findFirst: {
-            args: Prisma.PaletteFindFirstArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PalettePayload> | null
-          }
-          findFirstOrThrow: {
-            args: Prisma.PaletteFindFirstOrThrowArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PalettePayload>
-          }
-          findMany: {
-            args: Prisma.PaletteFindManyArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PalettePayload>[]
-          }
-          create: {
-            args: Prisma.PaletteCreateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PalettePayload>
-          }
-          createMany: {
-            args: Prisma.PaletteCreateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          createManyAndReturn: {
-            args: Prisma.PaletteCreateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PalettePayload>[]
-          }
-          delete: {
-            args: Prisma.PaletteDeleteArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PalettePayload>
-          }
-          update: {
-            args: Prisma.PaletteUpdateArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PalettePayload>
-          }
-          deleteMany: {
-            args: Prisma.PaletteDeleteManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateMany: {
-            args: Prisma.PaletteUpdateManyArgs<ExtArgs>
-            result: BatchPayload
-          }
-          updateManyAndReturn: {
-            args: Prisma.PaletteUpdateManyAndReturnArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PalettePayload>[]
-          }
-          upsert: {
-            args: Prisma.PaletteUpsertArgs<ExtArgs>
-            result: $Utils.PayloadToResult<Prisma.$PalettePayload>
-          }
-          aggregate: {
-            args: Prisma.PaletteAggregateArgs<ExtArgs>
-            result: $Utils.Optional<AggregatePalette>
-          }
-          groupBy: {
-            args: Prisma.PaletteGroupByArgs<ExtArgs>
-            result: $Utils.Optional<PaletteGroupByOutputType>[]
-          }
-          count: {
-            args: Prisma.PaletteCountArgs<ExtArgs>
-            result: $Utils.Optional<PaletteCountAggregateOutputType> | number
           }
         }
       }
@@ -1815,7 +1729,6 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     user?: UserOmit
     font?: FontOmit
-    palette?: PaletteOmit
     segment?: SegmentOmit
     attribute?: AttributeOmit
     elementType?: ElementTypeOmit
@@ -2983,6 +2896,11 @@ export namespace Prisma {
      * Skip the first `n` Users.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     */
     distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
@@ -4080,6 +3998,11 @@ export namespace Prisma {
      * Skip the first `n` Fonts.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Fonts.
+     */
     distinct?: FontScalarFieldEnum | FontScalarFieldEnum[]
   }
 
@@ -4271,1027 +4194,6 @@ export namespace Prisma {
 
 
   /**
-   * Model Palette
-   */
-
-  export type AggregatePalette = {
-    _count: PaletteCountAggregateOutputType | null
-    _avg: PaletteAvgAggregateOutputType | null
-    _sum: PaletteSumAggregateOutputType | null
-    _min: PaletteMinAggregateOutputType | null
-    _max: PaletteMaxAggregateOutputType | null
-  }
-
-  export type PaletteAvgAggregateOutputType = {
-    id: number | null
-  }
-
-  export type PaletteSumAggregateOutputType = {
-    id: number | null
-  }
-
-  export type PaletteMinAggregateOutputType = {
-    id: number | null
-    mainColor: string | null
-    description: string | null
-  }
-
-  export type PaletteMaxAggregateOutputType = {
-    id: number | null
-    mainColor: string | null
-    description: string | null
-  }
-
-  export type PaletteCountAggregateOutputType = {
-    id: number
-    mainColor: number
-    mixinColors: number
-    tags: number
-    description: number
-    _all: number
-  }
-
-
-  export type PaletteAvgAggregateInputType = {
-    id?: true
-  }
-
-  export type PaletteSumAggregateInputType = {
-    id?: true
-  }
-
-  export type PaletteMinAggregateInputType = {
-    id?: true
-    mainColor?: true
-    description?: true
-  }
-
-  export type PaletteMaxAggregateInputType = {
-    id?: true
-    mainColor?: true
-    description?: true
-  }
-
-  export type PaletteCountAggregateInputType = {
-    id?: true
-    mainColor?: true
-    mixinColors?: true
-    tags?: true
-    description?: true
-    _all?: true
-  }
-
-  export type PaletteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Palette to aggregate.
-     */
-    where?: PaletteWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Palettes to fetch.
-     */
-    orderBy?: PaletteOrderByWithRelationInput | PaletteOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the start position
-     */
-    cursor?: PaletteWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Palettes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Palettes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Count returned Palettes
-    **/
-    _count?: true | PaletteCountAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to average
-    **/
-    _avg?: PaletteAvgAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to sum
-    **/
-    _sum?: PaletteSumAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the minimum value
-    **/
-    _min?: PaletteMinAggregateInputType
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-     * 
-     * Select which fields to find the maximum value
-    **/
-    _max?: PaletteMaxAggregateInputType
-  }
-
-  export type GetPaletteAggregateType<T extends PaletteAggregateArgs> = {
-        [P in keyof T & keyof AggregatePalette]: P extends '_count' | 'count'
-      ? T[P] extends true
-        ? number
-        : GetScalarType<T[P], AggregatePalette[P]>
-      : GetScalarType<T[P], AggregatePalette[P]>
-  }
-
-
-
-
-  export type PaletteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: PaletteWhereInput
-    orderBy?: PaletteOrderByWithAggregationInput | PaletteOrderByWithAggregationInput[]
-    by: PaletteScalarFieldEnum[] | PaletteScalarFieldEnum
-    having?: PaletteScalarWhereWithAggregatesInput
-    take?: number
-    skip?: number
-    _count?: PaletteCountAggregateInputType | true
-    _avg?: PaletteAvgAggregateInputType
-    _sum?: PaletteSumAggregateInputType
-    _min?: PaletteMinAggregateInputType
-    _max?: PaletteMaxAggregateInputType
-  }
-
-  export type PaletteGroupByOutputType = {
-    id: number
-    mainColor: string
-    mixinColors: string[]
-    tags: string[]
-    description: string | null
-    _count: PaletteCountAggregateOutputType | null
-    _avg: PaletteAvgAggregateOutputType | null
-    _sum: PaletteSumAggregateOutputType | null
-    _min: PaletteMinAggregateOutputType | null
-    _max: PaletteMaxAggregateOutputType | null
-  }
-
-  type GetPaletteGroupByPayload<T extends PaletteGroupByArgs> = Prisma.PrismaPromise<
-    Array<
-      PickEnumerable<PaletteGroupByOutputType, T['by']> &
-        {
-          [P in ((keyof T) & (keyof PaletteGroupByOutputType))]: P extends '_count'
-            ? T[P] extends boolean
-              ? number
-              : GetScalarType<T[P], PaletteGroupByOutputType[P]>
-            : GetScalarType<T[P], PaletteGroupByOutputType[P]>
-        }
-      >
-    >
-
-
-  export type PaletteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    mainColor?: boolean
-    mixinColors?: boolean
-    tags?: boolean
-    description?: boolean
-  }, ExtArgs["result"]["palette"]>
-
-  export type PaletteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    mainColor?: boolean
-    mixinColors?: boolean
-    tags?: boolean
-    description?: boolean
-  }, ExtArgs["result"]["palette"]>
-
-  export type PaletteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
-    id?: boolean
-    mainColor?: boolean
-    mixinColors?: boolean
-    tags?: boolean
-    description?: boolean
-  }, ExtArgs["result"]["palette"]>
-
-  export type PaletteSelectScalar = {
-    id?: boolean
-    mainColor?: boolean
-    mixinColors?: boolean
-    tags?: boolean
-    description?: boolean
-  }
-
-  export type PaletteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "mainColor" | "mixinColors" | "tags" | "description", ExtArgs["result"]["palette"]>
-
-  export type $PalettePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    name: "Palette"
-    objects: {}
-    scalars: $Extensions.GetPayloadResult<{
-      id: number
-      mainColor: string
-      mixinColors: string[]
-      tags: string[]
-      description: string | null
-    }, ExtArgs["result"]["palette"]>
-    composites: {}
-  }
-
-  type PaletteGetPayload<S extends boolean | null | undefined | PaletteDefaultArgs> = $Result.GetResult<Prisma.$PalettePayload, S>
-
-  type PaletteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
-    Omit<PaletteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
-      select?: PaletteCountAggregateInputType | true
-    }
-
-  export interface PaletteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Palette'], meta: { name: 'Palette' } }
-    /**
-     * Find zero or one Palette that matches the filter.
-     * @param {PaletteFindUniqueArgs} args - Arguments to find a Palette
-     * @example
-     * // Get one Palette
-     * const palette = await prisma.palette.findUnique({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUnique<T extends PaletteFindUniqueArgs>(args: SelectSubset<T, PaletteFindUniqueArgs<ExtArgs>>): Prisma__PaletteClient<$Result.GetResult<Prisma.$PalettePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find one Palette that matches the filter or throw an error with `error.code='P2025'`
-     * if no matches were found.
-     * @param {PaletteFindUniqueOrThrowArgs} args - Arguments to find a Palette
-     * @example
-     * // Get one Palette
-     * const palette = await prisma.palette.findUniqueOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findUniqueOrThrow<T extends PaletteFindUniqueOrThrowArgs>(args: SelectSubset<T, PaletteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PaletteClient<$Result.GetResult<Prisma.$PalettePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Palette that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PaletteFindFirstArgs} args - Arguments to find a Palette
-     * @example
-     * // Get one Palette
-     * const palette = await prisma.palette.findFirst({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirst<T extends PaletteFindFirstArgs>(args?: SelectSubset<T, PaletteFindFirstArgs<ExtArgs>>): Prisma__PaletteClient<$Result.GetResult<Prisma.$PalettePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find the first Palette that matches the filter or
-     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PaletteFindFirstOrThrowArgs} args - Arguments to find a Palette
-     * @example
-     * // Get one Palette
-     * const palette = await prisma.palette.findFirstOrThrow({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     */
-    findFirstOrThrow<T extends PaletteFindFirstOrThrowArgs>(args?: SelectSubset<T, PaletteFindFirstOrThrowArgs<ExtArgs>>): Prisma__PaletteClient<$Result.GetResult<Prisma.$PalettePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Find zero or more Palettes that matches the filter.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PaletteFindManyArgs} args - Arguments to filter and select certain fields only.
-     * @example
-     * // Get all Palettes
-     * const palettes = await prisma.palette.findMany()
-     * 
-     * // Get first 10 Palettes
-     * const palettes = await prisma.palette.findMany({ take: 10 })
-     * 
-     * // Only select the `id`
-     * const paletteWithIdOnly = await prisma.palette.findMany({ select: { id: true } })
-     * 
-     */
-    findMany<T extends PaletteFindManyArgs>(args?: SelectSubset<T, PaletteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PalettePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
-
-    /**
-     * Create a Palette.
-     * @param {PaletteCreateArgs} args - Arguments to create a Palette.
-     * @example
-     * // Create one Palette
-     * const Palette = await prisma.palette.create({
-     *   data: {
-     *     // ... data to create a Palette
-     *   }
-     * })
-     * 
-     */
-    create<T extends PaletteCreateArgs>(args: SelectSubset<T, PaletteCreateArgs<ExtArgs>>): Prisma__PaletteClient<$Result.GetResult<Prisma.$PalettePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Create many Palettes.
-     * @param {PaletteCreateManyArgs} args - Arguments to create many Palettes.
-     * @example
-     * // Create many Palettes
-     * const palette = await prisma.palette.createMany({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     *     
-     */
-    createMany<T extends PaletteCreateManyArgs>(args?: SelectSubset<T, PaletteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Create many Palettes and returns the data saved in the database.
-     * @param {PaletteCreateManyAndReturnArgs} args - Arguments to create many Palettes.
-     * @example
-     * // Create many Palettes
-     * const palette = await prisma.palette.createManyAndReturn({
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Create many Palettes and only return the `id`
-     * const paletteWithIdOnly = await prisma.palette.createManyAndReturn({
-     *   select: { id: true },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    createManyAndReturn<T extends PaletteCreateManyAndReturnArgs>(args?: SelectSubset<T, PaletteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PalettePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Delete a Palette.
-     * @param {PaletteDeleteArgs} args - Arguments to delete one Palette.
-     * @example
-     * // Delete one Palette
-     * const Palette = await prisma.palette.delete({
-     *   where: {
-     *     // ... filter to delete one Palette
-     *   }
-     * })
-     * 
-     */
-    delete<T extends PaletteDeleteArgs>(args: SelectSubset<T, PaletteDeleteArgs<ExtArgs>>): Prisma__PaletteClient<$Result.GetResult<Prisma.$PalettePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Update one Palette.
-     * @param {PaletteUpdateArgs} args - Arguments to update one Palette.
-     * @example
-     * // Update one Palette
-     * const palette = await prisma.palette.update({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    update<T extends PaletteUpdateArgs>(args: SelectSubset<T, PaletteUpdateArgs<ExtArgs>>): Prisma__PaletteClient<$Result.GetResult<Prisma.$PalettePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-    /**
-     * Delete zero or more Palettes.
-     * @param {PaletteDeleteManyArgs} args - Arguments to filter Palettes to delete.
-     * @example
-     * // Delete a few Palettes
-     * const { count } = await prisma.palette.deleteMany({
-     *   where: {
-     *     // ... provide filter here
-     *   }
-     * })
-     * 
-     */
-    deleteMany<T extends PaletteDeleteManyArgs>(args?: SelectSubset<T, PaletteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Palettes.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PaletteUpdateManyArgs} args - Arguments to update one or more rows.
-     * @example
-     * // Update many Palettes
-     * const palette = await prisma.palette.updateMany({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: {
-     *     // ... provide data here
-     *   }
-     * })
-     * 
-     */
-    updateMany<T extends PaletteUpdateManyArgs>(args: SelectSubset<T, PaletteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
-
-    /**
-     * Update zero or more Palettes and returns the data updated in the database.
-     * @param {PaletteUpdateManyAndReturnArgs} args - Arguments to update many Palettes.
-     * @example
-     * // Update many Palettes
-     * const palette = await prisma.palette.updateManyAndReturn({
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * 
-     * // Update zero or more Palettes and only return the `id`
-     * const paletteWithIdOnly = await prisma.palette.updateManyAndReturn({
-     *   select: { id: true },
-     *   where: {
-     *     // ... provide filter here
-     *   },
-     *   data: [
-     *     // ... provide data here
-     *   ]
-     * })
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * 
-     */
-    updateManyAndReturn<T extends PaletteUpdateManyAndReturnArgs>(args: SelectSubset<T, PaletteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PalettePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
-
-    /**
-     * Create or update one Palette.
-     * @param {PaletteUpsertArgs} args - Arguments to update or create a Palette.
-     * @example
-     * // Update or create a Palette
-     * const palette = await prisma.palette.upsert({
-     *   create: {
-     *     // ... data to create a Palette
-     *   },
-     *   update: {
-     *     // ... in case it already exists, update
-     *   },
-     *   where: {
-     *     // ... the filter for the Palette we want to update
-     *   }
-     * })
-     */
-    upsert<T extends PaletteUpsertArgs>(args: SelectSubset<T, PaletteUpsertArgs<ExtArgs>>): Prisma__PaletteClient<$Result.GetResult<Prisma.$PalettePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-
-    /**
-     * Count the number of Palettes.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PaletteCountArgs} args - Arguments to filter Palettes to count.
-     * @example
-     * // Count the number of Palettes
-     * const count = await prisma.palette.count({
-     *   where: {
-     *     // ... the filter for the Palettes we want to count
-     *   }
-     * })
-    **/
-    count<T extends PaletteCountArgs>(
-      args?: Subset<T, PaletteCountArgs>,
-    ): Prisma.PrismaPromise<
-      T extends $Utils.Record<'select', any>
-        ? T['select'] extends true
-          ? number
-          : GetScalarType<T['select'], PaletteCountAggregateOutputType>
-        : number
-    >
-
-    /**
-     * Allows you to perform aggregations operations on a Palette.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PaletteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
-     * @example
-     * // Ordered by age ascending
-     * // Where email contains prisma.io
-     * // Limited to the 10 users
-     * const aggregations = await prisma.user.aggregate({
-     *   _avg: {
-     *     age: true,
-     *   },
-     *   where: {
-     *     email: {
-     *       contains: "prisma.io",
-     *     },
-     *   },
-     *   orderBy: {
-     *     age: "asc",
-     *   },
-     *   take: 10,
-     * })
-    **/
-    aggregate<T extends PaletteAggregateArgs>(args: Subset<T, PaletteAggregateArgs>): Prisma.PrismaPromise<GetPaletteAggregateType<T>>
-
-    /**
-     * Group by Palette.
-     * Note, that providing `undefined` is treated as the value not being there.
-     * Read more here: https://pris.ly/d/null-undefined
-     * @param {PaletteGroupByArgs} args - Group by arguments.
-     * @example
-     * // Group by city, order by createdAt, get count
-     * const result = await prisma.user.groupBy({
-     *   by: ['city', 'createdAt'],
-     *   orderBy: {
-     *     createdAt: true
-     *   },
-     *   _count: {
-     *     _all: true
-     *   },
-     * })
-     * 
-    **/
-    groupBy<
-      T extends PaletteGroupByArgs,
-      HasSelectOrTake extends Or<
-        Extends<'skip', Keys<T>>,
-        Extends<'take', Keys<T>>
-      >,
-      OrderByArg extends True extends HasSelectOrTake
-        ? { orderBy: PaletteGroupByArgs['orderBy'] }
-        : { orderBy?: PaletteGroupByArgs['orderBy'] },
-      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
-      ByFields extends MaybeTupleToUnion<T['by']>,
-      ByValid extends Has<ByFields, OrderFields>,
-      HavingFields extends GetHavingFields<T['having']>,
-      HavingValid extends Has<ByFields, HavingFields>,
-      ByEmpty extends T['by'] extends never[] ? True : False,
-      InputErrors extends ByEmpty extends True
-      ? `Error: "by" must not be empty.`
-      : HavingValid extends False
-      ? {
-          [P in HavingFields]: P extends ByFields
-            ? never
-            : P extends string
-            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
-            : [
-                Error,
-                'Field ',
-                P,
-                ` in "having" needs to be provided in "by"`,
-              ]
-        }[HavingFields]
-      : 'take' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "take", you also need to provide "orderBy"'
-      : 'skip' extends Keys<T>
-      ? 'orderBy' extends Keys<T>
-        ? ByValid extends True
-          ? {}
-          : {
-              [P in OrderFields]: P extends ByFields
-                ? never
-                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-            }[OrderFields]
-        : 'Error: If you provide "skip", you also need to provide "orderBy"'
-      : ByValid extends True
-      ? {}
-      : {
-          [P in OrderFields]: P extends ByFields
-            ? never
-            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
-        }[OrderFields]
-    >(args: SubsetIntersection<T, PaletteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPaletteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
-  /**
-   * Fields of the Palette model
-   */
-  readonly fields: PaletteFieldRefs;
-  }
-
-  /**
-   * The delegate class that acts as a "Promise-like" for Palette.
-   * Why is this prefixed with `Prisma__`?
-   * Because we want to prevent naming conflicts as mentioned in
-   * https://github.com/prisma/prisma-client-js/issues/707
-   */
-  export interface Prisma__PaletteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
-    readonly [Symbol.toStringTag]: "PrismaPromise"
-    /**
-     * Attaches callbacks for the resolution and/or rejection of the Promise.
-     * @param onfulfilled The callback to execute when the Promise is resolved.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of which ever callback is executed.
-     */
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
-    /**
-     * Attaches a callback for only the rejection of the Promise.
-     * @param onrejected The callback to execute when the Promise is rejected.
-     * @returns A Promise for the completion of the callback.
-     */
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
-    /**
-     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
-     * resolved value cannot be modified from the callback.
-     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
-     * @returns A Promise for the completion of the callback.
-     */
-    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
-  }
-
-
-
-
-  /**
-   * Fields of the Palette model
-   */
-  interface PaletteFieldRefs {
-    readonly id: FieldRef<"Palette", 'Int'>
-    readonly mainColor: FieldRef<"Palette", 'String'>
-    readonly mixinColors: FieldRef<"Palette", 'String[]'>
-    readonly tags: FieldRef<"Palette", 'String[]'>
-    readonly description: FieldRef<"Palette", 'String'>
-  }
-    
-
-  // Custom InputTypes
-  /**
-   * Palette findUnique
-   */
-  export type PaletteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Palette
-     */
-    select?: PaletteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Palette
-     */
-    omit?: PaletteOmit<ExtArgs> | null
-    /**
-     * Filter, which Palette to fetch.
-     */
-    where: PaletteWhereUniqueInput
-  }
-
-  /**
-   * Palette findUniqueOrThrow
-   */
-  export type PaletteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Palette
-     */
-    select?: PaletteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Palette
-     */
-    omit?: PaletteOmit<ExtArgs> | null
-    /**
-     * Filter, which Palette to fetch.
-     */
-    where: PaletteWhereUniqueInput
-  }
-
-  /**
-   * Palette findFirst
-   */
-  export type PaletteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Palette
-     */
-    select?: PaletteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Palette
-     */
-    omit?: PaletteOmit<ExtArgs> | null
-    /**
-     * Filter, which Palette to fetch.
-     */
-    where?: PaletteWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Palettes to fetch.
-     */
-    orderBy?: PaletteOrderByWithRelationInput | PaletteOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Palettes.
-     */
-    cursor?: PaletteWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Palettes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Palettes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Palettes.
-     */
-    distinct?: PaletteScalarFieldEnum | PaletteScalarFieldEnum[]
-  }
-
-  /**
-   * Palette findFirstOrThrow
-   */
-  export type PaletteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Palette
-     */
-    select?: PaletteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Palette
-     */
-    omit?: PaletteOmit<ExtArgs> | null
-    /**
-     * Filter, which Palette to fetch.
-     */
-    where?: PaletteWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Palettes to fetch.
-     */
-    orderBy?: PaletteOrderByWithRelationInput | PaletteOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for searching for Palettes.
-     */
-    cursor?: PaletteWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Palettes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Palettes.
-     */
-    skip?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-     * 
-     * Filter by unique combinations of Palettes.
-     */
-    distinct?: PaletteScalarFieldEnum | PaletteScalarFieldEnum[]
-  }
-
-  /**
-   * Palette findMany
-   */
-  export type PaletteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Palette
-     */
-    select?: PaletteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Palette
-     */
-    omit?: PaletteOmit<ExtArgs> | null
-    /**
-     * Filter, which Palettes to fetch.
-     */
-    where?: PaletteWhereInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
-     * 
-     * Determine the order of Palettes to fetch.
-     */
-    orderBy?: PaletteOrderByWithRelationInput | PaletteOrderByWithRelationInput[]
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-     * 
-     * Sets the position for listing Palettes.
-     */
-    cursor?: PaletteWhereUniqueInput
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Take `±n` Palettes from the position of the cursor.
-     */
-    take?: number
-    /**
-     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
-     * 
-     * Skip the first `n` Palettes.
-     */
-    skip?: number
-    distinct?: PaletteScalarFieldEnum | PaletteScalarFieldEnum[]
-  }
-
-  /**
-   * Palette create
-   */
-  export type PaletteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Palette
-     */
-    select?: PaletteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Palette
-     */
-    omit?: PaletteOmit<ExtArgs> | null
-    /**
-     * The data needed to create a Palette.
-     */
-    data: XOR<PaletteCreateInput, PaletteUncheckedCreateInput>
-  }
-
-  /**
-   * Palette createMany
-   */
-  export type PaletteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to create many Palettes.
-     */
-    data: PaletteCreateManyInput | PaletteCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Palette createManyAndReturn
-   */
-  export type PaletteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Palette
-     */
-    select?: PaletteSelectCreateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Palette
-     */
-    omit?: PaletteOmit<ExtArgs> | null
-    /**
-     * The data used to create many Palettes.
-     */
-    data: PaletteCreateManyInput | PaletteCreateManyInput[]
-    skipDuplicates?: boolean
-  }
-
-  /**
-   * Palette update
-   */
-  export type PaletteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Palette
-     */
-    select?: PaletteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Palette
-     */
-    omit?: PaletteOmit<ExtArgs> | null
-    /**
-     * The data needed to update a Palette.
-     */
-    data: XOR<PaletteUpdateInput, PaletteUncheckedUpdateInput>
-    /**
-     * Choose, which Palette to update.
-     */
-    where: PaletteWhereUniqueInput
-  }
-
-  /**
-   * Palette updateMany
-   */
-  export type PaletteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * The data used to update Palettes.
-     */
-    data: XOR<PaletteUpdateManyMutationInput, PaletteUncheckedUpdateManyInput>
-    /**
-     * Filter which Palettes to update
-     */
-    where?: PaletteWhereInput
-    /**
-     * Limit how many Palettes to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Palette updateManyAndReturn
-   */
-  export type PaletteUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Palette
-     */
-    select?: PaletteSelectUpdateManyAndReturn<ExtArgs> | null
-    /**
-     * Omit specific fields from the Palette
-     */
-    omit?: PaletteOmit<ExtArgs> | null
-    /**
-     * The data used to update Palettes.
-     */
-    data: XOR<PaletteUpdateManyMutationInput, PaletteUncheckedUpdateManyInput>
-    /**
-     * Filter which Palettes to update
-     */
-    where?: PaletteWhereInput
-    /**
-     * Limit how many Palettes to update.
-     */
-    limit?: number
-  }
-
-  /**
-   * Palette upsert
-   */
-  export type PaletteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Palette
-     */
-    select?: PaletteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Palette
-     */
-    omit?: PaletteOmit<ExtArgs> | null
-    /**
-     * The filter to search for the Palette to update in case it exists.
-     */
-    where: PaletteWhereUniqueInput
-    /**
-     * In case the Palette found by the `where` argument doesn't exist, create a new Palette with this data.
-     */
-    create: XOR<PaletteCreateInput, PaletteUncheckedCreateInput>
-    /**
-     * In case the Palette was found with the provided `where` argument, update it with this data.
-     */
-    update: XOR<PaletteUpdateInput, PaletteUncheckedUpdateInput>
-  }
-
-  /**
-   * Palette delete
-   */
-  export type PaletteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Palette
-     */
-    select?: PaletteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Palette
-     */
-    omit?: PaletteOmit<ExtArgs> | null
-    /**
-     * Filter which Palette to delete.
-     */
-    where: PaletteWhereUniqueInput
-  }
-
-  /**
-   * Palette deleteMany
-   */
-  export type PaletteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Filter which Palettes to delete
-     */
-    where?: PaletteWhereInput
-    /**
-     * Limit how many Palettes to delete.
-     */
-    limit?: number
-  }
-
-  /**
-   * Palette without action
-   */
-  export type PaletteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the Palette
-     */
-    select?: PaletteSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the Palette
-     */
-    omit?: PaletteOmit<ExtArgs> | null
-  }
-
-
-  /**
    * Model Segment
    */
 
@@ -5316,14 +4218,14 @@ export namespace Prisma {
     title: string | null
     slug: string | null
     description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    color: string | null
     content: string | null
-    type: $Enums.SegmentType | null
     difficulty: $Enums.Difficulty | null
     duration: string | null
     icon: string | null
-    color: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
+    type: $Enums.SegmentType | null
   }
 
   export type SegmentMaxAggregateOutputType = {
@@ -5331,14 +4233,14 @@ export namespace Prisma {
     title: string | null
     slug: string | null
     description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    color: string | null
     content: string | null
-    type: $Enums.SegmentType | null
     difficulty: $Enums.Difficulty | null
     duration: string | null
     icon: string | null
-    color: string | null
-    createdAt: Date | null
-    updatedAt: Date | null
+    type: $Enums.SegmentType | null
   }
 
   export type SegmentCountAggregateOutputType = {
@@ -5346,16 +4248,16 @@ export namespace Prisma {
     title: number
     slug: number
     description: number
+    tags: number
+    createdAt: number
+    updatedAt: number
+    color: number
     content: number
-    type: number
     difficulty: number
     duration: number
     icon: number
-    color: number
-    tags: number
     questions: number
-    createdAt: number
-    updatedAt: number
+    type: number
     _all: number
   }
 
@@ -5373,14 +4275,14 @@ export namespace Prisma {
     title?: true
     slug?: true
     description?: true
+    createdAt?: true
+    updatedAt?: true
+    color?: true
     content?: true
-    type?: true
     difficulty?: true
     duration?: true
     icon?: true
-    color?: true
-    createdAt?: true
-    updatedAt?: true
+    type?: true
   }
 
   export type SegmentMaxAggregateInputType = {
@@ -5388,14 +4290,14 @@ export namespace Prisma {
     title?: true
     slug?: true
     description?: true
+    createdAt?: true
+    updatedAt?: true
+    color?: true
     content?: true
-    type?: true
     difficulty?: true
     duration?: true
     icon?: true
-    color?: true
-    createdAt?: true
-    updatedAt?: true
+    type?: true
   }
 
   export type SegmentCountAggregateInputType = {
@@ -5403,16 +4305,16 @@ export namespace Prisma {
     title?: true
     slug?: true
     description?: true
+    tags?: true
+    createdAt?: true
+    updatedAt?: true
+    color?: true
     content?: true
-    type?: true
     difficulty?: true
     duration?: true
     icon?: true
-    color?: true
-    tags?: true
     questions?: true
-    createdAt?: true
-    updatedAt?: true
+    type?: true
     _all?: true
   }
 
@@ -5507,16 +4409,16 @@ export namespace Prisma {
     title: string
     slug: string
     description: string | null
+    tags: string[]
+    createdAt: Date
+    updatedAt: Date
+    color: string | null
     content: string | null
-    type: $Enums.SegmentType
     difficulty: $Enums.Difficulty
     duration: string | null
     icon: string | null
-    color: string | null
-    tags: string[]
     questions: JsonValue | null
-    createdAt: Date
-    updatedAt: Date
+    type: $Enums.SegmentType
     _count: SegmentCountAggregateOutputType | null
     _avg: SegmentAvgAggregateOutputType | null
     _sum: SegmentSumAggregateOutputType | null
@@ -5543,16 +4445,16 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     description?: boolean
+    tags?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    color?: boolean
     content?: boolean
-    type?: boolean
     difficulty?: boolean
     duration?: boolean
     icon?: boolean
-    color?: boolean
-    tags?: boolean
     questions?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    type?: boolean
   }, ExtArgs["result"]["segment"]>
 
   export type SegmentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5560,16 +4462,16 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     description?: boolean
+    tags?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    color?: boolean
     content?: boolean
-    type?: boolean
     difficulty?: boolean
     duration?: boolean
     icon?: boolean
-    color?: boolean
-    tags?: boolean
     questions?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    type?: boolean
   }, ExtArgs["result"]["segment"]>
 
   export type SegmentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5577,16 +4479,16 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     description?: boolean
+    tags?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    color?: boolean
     content?: boolean
-    type?: boolean
     difficulty?: boolean
     duration?: boolean
     icon?: boolean
-    color?: boolean
-    tags?: boolean
     questions?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    type?: boolean
   }, ExtArgs["result"]["segment"]>
 
   export type SegmentSelectScalar = {
@@ -5594,19 +4496,19 @@ export namespace Prisma {
     title?: boolean
     slug?: boolean
     description?: boolean
+    tags?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    color?: boolean
     content?: boolean
-    type?: boolean
     difficulty?: boolean
     duration?: boolean
     icon?: boolean
-    color?: boolean
-    tags?: boolean
     questions?: boolean
-    createdAt?: boolean
-    updatedAt?: boolean
+    type?: boolean
   }
 
-  export type SegmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "content" | "type" | "difficulty" | "duration" | "icon" | "color" | "tags" | "questions" | "createdAt" | "updatedAt", ExtArgs["result"]["segment"]>
+  export type SegmentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "slug" | "description" | "tags" | "createdAt" | "updatedAt" | "color" | "content" | "difficulty" | "duration" | "icon" | "questions" | "type", ExtArgs["result"]["segment"]>
 
   export type $SegmentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Segment"
@@ -5616,16 +4518,16 @@ export namespace Prisma {
       title: string
       slug: string
       description: string | null
+      tags: string[]
+      createdAt: Date
+      updatedAt: Date
+      color: string | null
       content: string | null
-      type: $Enums.SegmentType
       difficulty: $Enums.Difficulty
       duration: string | null
       icon: string | null
-      color: string | null
-      tags: string[]
       questions: Prisma.JsonValue | null
-      createdAt: Date
-      updatedAt: Date
+      type: $Enums.SegmentType
     }, ExtArgs["result"]["segment"]>
     composites: {}
   }
@@ -6053,16 +4955,16 @@ export namespace Prisma {
     readonly title: FieldRef<"Segment", 'String'>
     readonly slug: FieldRef<"Segment", 'String'>
     readonly description: FieldRef<"Segment", 'String'>
+    readonly tags: FieldRef<"Segment", 'String[]'>
+    readonly createdAt: FieldRef<"Segment", 'DateTime'>
+    readonly updatedAt: FieldRef<"Segment", 'DateTime'>
+    readonly color: FieldRef<"Segment", 'String'>
     readonly content: FieldRef<"Segment", 'String'>
-    readonly type: FieldRef<"Segment", 'SegmentType'>
     readonly difficulty: FieldRef<"Segment", 'Difficulty'>
     readonly duration: FieldRef<"Segment", 'String'>
     readonly icon: FieldRef<"Segment", 'String'>
-    readonly color: FieldRef<"Segment", 'String'>
-    readonly tags: FieldRef<"Segment", 'String[]'>
     readonly questions: FieldRef<"Segment", 'Json'>
-    readonly createdAt: FieldRef<"Segment", 'DateTime'>
-    readonly updatedAt: FieldRef<"Segment", 'DateTime'>
+    readonly type: FieldRef<"Segment", 'SegmentType'>
   }
     
 
@@ -6239,6 +5141,11 @@ export namespace Prisma {
      * Skip the first `n` Segments.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Segments.
+     */
     distinct?: SegmentScalarFieldEnum | SegmentScalarFieldEnum[]
   }
 
@@ -7290,6 +6197,11 @@ export namespace Prisma {
      * Skip the first `n` Attributes.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attributes.
+     */
     distinct?: AttributeScalarFieldEnum | AttributeScalarFieldEnum[]
   }
 
@@ -8409,6 +7321,11 @@ export namespace Prisma {
      * Skip the first `n` ElementTypes.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ElementTypes.
+     */
     distinct?: ElementTypeScalarFieldEnum | ElementTypeScalarFieldEnum[]
   }
 
@@ -8845,22 +7762,22 @@ export namespace Prisma {
   export type ElementAttributeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     elementTypeId?: boolean
     attributeId?: boolean
-    elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
+    elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["elementAttribute"]>
 
   export type ElementAttributeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     elementTypeId?: boolean
     attributeId?: boolean
-    elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
+    elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["elementAttribute"]>
 
   export type ElementAttributeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     elementTypeId?: boolean
     attributeId?: boolean
-    elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
+    elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["elementAttribute"]>
 
   export type ElementAttributeSelectScalar = {
@@ -8870,23 +7787,23 @@ export namespace Prisma {
 
   export type ElementAttributeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"elementTypeId" | "attributeId", ExtArgs["result"]["elementAttribute"]>
   export type ElementAttributeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
+    elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
   }
   export type ElementAttributeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
+    elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
   }
   export type ElementAttributeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
+    elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
   }
 
   export type $ElementAttributePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ElementAttribute"
     objects: {
-      elementType: Prisma.$ElementTypePayload<ExtArgs>
       attribute: Prisma.$AttributePayload<ExtArgs>
+      elementType: Prisma.$ElementTypePayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       elementTypeId: number
@@ -9285,8 +8202,8 @@ export namespace Prisma {
    */
   export interface Prisma__ElementAttributeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    elementType<T extends ElementTypeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ElementTypeDefaultArgs<ExtArgs>>): Prisma__ElementTypeClient<$Result.GetResult<Prisma.$ElementTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     attribute<T extends AttributeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AttributeDefaultArgs<ExtArgs>>): Prisma__AttributeClient<$Result.GetResult<Prisma.$AttributePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    elementType<T extends ElementTypeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ElementTypeDefaultArgs<ExtArgs>>): Prisma__ElementTypeClient<$Result.GetResult<Prisma.$ElementTypePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9514,6 +8431,11 @@ export namespace Prisma {
      * Skip the first `n` ElementAttributes.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ElementAttributes.
+     */
     distinct?: ElementAttributeScalarFieldEnum | ElementAttributeScalarFieldEnum[]
   }
 
@@ -9746,80 +8668,80 @@ export namespace Prisma {
 
   export type ElementAvgAggregateOutputType = {
     id: number | null
-    zIndex: number | null
     elementTypeId: number | null
     moodboardId: number | null
+    zIndex: number | null
   }
 
   export type ElementSumAggregateOutputType = {
     id: number | null
-    zIndex: number | null
     elementTypeId: number | null
     moodboardId: number | null
+    zIndex: number | null
   }
 
   export type ElementMinAggregateOutputType = {
     id: number | null
-    fabricJson: string | null
-    zIndex: number | null
     elementTypeId: number | null
     moodboardId: number | null
+    fabricJson: string | null
+    zIndex: number | null
   }
 
   export type ElementMaxAggregateOutputType = {
     id: number | null
-    fabricJson: string | null
-    zIndex: number | null
     elementTypeId: number | null
     moodboardId: number | null
+    fabricJson: string | null
+    zIndex: number | null
   }
 
   export type ElementCountAggregateOutputType = {
     id: number
-    fabricJson: number
-    zIndex: number
     elementTypeId: number
     moodboardId: number
+    fabricJson: number
+    zIndex: number
     _all: number
   }
 
 
   export type ElementAvgAggregateInputType = {
     id?: true
-    zIndex?: true
     elementTypeId?: true
     moodboardId?: true
+    zIndex?: true
   }
 
   export type ElementSumAggregateInputType = {
     id?: true
-    zIndex?: true
     elementTypeId?: true
     moodboardId?: true
+    zIndex?: true
   }
 
   export type ElementMinAggregateInputType = {
     id?: true
-    fabricJson?: true
-    zIndex?: true
     elementTypeId?: true
     moodboardId?: true
+    fabricJson?: true
+    zIndex?: true
   }
 
   export type ElementMaxAggregateInputType = {
     id?: true
-    fabricJson?: true
-    zIndex?: true
     elementTypeId?: true
     moodboardId?: true
+    fabricJson?: true
+    zIndex?: true
   }
 
   export type ElementCountAggregateInputType = {
     id?: true
-    fabricJson?: true
-    zIndex?: true
     elementTypeId?: true
     moodboardId?: true
+    fabricJson?: true
+    zIndex?: true
     _all?: true
   }
 
@@ -9911,10 +8833,10 @@ export namespace Prisma {
 
   export type ElementGroupByOutputType = {
     id: number
-    fabricJson: string
-    zIndex: number
     elementTypeId: number
     moodboardId: number
+    fabricJson: string
+    zIndex: number
     _count: ElementCountAggregateOutputType | null
     _avg: ElementAvgAggregateOutputType | null
     _sum: ElementSumAggregateOutputType | null
@@ -9938,10 +8860,10 @@ export namespace Prisma {
 
   export type ElementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    fabricJson?: boolean
-    zIndex?: boolean
     elementTypeId?: boolean
     moodboardId?: boolean
+    fabricJson?: boolean
+    zIndex?: boolean
     elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
     moodboard?: boolean | MoodboardDefaultArgs<ExtArgs>
     values?: boolean | Element$valuesArgs<ExtArgs>
@@ -9950,33 +8872,33 @@ export namespace Prisma {
 
   export type ElementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    fabricJson?: boolean
-    zIndex?: boolean
     elementTypeId?: boolean
     moodboardId?: boolean
+    fabricJson?: boolean
+    zIndex?: boolean
     elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
     moodboard?: boolean | MoodboardDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["element"]>
 
   export type ElementSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    fabricJson?: boolean
-    zIndex?: boolean
     elementTypeId?: boolean
     moodboardId?: boolean
+    fabricJson?: boolean
+    zIndex?: boolean
     elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
     moodboard?: boolean | MoodboardDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["element"]>
 
   export type ElementSelectScalar = {
     id?: boolean
-    fabricJson?: boolean
-    zIndex?: boolean
     elementTypeId?: boolean
     moodboardId?: boolean
+    fabricJson?: boolean
+    zIndex?: boolean
   }
 
-  export type ElementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "fabricJson" | "zIndex" | "elementTypeId" | "moodboardId", ExtArgs["result"]["element"]>
+  export type ElementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "elementTypeId" | "moodboardId" | "fabricJson" | "zIndex", ExtArgs["result"]["element"]>
   export type ElementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     elementType?: boolean | ElementTypeDefaultArgs<ExtArgs>
     moodboard?: boolean | MoodboardDefaultArgs<ExtArgs>
@@ -10001,10 +8923,10 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      fabricJson: string
-      zIndex: number
       elementTypeId: number
       moodboardId: number
+      fabricJson: string
+      zIndex: number
     }, ExtArgs["result"]["element"]>
     composites: {}
   }
@@ -10432,10 +9354,10 @@ export namespace Prisma {
    */
   interface ElementFieldRefs {
     readonly id: FieldRef<"Element", 'Int'>
-    readonly fabricJson: FieldRef<"Element", 'String'>
-    readonly zIndex: FieldRef<"Element", 'Int'>
     readonly elementTypeId: FieldRef<"Element", 'Int'>
     readonly moodboardId: FieldRef<"Element", 'Int'>
+    readonly fabricJson: FieldRef<"Element", 'String'>
+    readonly zIndex: FieldRef<"Element", 'Int'>
   }
     
 
@@ -10632,6 +9554,11 @@ export namespace Prisma {
      * Skip the first `n` Elements.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Elements.
+     */
     distinct?: ElementScalarFieldEnum | ElementScalarFieldEnum[]
   }
 
@@ -11060,24 +9987,24 @@ export namespace Prisma {
     elementId?: boolean
     attributeId?: boolean
     value?: boolean
-    element?: boolean | ElementDefaultArgs<ExtArgs>
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
+    element?: boolean | ElementDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["elementValue"]>
 
   export type ElementValueSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     elementId?: boolean
     attributeId?: boolean
     value?: boolean
-    element?: boolean | ElementDefaultArgs<ExtArgs>
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
+    element?: boolean | ElementDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["elementValue"]>
 
   export type ElementValueSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     elementId?: boolean
     attributeId?: boolean
     value?: boolean
-    element?: boolean | ElementDefaultArgs<ExtArgs>
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
+    element?: boolean | ElementDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["elementValue"]>
 
   export type ElementValueSelectScalar = {
@@ -11088,23 +10015,23 @@ export namespace Prisma {
 
   export type ElementValueOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"elementId" | "attributeId" | "value", ExtArgs["result"]["elementValue"]>
   export type ElementValueInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    element?: boolean | ElementDefaultArgs<ExtArgs>
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
+    element?: boolean | ElementDefaultArgs<ExtArgs>
   }
   export type ElementValueIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    element?: boolean | ElementDefaultArgs<ExtArgs>
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
+    element?: boolean | ElementDefaultArgs<ExtArgs>
   }
   export type ElementValueIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    element?: boolean | ElementDefaultArgs<ExtArgs>
     attribute?: boolean | AttributeDefaultArgs<ExtArgs>
+    element?: boolean | ElementDefaultArgs<ExtArgs>
   }
 
   export type $ElementValuePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ElementValue"
     objects: {
-      element: Prisma.$ElementPayload<ExtArgs>
       attribute: Prisma.$AttributePayload<ExtArgs>
+      element: Prisma.$ElementPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       elementId: number
@@ -11504,8 +10431,8 @@ export namespace Prisma {
    */
   export interface Prisma__ElementValueClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    element<T extends ElementDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ElementDefaultArgs<ExtArgs>>): Prisma__ElementClient<$Result.GetResult<Prisma.$ElementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     attribute<T extends AttributeDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AttributeDefaultArgs<ExtArgs>>): Prisma__AttributeClient<$Result.GetResult<Prisma.$AttributePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    element<T extends ElementDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ElementDefaultArgs<ExtArgs>>): Prisma__ElementClient<$Result.GetResult<Prisma.$ElementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11734,6 +10661,11 @@ export namespace Prisma {
      * Skip the first `n` ElementValues.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ElementValues.
+     */
     distinct?: ElementValueScalarFieldEnum | ElementValueScalarFieldEnum[]
   }
 
@@ -11986,42 +10918,42 @@ export namespace Prisma {
     id: number | null
     name: string | null
     createdAt: Date | null
+    userId: string | null
+    canvasJson: string | null
     canvasWidth: number | null
     canvasHeight: number | null
     bgColor: string | null
-    canvasJson: string | null
     viewportX: number | null
     viewportY: number | null
     viewportScale: number | null
-    userId: string | null
   }
 
   export type MoodboardMaxAggregateOutputType = {
     id: number | null
     name: string | null
     createdAt: Date | null
+    userId: string | null
+    canvasJson: string | null
     canvasWidth: number | null
     canvasHeight: number | null
     bgColor: string | null
-    canvasJson: string | null
     viewportX: number | null
     viewportY: number | null
     viewportScale: number | null
-    userId: string | null
   }
 
   export type MoodboardCountAggregateOutputType = {
     id: number
     name: number
     createdAt: number
+    userId: number
+    canvasJson: number
     canvasWidth: number
     canvasHeight: number
     bgColor: number
-    canvasJson: number
     viewportX: number
     viewportY: number
     viewportScale: number
-    userId: number
     _all: number
   }
 
@@ -12048,42 +10980,42 @@ export namespace Prisma {
     id?: true
     name?: true
     createdAt?: true
+    userId?: true
+    canvasJson?: true
     canvasWidth?: true
     canvasHeight?: true
     bgColor?: true
-    canvasJson?: true
     viewportX?: true
     viewportY?: true
     viewportScale?: true
-    userId?: true
   }
 
   export type MoodboardMaxAggregateInputType = {
     id?: true
     name?: true
     createdAt?: true
+    userId?: true
+    canvasJson?: true
     canvasWidth?: true
     canvasHeight?: true
     bgColor?: true
-    canvasJson?: true
     viewportX?: true
     viewportY?: true
     viewportScale?: true
-    userId?: true
   }
 
   export type MoodboardCountAggregateInputType = {
     id?: true
     name?: true
     createdAt?: true
+    userId?: true
+    canvasJson?: true
     canvasWidth?: true
     canvasHeight?: true
     bgColor?: true
-    canvasJson?: true
     viewportX?: true
     viewportY?: true
     viewportScale?: true
-    userId?: true
     _all?: true
   }
 
@@ -12177,14 +11109,14 @@ export namespace Prisma {
     id: number
     name: string
     createdAt: Date
+    userId: string
+    canvasJson: string | null
     canvasWidth: number
     canvasHeight: number
     bgColor: string
-    canvasJson: string | null
     viewportX: number
     viewportY: number
     viewportScale: number
-    userId: string
     _count: MoodboardCountAggregateOutputType | null
     _avg: MoodboardAvgAggregateOutputType | null
     _sum: MoodboardSumAggregateOutputType | null
@@ -12210,14 +11142,14 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     createdAt?: boolean
+    userId?: boolean
+    canvasJson?: boolean
     canvasWidth?: boolean
     canvasHeight?: boolean
     bgColor?: boolean
-    canvasJson?: boolean
     viewportX?: boolean
     viewportY?: boolean
     viewportScale?: boolean
-    userId?: boolean
     elements?: boolean | Moodboard$elementsArgs<ExtArgs>
     _count?: boolean | MoodboardCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["moodboard"]>
@@ -12226,45 +11158,45 @@ export namespace Prisma {
     id?: boolean
     name?: boolean
     createdAt?: boolean
+    userId?: boolean
+    canvasJson?: boolean
     canvasWidth?: boolean
     canvasHeight?: boolean
     bgColor?: boolean
-    canvasJson?: boolean
     viewportX?: boolean
     viewportY?: boolean
     viewportScale?: boolean
-    userId?: boolean
   }, ExtArgs["result"]["moodboard"]>
 
   export type MoodboardSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
     createdAt?: boolean
+    userId?: boolean
+    canvasJson?: boolean
     canvasWidth?: boolean
     canvasHeight?: boolean
     bgColor?: boolean
-    canvasJson?: boolean
     viewportX?: boolean
     viewportY?: boolean
     viewportScale?: boolean
-    userId?: boolean
   }, ExtArgs["result"]["moodboard"]>
 
   export type MoodboardSelectScalar = {
     id?: boolean
     name?: boolean
     createdAt?: boolean
+    userId?: boolean
+    canvasJson?: boolean
     canvasWidth?: boolean
     canvasHeight?: boolean
     bgColor?: boolean
-    canvasJson?: boolean
     viewportX?: boolean
     viewportY?: boolean
     viewportScale?: boolean
-    userId?: boolean
   }
 
-  export type MoodboardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "canvasWidth" | "canvasHeight" | "bgColor" | "canvasJson" | "viewportX" | "viewportY" | "viewportScale" | "userId", ExtArgs["result"]["moodboard"]>
+  export type MoodboardOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "userId" | "canvasJson" | "canvasWidth" | "canvasHeight" | "bgColor" | "viewportX" | "viewportY" | "viewportScale", ExtArgs["result"]["moodboard"]>
   export type MoodboardInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     elements?: boolean | Moodboard$elementsArgs<ExtArgs>
     _count?: boolean | MoodboardCountOutputTypeDefaultArgs<ExtArgs>
@@ -12281,14 +11213,14 @@ export namespace Prisma {
       id: number
       name: string
       createdAt: Date
+      userId: string
+      canvasJson: string | null
       canvasWidth: number
       canvasHeight: number
       bgColor: string
-      canvasJson: string | null
       viewportX: number
       viewportY: number
       viewportScale: number
-      userId: string
     }, ExtArgs["result"]["moodboard"]>
     composites: {}
   }
@@ -12716,14 +11648,14 @@ export namespace Prisma {
     readonly id: FieldRef<"Moodboard", 'Int'>
     readonly name: FieldRef<"Moodboard", 'String'>
     readonly createdAt: FieldRef<"Moodboard", 'DateTime'>
+    readonly userId: FieldRef<"Moodboard", 'String'>
+    readonly canvasJson: FieldRef<"Moodboard", 'String'>
     readonly canvasWidth: FieldRef<"Moodboard", 'Int'>
     readonly canvasHeight: FieldRef<"Moodboard", 'Int'>
     readonly bgColor: FieldRef<"Moodboard", 'String'>
-    readonly canvasJson: FieldRef<"Moodboard", 'String'>
     readonly viewportX: FieldRef<"Moodboard", 'Float'>
     readonly viewportY: FieldRef<"Moodboard", 'Float'>
     readonly viewportScale: FieldRef<"Moodboard", 'Float'>
-    readonly userId: FieldRef<"Moodboard", 'String'>
   }
     
 
@@ -12920,6 +11852,11 @@ export namespace Prisma {
      * Skip the first `n` Moodboards.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Moodboards.
+     */
     distinct?: MoodboardScalarFieldEnum | MoodboardScalarFieldEnum[]
   }
 
@@ -14047,6 +12984,11 @@ export namespace Prisma {
      * Skip the first `n` GalleryPins.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GalleryPins.
+     */
     distinct?: GalleryPinScalarFieldEnum | GalleryPinScalarFieldEnum[]
   }
 
@@ -15149,6 +14091,11 @@ export namespace Prisma {
      * Skip the first `n` GalleryPinLikes.
      */
     skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GalleryPinLikes.
+     */
     distinct?: GalleryPinLikeScalarFieldEnum | GalleryPinLikeScalarFieldEnum[]
   }
 
@@ -15405,32 +14352,21 @@ export namespace Prisma {
   export type FontScalarFieldEnum = (typeof FontScalarFieldEnum)[keyof typeof FontScalarFieldEnum]
 
 
-  export const PaletteScalarFieldEnum: {
-    id: 'id',
-    mainColor: 'mainColor',
-    mixinColors: 'mixinColors',
-    tags: 'tags',
-    description: 'description'
-  };
-
-  export type PaletteScalarFieldEnum = (typeof PaletteScalarFieldEnum)[keyof typeof PaletteScalarFieldEnum]
-
-
   export const SegmentScalarFieldEnum: {
     id: 'id',
     title: 'title',
     slug: 'slug',
     description: 'description',
+    tags: 'tags',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    color: 'color',
     content: 'content',
-    type: 'type',
     difficulty: 'difficulty',
     duration: 'duration',
     icon: 'icon',
-    color: 'color',
-    tags: 'tags',
     questions: 'questions',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    type: 'type'
   };
 
   export type SegmentScalarFieldEnum = (typeof SegmentScalarFieldEnum)[keyof typeof SegmentScalarFieldEnum]
@@ -15466,10 +14402,10 @@ export namespace Prisma {
 
   export const ElementScalarFieldEnum: {
     id: 'id',
-    fabricJson: 'fabricJson',
-    zIndex: 'zIndex',
     elementTypeId: 'elementTypeId',
-    moodboardId: 'moodboardId'
+    moodboardId: 'moodboardId',
+    fabricJson: 'fabricJson',
+    zIndex: 'zIndex'
   };
 
   export type ElementScalarFieldEnum = (typeof ElementScalarFieldEnum)[keyof typeof ElementScalarFieldEnum]
@@ -15488,14 +14424,14 @@ export namespace Prisma {
     id: 'id',
     name: 'name',
     createdAt: 'createdAt',
+    userId: 'userId',
+    canvasJson: 'canvasJson',
     canvasWidth: 'canvasWidth',
     canvasHeight: 'canvasHeight',
     bgColor: 'bgColor',
-    canvasJson: 'canvasJson',
     viewportX: 'viewportX',
     viewportY: 'viewportY',
-    viewportScale: 'viewportScale',
-    userId: 'userId'
+    viewportScale: 'viewportScale'
   };
 
   export type MoodboardScalarFieldEnum = (typeof MoodboardScalarFieldEnum)[keyof typeof MoodboardScalarFieldEnum]
@@ -15625,20 +14561,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'SegmentType'
-   */
-  export type EnumSegmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SegmentType'>
-    
-
-
-  /**
-   * Reference to a field of type 'SegmentType[]'
-   */
-  export type ListEnumSegmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SegmentType[]'>
-    
-
-
-  /**
    * Reference to a field of type 'Difficulty'
    */
   export type EnumDifficultyFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Difficulty'>
@@ -15663,6 +14585,20 @@ export namespace Prisma {
    * Reference to a field of type 'QueryMode'
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+  /**
+   * Reference to a field of type 'SegmentType'
+   */
+  export type EnumSegmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SegmentType'>
+    
+
+
+  /**
+   * Reference to a field of type 'SegmentType[]'
+   */
+  export type ListEnumSegmentTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SegmentType[]'>
     
 
 
@@ -15812,60 +14748,6 @@ export namespace Prisma {
     tips?: StringNullableWithAggregatesFilter<"Font"> | string | null
   }
 
-  export type PaletteWhereInput = {
-    AND?: PaletteWhereInput | PaletteWhereInput[]
-    OR?: PaletteWhereInput[]
-    NOT?: PaletteWhereInput | PaletteWhereInput[]
-    id?: IntFilter<"Palette"> | number
-    mainColor?: StringFilter<"Palette"> | string
-    mixinColors?: StringNullableListFilter<"Palette">
-    tags?: StringNullableListFilter<"Palette">
-    description?: StringNullableFilter<"Palette"> | string | null
-  }
-
-  export type PaletteOrderByWithRelationInput = {
-    id?: SortOrder
-    mainColor?: SortOrder
-    mixinColors?: SortOrder
-    tags?: SortOrder
-    description?: SortOrderInput | SortOrder
-  }
-
-  export type PaletteWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
-    AND?: PaletteWhereInput | PaletteWhereInput[]
-    OR?: PaletteWhereInput[]
-    NOT?: PaletteWhereInput | PaletteWhereInput[]
-    mainColor?: StringFilter<"Palette"> | string
-    mixinColors?: StringNullableListFilter<"Palette">
-    tags?: StringNullableListFilter<"Palette">
-    description?: StringNullableFilter<"Palette"> | string | null
-  }, "id">
-
-  export type PaletteOrderByWithAggregationInput = {
-    id?: SortOrder
-    mainColor?: SortOrder
-    mixinColors?: SortOrder
-    tags?: SortOrder
-    description?: SortOrderInput | SortOrder
-    _count?: PaletteCountOrderByAggregateInput
-    _avg?: PaletteAvgOrderByAggregateInput
-    _max?: PaletteMaxOrderByAggregateInput
-    _min?: PaletteMinOrderByAggregateInput
-    _sum?: PaletteSumOrderByAggregateInput
-  }
-
-  export type PaletteScalarWhereWithAggregatesInput = {
-    AND?: PaletteScalarWhereWithAggregatesInput | PaletteScalarWhereWithAggregatesInput[]
-    OR?: PaletteScalarWhereWithAggregatesInput[]
-    NOT?: PaletteScalarWhereWithAggregatesInput | PaletteScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"Palette"> | number
-    mainColor?: StringWithAggregatesFilter<"Palette"> | string
-    mixinColors?: StringNullableListFilter<"Palette">
-    tags?: StringNullableListFilter<"Palette">
-    description?: StringNullableWithAggregatesFilter<"Palette"> | string | null
-  }
-
   export type SegmentWhereInput = {
     AND?: SegmentWhereInput | SegmentWhereInput[]
     OR?: SegmentWhereInput[]
@@ -15874,16 +14756,16 @@ export namespace Prisma {
     title?: StringFilter<"Segment"> | string
     slug?: StringFilter<"Segment"> | string
     description?: StringNullableFilter<"Segment"> | string | null
+    tags?: StringNullableListFilter<"Segment">
+    createdAt?: DateTimeFilter<"Segment"> | Date | string
+    updatedAt?: DateTimeFilter<"Segment"> | Date | string
+    color?: StringNullableFilter<"Segment"> | string | null
     content?: StringNullableFilter<"Segment"> | string | null
-    type?: EnumSegmentTypeFilter<"Segment"> | $Enums.SegmentType
     difficulty?: EnumDifficultyFilter<"Segment"> | $Enums.Difficulty
     duration?: StringNullableFilter<"Segment"> | string | null
     icon?: StringNullableFilter<"Segment"> | string | null
-    color?: StringNullableFilter<"Segment"> | string | null
-    tags?: StringNullableListFilter<"Segment">
     questions?: JsonNullableFilter<"Segment">
-    createdAt?: DateTimeFilter<"Segment"> | Date | string
-    updatedAt?: DateTimeFilter<"Segment"> | Date | string
+    type?: EnumSegmentTypeFilter<"Segment"> | $Enums.SegmentType
   }
 
   export type SegmentOrderByWithRelationInput = {
@@ -15891,16 +14773,16 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrderInput | SortOrder
+    tags?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    color?: SortOrderInput | SortOrder
     content?: SortOrderInput | SortOrder
-    type?: SortOrder
     difficulty?: SortOrder
     duration?: SortOrderInput | SortOrder
     icon?: SortOrderInput | SortOrder
-    color?: SortOrderInput | SortOrder
-    tags?: SortOrder
     questions?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    type?: SortOrder
   }
 
   export type SegmentWhereUniqueInput = Prisma.AtLeast<{
@@ -15911,16 +14793,16 @@ export namespace Prisma {
     NOT?: SegmentWhereInput | SegmentWhereInput[]
     title?: StringFilter<"Segment"> | string
     description?: StringNullableFilter<"Segment"> | string | null
+    tags?: StringNullableListFilter<"Segment">
+    createdAt?: DateTimeFilter<"Segment"> | Date | string
+    updatedAt?: DateTimeFilter<"Segment"> | Date | string
+    color?: StringNullableFilter<"Segment"> | string | null
     content?: StringNullableFilter<"Segment"> | string | null
-    type?: EnumSegmentTypeFilter<"Segment"> | $Enums.SegmentType
     difficulty?: EnumDifficultyFilter<"Segment"> | $Enums.Difficulty
     duration?: StringNullableFilter<"Segment"> | string | null
     icon?: StringNullableFilter<"Segment"> | string | null
-    color?: StringNullableFilter<"Segment"> | string | null
-    tags?: StringNullableListFilter<"Segment">
     questions?: JsonNullableFilter<"Segment">
-    createdAt?: DateTimeFilter<"Segment"> | Date | string
-    updatedAt?: DateTimeFilter<"Segment"> | Date | string
+    type?: EnumSegmentTypeFilter<"Segment"> | $Enums.SegmentType
   }, "id" | "slug">
 
   export type SegmentOrderByWithAggregationInput = {
@@ -15928,16 +14810,16 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrderInput | SortOrder
+    tags?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    color?: SortOrderInput | SortOrder
     content?: SortOrderInput | SortOrder
-    type?: SortOrder
     difficulty?: SortOrder
     duration?: SortOrderInput | SortOrder
     icon?: SortOrderInput | SortOrder
-    color?: SortOrderInput | SortOrder
-    tags?: SortOrder
     questions?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    type?: SortOrder
     _count?: SegmentCountOrderByAggregateInput
     _avg?: SegmentAvgOrderByAggregateInput
     _max?: SegmentMaxOrderByAggregateInput
@@ -15953,16 +14835,16 @@ export namespace Prisma {
     title?: StringWithAggregatesFilter<"Segment"> | string
     slug?: StringWithAggregatesFilter<"Segment"> | string
     description?: StringNullableWithAggregatesFilter<"Segment"> | string | null
+    tags?: StringNullableListFilter<"Segment">
+    createdAt?: DateTimeWithAggregatesFilter<"Segment"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Segment"> | Date | string
+    color?: StringNullableWithAggregatesFilter<"Segment"> | string | null
     content?: StringNullableWithAggregatesFilter<"Segment"> | string | null
-    type?: EnumSegmentTypeWithAggregatesFilter<"Segment"> | $Enums.SegmentType
     difficulty?: EnumDifficultyWithAggregatesFilter<"Segment"> | $Enums.Difficulty
     duration?: StringNullableWithAggregatesFilter<"Segment"> | string | null
     icon?: StringNullableWithAggregatesFilter<"Segment"> | string | null
-    color?: StringNullableWithAggregatesFilter<"Segment"> | string | null
-    tags?: StringNullableListFilter<"Segment">
     questions?: JsonNullableWithAggregatesFilter<"Segment">
-    createdAt?: DateTimeWithAggregatesFilter<"Segment"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"Segment"> | Date | string
+    type?: EnumSegmentTypeWithAggregatesFilter<"Segment"> | $Enums.SegmentType
   }
 
   export type AttributeWhereInput = {
@@ -16081,15 +14963,15 @@ export namespace Prisma {
     NOT?: ElementAttributeWhereInput | ElementAttributeWhereInput[]
     elementTypeId?: IntFilter<"ElementAttribute"> | number
     attributeId?: IntFilter<"ElementAttribute"> | number
-    elementType?: XOR<ElementTypeScalarRelationFilter, ElementTypeWhereInput>
     attribute?: XOR<AttributeScalarRelationFilter, AttributeWhereInput>
+    elementType?: XOR<ElementTypeScalarRelationFilter, ElementTypeWhereInput>
   }
 
   export type ElementAttributeOrderByWithRelationInput = {
     elementTypeId?: SortOrder
     attributeId?: SortOrder
-    elementType?: ElementTypeOrderByWithRelationInput
     attribute?: AttributeOrderByWithRelationInput
+    elementType?: ElementTypeOrderByWithRelationInput
   }
 
   export type ElementAttributeWhereUniqueInput = Prisma.AtLeast<{
@@ -16099,8 +14981,8 @@ export namespace Prisma {
     NOT?: ElementAttributeWhereInput | ElementAttributeWhereInput[]
     elementTypeId?: IntFilter<"ElementAttribute"> | number
     attributeId?: IntFilter<"ElementAttribute"> | number
-    elementType?: XOR<ElementTypeScalarRelationFilter, ElementTypeWhereInput>
     attribute?: XOR<AttributeScalarRelationFilter, AttributeWhereInput>
+    elementType?: XOR<ElementTypeScalarRelationFilter, ElementTypeWhereInput>
   }, "elementTypeId_attributeId">
 
   export type ElementAttributeOrderByWithAggregationInput = {
@@ -16126,10 +15008,10 @@ export namespace Prisma {
     OR?: ElementWhereInput[]
     NOT?: ElementWhereInput | ElementWhereInput[]
     id?: IntFilter<"Element"> | number
-    fabricJson?: StringFilter<"Element"> | string
-    zIndex?: IntFilter<"Element"> | number
     elementTypeId?: IntFilter<"Element"> | number
     moodboardId?: IntFilter<"Element"> | number
+    fabricJson?: StringFilter<"Element"> | string
+    zIndex?: IntFilter<"Element"> | number
     elementType?: XOR<ElementTypeScalarRelationFilter, ElementTypeWhereInput>
     moodboard?: XOR<MoodboardScalarRelationFilter, MoodboardWhereInput>
     values?: ElementValueListRelationFilter
@@ -16137,10 +15019,10 @@ export namespace Prisma {
 
   export type ElementOrderByWithRelationInput = {
     id?: SortOrder
-    fabricJson?: SortOrder
-    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
+    fabricJson?: SortOrder
+    zIndex?: SortOrder
     elementType?: ElementTypeOrderByWithRelationInput
     moodboard?: MoodboardOrderByWithRelationInput
     values?: ElementValueOrderByRelationAggregateInput
@@ -16151,10 +15033,10 @@ export namespace Prisma {
     AND?: ElementWhereInput | ElementWhereInput[]
     OR?: ElementWhereInput[]
     NOT?: ElementWhereInput | ElementWhereInput[]
-    fabricJson?: StringFilter<"Element"> | string
-    zIndex?: IntFilter<"Element"> | number
     elementTypeId?: IntFilter<"Element"> | number
     moodboardId?: IntFilter<"Element"> | number
+    fabricJson?: StringFilter<"Element"> | string
+    zIndex?: IntFilter<"Element"> | number
     elementType?: XOR<ElementTypeScalarRelationFilter, ElementTypeWhereInput>
     moodboard?: XOR<MoodboardScalarRelationFilter, MoodboardWhereInput>
     values?: ElementValueListRelationFilter
@@ -16162,10 +15044,10 @@ export namespace Prisma {
 
   export type ElementOrderByWithAggregationInput = {
     id?: SortOrder
-    fabricJson?: SortOrder
-    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
+    fabricJson?: SortOrder
+    zIndex?: SortOrder
     _count?: ElementCountOrderByAggregateInput
     _avg?: ElementAvgOrderByAggregateInput
     _max?: ElementMaxOrderByAggregateInput
@@ -16178,10 +15060,10 @@ export namespace Prisma {
     OR?: ElementScalarWhereWithAggregatesInput[]
     NOT?: ElementScalarWhereWithAggregatesInput | ElementScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Element"> | number
-    fabricJson?: StringWithAggregatesFilter<"Element"> | string
-    zIndex?: IntWithAggregatesFilter<"Element"> | number
     elementTypeId?: IntWithAggregatesFilter<"Element"> | number
     moodboardId?: IntWithAggregatesFilter<"Element"> | number
+    fabricJson?: StringWithAggregatesFilter<"Element"> | string
+    zIndex?: IntWithAggregatesFilter<"Element"> | number
   }
 
   export type ElementValueWhereInput = {
@@ -16191,16 +15073,16 @@ export namespace Prisma {
     elementId?: IntFilter<"ElementValue"> | number
     attributeId?: IntFilter<"ElementValue"> | number
     value?: StringFilter<"ElementValue"> | string
-    element?: XOR<ElementScalarRelationFilter, ElementWhereInput>
     attribute?: XOR<AttributeScalarRelationFilter, AttributeWhereInput>
+    element?: XOR<ElementScalarRelationFilter, ElementWhereInput>
   }
 
   export type ElementValueOrderByWithRelationInput = {
     elementId?: SortOrder
     attributeId?: SortOrder
     value?: SortOrder
-    element?: ElementOrderByWithRelationInput
     attribute?: AttributeOrderByWithRelationInput
+    element?: ElementOrderByWithRelationInput
   }
 
   export type ElementValueWhereUniqueInput = Prisma.AtLeast<{
@@ -16211,8 +15093,8 @@ export namespace Prisma {
     elementId?: IntFilter<"ElementValue"> | number
     attributeId?: IntFilter<"ElementValue"> | number
     value?: StringFilter<"ElementValue"> | string
-    element?: XOR<ElementScalarRelationFilter, ElementWhereInput>
     attribute?: XOR<AttributeScalarRelationFilter, AttributeWhereInput>
+    element?: XOR<ElementScalarRelationFilter, ElementWhereInput>
   }, "elementId_attributeId">
 
   export type ElementValueOrderByWithAggregationInput = {
@@ -16242,14 +15124,14 @@ export namespace Prisma {
     id?: IntFilter<"Moodboard"> | number
     name?: StringFilter<"Moodboard"> | string
     createdAt?: DateTimeFilter<"Moodboard"> | Date | string
+    userId?: StringFilter<"Moodboard"> | string
+    canvasJson?: StringNullableFilter<"Moodboard"> | string | null
     canvasWidth?: IntFilter<"Moodboard"> | number
     canvasHeight?: IntFilter<"Moodboard"> | number
     bgColor?: StringFilter<"Moodboard"> | string
-    canvasJson?: StringNullableFilter<"Moodboard"> | string | null
     viewportX?: FloatFilter<"Moodboard"> | number
     viewportY?: FloatFilter<"Moodboard"> | number
     viewportScale?: FloatFilter<"Moodboard"> | number
-    userId?: StringFilter<"Moodboard"> | string
     elements?: ElementListRelationFilter
   }
 
@@ -16257,14 +15139,14 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    userId?: SortOrder
+    canvasJson?: SortOrderInput | SortOrder
     canvasWidth?: SortOrder
     canvasHeight?: SortOrder
     bgColor?: SortOrder
-    canvasJson?: SortOrderInput | SortOrder
     viewportX?: SortOrder
     viewportY?: SortOrder
     viewportScale?: SortOrder
-    userId?: SortOrder
     elements?: ElementOrderByRelationAggregateInput
   }
 
@@ -16275,14 +15157,14 @@ export namespace Prisma {
     NOT?: MoodboardWhereInput | MoodboardWhereInput[]
     name?: StringFilter<"Moodboard"> | string
     createdAt?: DateTimeFilter<"Moodboard"> | Date | string
+    userId?: StringFilter<"Moodboard"> | string
+    canvasJson?: StringNullableFilter<"Moodboard"> | string | null
     canvasWidth?: IntFilter<"Moodboard"> | number
     canvasHeight?: IntFilter<"Moodboard"> | number
     bgColor?: StringFilter<"Moodboard"> | string
-    canvasJson?: StringNullableFilter<"Moodboard"> | string | null
     viewportX?: FloatFilter<"Moodboard"> | number
     viewportY?: FloatFilter<"Moodboard"> | number
     viewportScale?: FloatFilter<"Moodboard"> | number
-    userId?: StringFilter<"Moodboard"> | string
     elements?: ElementListRelationFilter
   }, "id">
 
@@ -16290,14 +15172,14 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    userId?: SortOrder
+    canvasJson?: SortOrderInput | SortOrder
     canvasWidth?: SortOrder
     canvasHeight?: SortOrder
     bgColor?: SortOrder
-    canvasJson?: SortOrderInput | SortOrder
     viewportX?: SortOrder
     viewportY?: SortOrder
     viewportScale?: SortOrder
-    userId?: SortOrder
     _count?: MoodboardCountOrderByAggregateInput
     _avg?: MoodboardAvgOrderByAggregateInput
     _max?: MoodboardMaxOrderByAggregateInput
@@ -16312,14 +15194,14 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Moodboard"> | number
     name?: StringWithAggregatesFilter<"Moodboard"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Moodboard"> | Date | string
+    userId?: StringWithAggregatesFilter<"Moodboard"> | string
+    canvasJson?: StringNullableWithAggregatesFilter<"Moodboard"> | string | null
     canvasWidth?: IntWithAggregatesFilter<"Moodboard"> | number
     canvasHeight?: IntWithAggregatesFilter<"Moodboard"> | number
     bgColor?: StringWithAggregatesFilter<"Moodboard"> | string
-    canvasJson?: StringNullableWithAggregatesFilter<"Moodboard"> | string | null
     viewportX?: FloatWithAggregatesFilter<"Moodboard"> | number
     viewportY?: FloatWithAggregatesFilter<"Moodboard"> | number
     viewportScale?: FloatWithAggregatesFilter<"Moodboard"> | number
-    userId?: StringWithAggregatesFilter<"Moodboard"> | string
   }
 
   export type GalleryPinWhereInput = {
@@ -16569,73 +15451,20 @@ export namespace Prisma {
     tips?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type PaletteCreateInput = {
-    mainColor: string
-    mixinColors?: PaletteCreatemixinColorsInput | string[]
-    tags?: PaletteCreatetagsInput | string[]
-    description?: string | null
-  }
-
-  export type PaletteUncheckedCreateInput = {
-    id?: number
-    mainColor: string
-    mixinColors?: PaletteCreatemixinColorsInput | string[]
-    tags?: PaletteCreatetagsInput | string[]
-    description?: string | null
-  }
-
-  export type PaletteUpdateInput = {
-    mainColor?: StringFieldUpdateOperationsInput | string
-    mixinColors?: PaletteUpdatemixinColorsInput | string[]
-    tags?: PaletteUpdatetagsInput | string[]
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type PaletteUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    mainColor?: StringFieldUpdateOperationsInput | string
-    mixinColors?: PaletteUpdatemixinColorsInput | string[]
-    tags?: PaletteUpdatetagsInput | string[]
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type PaletteCreateManyInput = {
-    id?: number
-    mainColor: string
-    mixinColors?: PaletteCreatemixinColorsInput | string[]
-    tags?: PaletteCreatetagsInput | string[]
-    description?: string | null
-  }
-
-  export type PaletteUpdateManyMutationInput = {
-    mainColor?: StringFieldUpdateOperationsInput | string
-    mixinColors?: PaletteUpdatemixinColorsInput | string[]
-    tags?: PaletteUpdatetagsInput | string[]
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type PaletteUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    mainColor?: StringFieldUpdateOperationsInput | string
-    mixinColors?: PaletteUpdatemixinColorsInput | string[]
-    tags?: PaletteUpdatetagsInput | string[]
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
   export type SegmentCreateInput = {
     title: string
     slug: string
     description?: string | null
+    tags?: SegmentCreatetagsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    color?: string | null
     content?: string | null
-    type?: $Enums.SegmentType
     difficulty?: $Enums.Difficulty
     duration?: string | null
     icon?: string | null
-    color?: string | null
-    tags?: SegmentCreatetagsInput | string[]
     questions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    type?: $Enums.SegmentType
   }
 
   export type SegmentUncheckedCreateInput = {
@@ -16643,32 +15472,32 @@ export namespace Prisma {
     title: string
     slug: string
     description?: string | null
+    tags?: SegmentCreatetagsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    color?: string | null
     content?: string | null
-    type?: $Enums.SegmentType
     difficulty?: $Enums.Difficulty
     duration?: string | null
     icon?: string | null
-    color?: string | null
-    tags?: SegmentCreatetagsInput | string[]
     questions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    type?: $Enums.SegmentType
   }
 
   export type SegmentUpdateInput = {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: SegmentUpdatetagsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumSegmentTypeFieldUpdateOperationsInput | $Enums.SegmentType
     difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     icon?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: SegmentUpdatetagsInput | string[]
     questions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumSegmentTypeFieldUpdateOperationsInput | $Enums.SegmentType
   }
 
   export type SegmentUncheckedUpdateInput = {
@@ -16676,16 +15505,16 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: SegmentUpdatetagsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumSegmentTypeFieldUpdateOperationsInput | $Enums.SegmentType
     difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     icon?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: SegmentUpdatetagsInput | string[]
     questions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumSegmentTypeFieldUpdateOperationsInput | $Enums.SegmentType
   }
 
   export type SegmentCreateManyInput = {
@@ -16693,32 +15522,32 @@ export namespace Prisma {
     title: string
     slug: string
     description?: string | null
+    tags?: SegmentCreatetagsInput | string[]
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    color?: string | null
     content?: string | null
-    type?: $Enums.SegmentType
     difficulty?: $Enums.Difficulty
     duration?: string | null
     icon?: string | null
-    color?: string | null
-    tags?: SegmentCreatetagsInput | string[]
     questions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    type?: $Enums.SegmentType
   }
 
   export type SegmentUpdateManyMutationInput = {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: SegmentUpdatetagsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumSegmentTypeFieldUpdateOperationsInput | $Enums.SegmentType
     difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     icon?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: SegmentUpdatetagsInput | string[]
     questions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumSegmentTypeFieldUpdateOperationsInput | $Enums.SegmentType
   }
 
   export type SegmentUncheckedUpdateManyInput = {
@@ -16726,16 +15555,16 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     slug?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: SegmentUpdatetagsInput | string[]
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    color?: NullableStringFieldUpdateOperationsInput | string | null
     content?: NullableStringFieldUpdateOperationsInput | string | null
-    type?: EnumSegmentTypeFieldUpdateOperationsInput | $Enums.SegmentType
     difficulty?: EnumDifficultyFieldUpdateOperationsInput | $Enums.Difficulty
     duration?: NullableStringFieldUpdateOperationsInput | string | null
     icon?: NullableStringFieldUpdateOperationsInput | string | null
-    color?: NullableStringFieldUpdateOperationsInput | string | null
-    tags?: SegmentUpdatetagsInput | string[]
     questions?: NullableJsonNullValueInput | InputJsonValue
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumSegmentTypeFieldUpdateOperationsInput | $Enums.SegmentType
   }
 
   export type AttributeCreateInput = {
@@ -16847,8 +15676,8 @@ export namespace Prisma {
   }
 
   export type ElementAttributeCreateInput = {
-    elementType: ElementTypeCreateNestedOneWithoutAttributesInput
     attribute: AttributeCreateNestedOneWithoutElementTypesInput
+    elementType: ElementTypeCreateNestedOneWithoutAttributesInput
   }
 
   export type ElementAttributeUncheckedCreateInput = {
@@ -16857,8 +15686,8 @@ export namespace Prisma {
   }
 
   export type ElementAttributeUpdateInput = {
-    elementType?: ElementTypeUpdateOneRequiredWithoutAttributesNestedInput
     attribute?: AttributeUpdateOneRequiredWithoutElementTypesNestedInput
+    elementType?: ElementTypeUpdateOneRequiredWithoutAttributesNestedInput
   }
 
   export type ElementAttributeUncheckedUpdateInput = {
@@ -16890,10 +15719,10 @@ export namespace Prisma {
 
   export type ElementUncheckedCreateInput = {
     id?: number
-    fabricJson: string
-    zIndex?: number
     elementTypeId: number
     moodboardId: number
+    fabricJson: string
+    zIndex?: number
     values?: ElementValueUncheckedCreateNestedManyWithoutElementInput
   }
 
@@ -16907,19 +15736,19 @@ export namespace Prisma {
 
   export type ElementUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    fabricJson?: StringFieldUpdateOperationsInput | string
-    zIndex?: IntFieldUpdateOperationsInput | number
     elementTypeId?: IntFieldUpdateOperationsInput | number
     moodboardId?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
     values?: ElementValueUncheckedUpdateManyWithoutElementNestedInput
   }
 
   export type ElementCreateManyInput = {
     id?: number
-    fabricJson: string
-    zIndex?: number
     elementTypeId: number
     moodboardId: number
+    fabricJson: string
+    zIndex?: number
   }
 
   export type ElementUpdateManyMutationInput = {
@@ -16929,16 +15758,16 @@ export namespace Prisma {
 
   export type ElementUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    fabricJson?: StringFieldUpdateOperationsInput | string
-    zIndex?: IntFieldUpdateOperationsInput | number
     elementTypeId?: IntFieldUpdateOperationsInput | number
     moodboardId?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
   }
 
   export type ElementValueCreateInput = {
     value: string
-    element: ElementCreateNestedOneWithoutValuesInput
     attribute: AttributeCreateNestedOneWithoutElementValuesInput
+    element: ElementCreateNestedOneWithoutValuesInput
   }
 
   export type ElementValueUncheckedCreateInput = {
@@ -16949,8 +15778,8 @@ export namespace Prisma {
 
   export type ElementValueUpdateInput = {
     value?: StringFieldUpdateOperationsInput | string
-    element?: ElementUpdateOneRequiredWithoutValuesNestedInput
     attribute?: AttributeUpdateOneRequiredWithoutElementValuesNestedInput
+    element?: ElementUpdateOneRequiredWithoutValuesNestedInput
   }
 
   export type ElementValueUncheckedUpdateInput = {
@@ -16978,14 +15807,14 @@ export namespace Prisma {
   export type MoodboardCreateInput = {
     name: string
     createdAt?: Date | string
+    userId: string
+    canvasJson?: string | null
     canvasWidth?: number
     canvasHeight?: number
     bgColor?: string
-    canvasJson?: string | null
     viewportX?: number
     viewportY?: number
     viewportScale?: number
-    userId: string
     elements?: ElementCreateNestedManyWithoutMoodboardInput
   }
 
@@ -16993,28 +15822,28 @@ export namespace Prisma {
     id?: number
     name: string
     createdAt?: Date | string
+    userId: string
+    canvasJson?: string | null
     canvasWidth?: number
     canvasHeight?: number
     bgColor?: string
-    canvasJson?: string | null
     viewportX?: number
     viewportY?: number
     viewportScale?: number
-    userId: string
     elements?: ElementUncheckedCreateNestedManyWithoutMoodboardInput
   }
 
   export type MoodboardUpdateInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
     canvasWidth?: IntFieldUpdateOperationsInput | number
     canvasHeight?: IntFieldUpdateOperationsInput | number
     bgColor?: StringFieldUpdateOperationsInput | string
-    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
     viewportX?: FloatFieldUpdateOperationsInput | number
     viewportY?: FloatFieldUpdateOperationsInput | number
     viewportScale?: FloatFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
     elements?: ElementUpdateManyWithoutMoodboardNestedInput
   }
 
@@ -17022,14 +15851,14 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
     canvasWidth?: IntFieldUpdateOperationsInput | number
     canvasHeight?: IntFieldUpdateOperationsInput | number
     bgColor?: StringFieldUpdateOperationsInput | string
-    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
     viewportX?: FloatFieldUpdateOperationsInput | number
     viewportY?: FloatFieldUpdateOperationsInput | number
     viewportScale?: FloatFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
     elements?: ElementUncheckedUpdateManyWithoutMoodboardNestedInput
   }
 
@@ -17037,41 +15866,41 @@ export namespace Prisma {
     id?: number
     name: string
     createdAt?: Date | string
+    userId: string
+    canvasJson?: string | null
     canvasWidth?: number
     canvasHeight?: number
     bgColor?: string
-    canvasJson?: string | null
     viewportX?: number
     viewportY?: number
     viewportScale?: number
-    userId: string
   }
 
   export type MoodboardUpdateManyMutationInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
     canvasWidth?: IntFieldUpdateOperationsInput | number
     canvasHeight?: IntFieldUpdateOperationsInput | number
     bgColor?: StringFieldUpdateOperationsInput | string
-    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
     viewportX?: FloatFieldUpdateOperationsInput | number
     viewportY?: FloatFieldUpdateOperationsInput | number
     viewportScale?: FloatFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type MoodboardUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
     canvasWidth?: IntFieldUpdateOperationsInput | number
     canvasHeight?: IntFieldUpdateOperationsInput | number
     bgColor?: StringFieldUpdateOperationsInput | string
-    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
     viewportX?: FloatFieldUpdateOperationsInput | number
     viewportY?: FloatFieldUpdateOperationsInput | number
     viewportScale?: FloatFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type GalleryPinCreateInput = {
@@ -17405,39 +16234,15 @@ export namespace Prisma {
     isEmpty?: boolean
   }
 
-  export type PaletteCountOrderByAggregateInput = {
-    id?: SortOrder
-    mainColor?: SortOrder
-    mixinColors?: SortOrder
-    tags?: SortOrder
-    description?: SortOrder
-  }
-
-  export type PaletteAvgOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type PaletteMaxOrderByAggregateInput = {
-    id?: SortOrder
-    mainColor?: SortOrder
-    description?: SortOrder
-  }
-
-  export type PaletteMinOrderByAggregateInput = {
-    id?: SortOrder
-    mainColor?: SortOrder
-    description?: SortOrder
-  }
-
-  export type PaletteSumOrderByAggregateInput = {
-    id?: SortOrder
-  }
-
-  export type EnumSegmentTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.SegmentType | EnumSegmentTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumSegmentTypeFilter<$PrismaModel> | $Enums.SegmentType
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type EnumDifficultyFilter<$PrismaModel = never> = {
@@ -17470,15 +16275,11 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  export type EnumSegmentTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.SegmentType | EnumSegmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSegmentTypeFilter<$PrismaModel> | $Enums.SegmentType
   }
 
   export type SegmentCountOrderByAggregateInput = {
@@ -17486,16 +16287,16 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    tags?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    color?: SortOrder
     content?: SortOrder
-    type?: SortOrder
     difficulty?: SortOrder
     duration?: SortOrder
     icon?: SortOrder
-    color?: SortOrder
-    tags?: SortOrder
     questions?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    type?: SortOrder
   }
 
   export type SegmentAvgOrderByAggregateInput = {
@@ -17507,14 +16308,14 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    color?: SortOrder
     content?: SortOrder
-    type?: SortOrder
     difficulty?: SortOrder
     duration?: SortOrder
     icon?: SortOrder
-    color?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    type?: SortOrder
   }
 
   export type SegmentMinOrderByAggregateInput = {
@@ -17522,28 +16323,32 @@ export namespace Prisma {
     title?: SortOrder
     slug?: SortOrder
     description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    color?: SortOrder
     content?: SortOrder
-    type?: SortOrder
     difficulty?: SortOrder
     duration?: SortOrder
     icon?: SortOrder
-    color?: SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    type?: SortOrder
   }
 
   export type SegmentSumOrderByAggregateInput = {
     id?: SortOrder
   }
 
-  export type EnumSegmentTypeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.SegmentType | EnumSegmentTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumSegmentTypeWithAggregatesFilter<$PrismaModel> | $Enums.SegmentType
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumSegmentTypeFilter<$PrismaModel>
-    _max?: NestedEnumSegmentTypeFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type EnumDifficultyWithAggregatesFilter<$PrismaModel = never> = {
@@ -17582,18 +16387,14 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+  export type EnumSegmentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SegmentType | EnumSegmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSegmentTypeWithAggregatesFilter<$PrismaModel> | $Enums.SegmentType
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
+    _min?: NestedEnumSegmentTypeFilter<$PrismaModel>
+    _max?: NestedEnumSegmentTypeFilter<$PrismaModel>
   }
 
   export type BoolFilter<$PrismaModel = never> = {
@@ -17697,14 +16498,14 @@ export namespace Prisma {
     id?: SortOrder
   }
 
-  export type ElementTypeScalarRelationFilter = {
-    is?: ElementTypeWhereInput
-    isNot?: ElementTypeWhereInput
-  }
-
   export type AttributeScalarRelationFilter = {
     is?: AttributeWhereInput
     isNot?: AttributeWhereInput
+  }
+
+  export type ElementTypeScalarRelationFilter = {
+    is?: ElementTypeWhereInput
+    isNot?: ElementTypeWhereInput
   }
 
   export type ElementAttributeElementTypeIdAttributeIdCompoundUniqueInput = {
@@ -17744,40 +16545,40 @@ export namespace Prisma {
 
   export type ElementCountOrderByAggregateInput = {
     id?: SortOrder
-    fabricJson?: SortOrder
-    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
+    fabricJson?: SortOrder
+    zIndex?: SortOrder
   }
 
   export type ElementAvgOrderByAggregateInput = {
     id?: SortOrder
-    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
+    zIndex?: SortOrder
   }
 
   export type ElementMaxOrderByAggregateInput = {
     id?: SortOrder
-    fabricJson?: SortOrder
-    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
+    fabricJson?: SortOrder
+    zIndex?: SortOrder
   }
 
   export type ElementMinOrderByAggregateInput = {
     id?: SortOrder
-    fabricJson?: SortOrder
-    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
+    fabricJson?: SortOrder
+    zIndex?: SortOrder
   }
 
   export type ElementSumOrderByAggregateInput = {
     id?: SortOrder
-    zIndex?: SortOrder
     elementTypeId?: SortOrder
     moodboardId?: SortOrder
+    zIndex?: SortOrder
   }
 
   export type ElementScalarRelationFilter = {
@@ -17833,14 +16634,14 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    userId?: SortOrder
+    canvasJson?: SortOrder
     canvasWidth?: SortOrder
     canvasHeight?: SortOrder
     bgColor?: SortOrder
-    canvasJson?: SortOrder
     viewportX?: SortOrder
     viewportY?: SortOrder
     viewportScale?: SortOrder
-    userId?: SortOrder
   }
 
   export type MoodboardAvgOrderByAggregateInput = {
@@ -17856,28 +16657,28 @@ export namespace Prisma {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    userId?: SortOrder
+    canvasJson?: SortOrder
     canvasWidth?: SortOrder
     canvasHeight?: SortOrder
     bgColor?: SortOrder
-    canvasJson?: SortOrder
     viewportX?: SortOrder
     viewportY?: SortOrder
     viewportScale?: SortOrder
-    userId?: SortOrder
   }
 
   export type MoodboardMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
     createdAt?: SortOrder
+    userId?: SortOrder
+    canvasJson?: SortOrder
     canvasWidth?: SortOrder
     canvasHeight?: SortOrder
     bgColor?: SortOrder
-    canvasJson?: SortOrder
     viewportX?: SortOrder
     viewportY?: SortOrder
     viewportScale?: SortOrder
-    userId?: SortOrder
   }
 
   export type MoodboardSumOrderByAggregateInput = {
@@ -18091,34 +16892,8 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type PaletteCreatemixinColorsInput = {
-    set: string[]
-  }
-
-  export type PaletteCreatetagsInput = {
-    set: string[]
-  }
-
-  export type PaletteUpdatemixinColorsInput = {
-    set?: string[]
-    push?: string | string[]
-  }
-
-  export type PaletteUpdatetagsInput = {
-    set?: string[]
-    push?: string | string[]
-  }
-
   export type SegmentCreatetagsInput = {
     set: string[]
-  }
-
-  export type EnumSegmentTypeFieldUpdateOperationsInput = {
-    set?: $Enums.SegmentType
-  }
-
-  export type EnumDifficultyFieldUpdateOperationsInput = {
-    set?: $Enums.Difficulty
   }
 
   export type SegmentUpdatetagsInput = {
@@ -18128,6 +16903,14 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type EnumDifficultyFieldUpdateOperationsInput = {
+    set?: $Enums.Difficulty
+  }
+
+  export type EnumSegmentTypeFieldUpdateOperationsInput = {
+    set?: $Enums.SegmentType
   }
 
   export type ElementAttributeCreateNestedManyWithoutAttributeInput = {
@@ -18302,24 +17085,16 @@ export namespace Prisma {
     deleteMany?: ElementAttributeScalarWhereInput | ElementAttributeScalarWhereInput[]
   }
 
-  export type ElementTypeCreateNestedOneWithoutAttributesInput = {
-    create?: XOR<ElementTypeCreateWithoutAttributesInput, ElementTypeUncheckedCreateWithoutAttributesInput>
-    connectOrCreate?: ElementTypeCreateOrConnectWithoutAttributesInput
-    connect?: ElementTypeWhereUniqueInput
-  }
-
   export type AttributeCreateNestedOneWithoutElementTypesInput = {
     create?: XOR<AttributeCreateWithoutElementTypesInput, AttributeUncheckedCreateWithoutElementTypesInput>
     connectOrCreate?: AttributeCreateOrConnectWithoutElementTypesInput
     connect?: AttributeWhereUniqueInput
   }
 
-  export type ElementTypeUpdateOneRequiredWithoutAttributesNestedInput = {
+  export type ElementTypeCreateNestedOneWithoutAttributesInput = {
     create?: XOR<ElementTypeCreateWithoutAttributesInput, ElementTypeUncheckedCreateWithoutAttributesInput>
     connectOrCreate?: ElementTypeCreateOrConnectWithoutAttributesInput
-    upsert?: ElementTypeUpsertWithoutAttributesInput
     connect?: ElementTypeWhereUniqueInput
-    update?: XOR<XOR<ElementTypeUpdateToOneWithWhereWithoutAttributesInput, ElementTypeUpdateWithoutAttributesInput>, ElementTypeUncheckedUpdateWithoutAttributesInput>
   }
 
   export type AttributeUpdateOneRequiredWithoutElementTypesNestedInput = {
@@ -18328,6 +17103,14 @@ export namespace Prisma {
     upsert?: AttributeUpsertWithoutElementTypesInput
     connect?: AttributeWhereUniqueInput
     update?: XOR<XOR<AttributeUpdateToOneWithWhereWithoutElementTypesInput, AttributeUpdateWithoutElementTypesInput>, AttributeUncheckedUpdateWithoutElementTypesInput>
+  }
+
+  export type ElementTypeUpdateOneRequiredWithoutAttributesNestedInput = {
+    create?: XOR<ElementTypeCreateWithoutAttributesInput, ElementTypeUncheckedCreateWithoutAttributesInput>
+    connectOrCreate?: ElementTypeCreateOrConnectWithoutAttributesInput
+    upsert?: ElementTypeUpsertWithoutAttributesInput
+    connect?: ElementTypeWhereUniqueInput
+    update?: XOR<XOR<ElementTypeUpdateToOneWithWhereWithoutAttributesInput, ElementTypeUpdateWithoutAttributesInput>, ElementTypeUncheckedUpdateWithoutAttributesInput>
   }
 
   export type ElementTypeCreateNestedOneWithoutElementsInput = {
@@ -18400,24 +17183,16 @@ export namespace Prisma {
     deleteMany?: ElementValueScalarWhereInput | ElementValueScalarWhereInput[]
   }
 
-  export type ElementCreateNestedOneWithoutValuesInput = {
-    create?: XOR<ElementCreateWithoutValuesInput, ElementUncheckedCreateWithoutValuesInput>
-    connectOrCreate?: ElementCreateOrConnectWithoutValuesInput
-    connect?: ElementWhereUniqueInput
-  }
-
   export type AttributeCreateNestedOneWithoutElementValuesInput = {
     create?: XOR<AttributeCreateWithoutElementValuesInput, AttributeUncheckedCreateWithoutElementValuesInput>
     connectOrCreate?: AttributeCreateOrConnectWithoutElementValuesInput
     connect?: AttributeWhereUniqueInput
   }
 
-  export type ElementUpdateOneRequiredWithoutValuesNestedInput = {
+  export type ElementCreateNestedOneWithoutValuesInput = {
     create?: XOR<ElementCreateWithoutValuesInput, ElementUncheckedCreateWithoutValuesInput>
     connectOrCreate?: ElementCreateOrConnectWithoutValuesInput
-    upsert?: ElementUpsertWithoutValuesInput
     connect?: ElementWhereUniqueInput
-    update?: XOR<XOR<ElementUpdateToOneWithWhereWithoutValuesInput, ElementUpdateWithoutValuesInput>, ElementUncheckedUpdateWithoutValuesInput>
   }
 
   export type AttributeUpdateOneRequiredWithoutElementValuesNestedInput = {
@@ -18426,6 +17201,14 @@ export namespace Prisma {
     upsert?: AttributeUpsertWithoutElementValuesInput
     connect?: AttributeWhereUniqueInput
     update?: XOR<XOR<AttributeUpdateToOneWithWhereWithoutElementValuesInput, AttributeUpdateWithoutElementValuesInput>, AttributeUncheckedUpdateWithoutElementValuesInput>
+  }
+
+  export type ElementUpdateOneRequiredWithoutValuesNestedInput = {
+    create?: XOR<ElementCreateWithoutValuesInput, ElementUncheckedCreateWithoutValuesInput>
+    connectOrCreate?: ElementCreateOrConnectWithoutValuesInput
+    upsert?: ElementUpsertWithoutValuesInput
+    connect?: ElementWhereUniqueInput
+    update?: XOR<XOR<ElementUpdateToOneWithWhereWithoutValuesInput, ElementUpdateWithoutValuesInput>, ElementUncheckedUpdateWithoutValuesInput>
   }
 
   export type ElementCreateNestedManyWithoutMoodboardInput = {
@@ -18715,20 +17498,6 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
-  export type NestedEnumSegmentTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.SegmentType | EnumSegmentTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumSegmentTypeFilter<$PrismaModel> | $Enums.SegmentType
-  }
-
-  export type NestedEnumDifficultyFilter<$PrismaModel = never> = {
-    equals?: $Enums.Difficulty | EnumDifficultyFieldRefInput<$PrismaModel>
-    in?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
-    notIn?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
-    not?: NestedEnumDifficultyFilter<$PrismaModel> | $Enums.Difficulty
-  }
-
   export type NestedDateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -18740,14 +17509,32 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
-  export type NestedEnumSegmentTypeWithAggregatesFilter<$PrismaModel = never> = {
+  export type NestedEnumDifficultyFilter<$PrismaModel = never> = {
+    equals?: $Enums.Difficulty | EnumDifficultyFieldRefInput<$PrismaModel>
+    in?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    notIn?: $Enums.Difficulty[] | ListEnumDifficultyFieldRefInput<$PrismaModel>
+    not?: NestedEnumDifficultyFilter<$PrismaModel> | $Enums.Difficulty
+  }
+
+  export type NestedEnumSegmentTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.SegmentType | EnumSegmentTypeFieldRefInput<$PrismaModel>
     in?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
     notIn?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumSegmentTypeWithAggregatesFilter<$PrismaModel> | $Enums.SegmentType
+    not?: NestedEnumSegmentTypeFilter<$PrismaModel> | $Enums.SegmentType
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnumSegmentTypeFilter<$PrismaModel>
-    _max?: NestedEnumSegmentTypeFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedEnumDifficultyWithAggregatesFilter<$PrismaModel = never> = {
@@ -18783,18 +17570,14 @@ export namespace Prisma {
     not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+  export type NestedEnumSegmentTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SegmentType | EnumSegmentTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.SegmentType[] | ListEnumSegmentTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumSegmentTypeWithAggregatesFilter<$PrismaModel> | $Enums.SegmentType
     _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
+    _min?: NestedEnumSegmentTypeFilter<$PrismaModel>
+    _max?: NestedEnumSegmentTypeFilter<$PrismaModel>
   }
 
   export type NestedBoolFilter<$PrismaModel = never> = {
@@ -19021,9 +17804,9 @@ export namespace Prisma {
 
   export type ElementUncheckedCreateWithoutElementTypeInput = {
     id?: number
+    moodboardId: number
     fabricJson: string
     zIndex?: number
-    moodboardId: number
     values?: ElementValueUncheckedCreateNestedManyWithoutElementInput
   }
 
@@ -19076,10 +17859,10 @@ export namespace Prisma {
     OR?: ElementScalarWhereInput[]
     NOT?: ElementScalarWhereInput | ElementScalarWhereInput[]
     id?: IntFilter<"Element"> | number
-    fabricJson?: StringFilter<"Element"> | string
-    zIndex?: IntFilter<"Element"> | number
     elementTypeId?: IntFilter<"Element"> | number
     moodboardId?: IntFilter<"Element"> | number
+    fabricJson?: StringFilter<"Element"> | string
+    zIndex?: IntFilter<"Element"> | number
   }
 
   export type ElementAttributeUpsertWithWhereUniqueWithoutElementTypeInput = {
@@ -19096,26 +17879,6 @@ export namespace Prisma {
   export type ElementAttributeUpdateManyWithWhereWithoutElementTypeInput = {
     where: ElementAttributeScalarWhereInput
     data: XOR<ElementAttributeUpdateManyMutationInput, ElementAttributeUncheckedUpdateManyWithoutElementTypeInput>
-  }
-
-  export type ElementTypeCreateWithoutAttributesInput = {
-    name: string
-    description?: string | null
-    isActive?: boolean
-    elements?: ElementCreateNestedManyWithoutElementTypeInput
-  }
-
-  export type ElementTypeUncheckedCreateWithoutAttributesInput = {
-    id?: number
-    name: string
-    description?: string | null
-    isActive?: boolean
-    elements?: ElementUncheckedCreateNestedManyWithoutElementTypeInput
-  }
-
-  export type ElementTypeCreateOrConnectWithoutAttributesInput = {
-    where: ElementTypeWhereUniqueInput
-    create: XOR<ElementTypeCreateWithoutAttributesInput, ElementTypeUncheckedCreateWithoutAttributesInput>
   }
 
   export type AttributeCreateWithoutElementTypesInput = {
@@ -19138,30 +17901,24 @@ export namespace Prisma {
     create: XOR<AttributeCreateWithoutElementTypesInput, AttributeUncheckedCreateWithoutElementTypesInput>
   }
 
-  export type ElementTypeUpsertWithoutAttributesInput = {
-    update: XOR<ElementTypeUpdateWithoutAttributesInput, ElementTypeUncheckedUpdateWithoutAttributesInput>
+  export type ElementTypeCreateWithoutAttributesInput = {
+    name: string
+    description?: string | null
+    isActive?: boolean
+    elements?: ElementCreateNestedManyWithoutElementTypeInput
+  }
+
+  export type ElementTypeUncheckedCreateWithoutAttributesInput = {
+    id?: number
+    name: string
+    description?: string | null
+    isActive?: boolean
+    elements?: ElementUncheckedCreateNestedManyWithoutElementTypeInput
+  }
+
+  export type ElementTypeCreateOrConnectWithoutAttributesInput = {
+    where: ElementTypeWhereUniqueInput
     create: XOR<ElementTypeCreateWithoutAttributesInput, ElementTypeUncheckedCreateWithoutAttributesInput>
-    where?: ElementTypeWhereInput
-  }
-
-  export type ElementTypeUpdateToOneWithWhereWithoutAttributesInput = {
-    where?: ElementTypeWhereInput
-    data: XOR<ElementTypeUpdateWithoutAttributesInput, ElementTypeUncheckedUpdateWithoutAttributesInput>
-  }
-
-  export type ElementTypeUpdateWithoutAttributesInput = {
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    elements?: ElementUpdateManyWithoutElementTypeNestedInput
-  }
-
-  export type ElementTypeUncheckedUpdateWithoutAttributesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isActive?: BoolFieldUpdateOperationsInput | boolean
-    elements?: ElementUncheckedUpdateManyWithoutElementTypeNestedInput
   }
 
   export type AttributeUpsertWithoutElementTypesInput = {
@@ -19190,6 +17947,32 @@ export namespace Prisma {
     elementValues?: ElementValueUncheckedUpdateManyWithoutAttributeNestedInput
   }
 
+  export type ElementTypeUpsertWithoutAttributesInput = {
+    update: XOR<ElementTypeUpdateWithoutAttributesInput, ElementTypeUncheckedUpdateWithoutAttributesInput>
+    create: XOR<ElementTypeCreateWithoutAttributesInput, ElementTypeUncheckedCreateWithoutAttributesInput>
+    where?: ElementTypeWhereInput
+  }
+
+  export type ElementTypeUpdateToOneWithWhereWithoutAttributesInput = {
+    where?: ElementTypeWhereInput
+    data: XOR<ElementTypeUpdateWithoutAttributesInput, ElementTypeUncheckedUpdateWithoutAttributesInput>
+  }
+
+  export type ElementTypeUpdateWithoutAttributesInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    elements?: ElementUpdateManyWithoutElementTypeNestedInput
+  }
+
+  export type ElementTypeUncheckedUpdateWithoutAttributesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    elements?: ElementUncheckedUpdateManyWithoutElementTypeNestedInput
+  }
+
   export type ElementTypeCreateWithoutElementsInput = {
     name: string
     description?: string | null
@@ -19213,28 +17996,28 @@ export namespace Prisma {
   export type MoodboardCreateWithoutElementsInput = {
     name: string
     createdAt?: Date | string
+    userId: string
+    canvasJson?: string | null
     canvasWidth?: number
     canvasHeight?: number
     bgColor?: string
-    canvasJson?: string | null
     viewportX?: number
     viewportY?: number
     viewportScale?: number
-    userId: string
   }
 
   export type MoodboardUncheckedCreateWithoutElementsInput = {
     id?: number
     name: string
     createdAt?: Date | string
+    userId: string
+    canvasJson?: string | null
     canvasWidth?: number
     canvasHeight?: number
     bgColor?: string
-    canvasJson?: string | null
     viewportX?: number
     viewportY?: number
     viewportScale?: number
-    userId: string
   }
 
   export type MoodboardCreateOrConnectWithoutElementsInput = {
@@ -19302,28 +18085,28 @@ export namespace Prisma {
   export type MoodboardUpdateWithoutElementsInput = {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
     canvasWidth?: IntFieldUpdateOperationsInput | number
     canvasHeight?: IntFieldUpdateOperationsInput | number
     bgColor?: StringFieldUpdateOperationsInput | string
-    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
     viewportX?: FloatFieldUpdateOperationsInput | number
     viewportY?: FloatFieldUpdateOperationsInput | number
     viewportScale?: FloatFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type MoodboardUncheckedUpdateWithoutElementsInput = {
     id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    userId?: StringFieldUpdateOperationsInput | string
+    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
     canvasWidth?: IntFieldUpdateOperationsInput | number
     canvasHeight?: IntFieldUpdateOperationsInput | number
     bgColor?: StringFieldUpdateOperationsInput | string
-    canvasJson?: NullableStringFieldUpdateOperationsInput | string | null
     viewportX?: FloatFieldUpdateOperationsInput | number
     viewportY?: FloatFieldUpdateOperationsInput | number
     viewportScale?: FloatFieldUpdateOperationsInput | number
-    userId?: StringFieldUpdateOperationsInput | string
   }
 
   export type ElementValueUpsertWithWhereUniqueWithoutElementInput = {
@@ -19340,26 +18123,6 @@ export namespace Prisma {
   export type ElementValueUpdateManyWithWhereWithoutElementInput = {
     where: ElementValueScalarWhereInput
     data: XOR<ElementValueUpdateManyMutationInput, ElementValueUncheckedUpdateManyWithoutElementInput>
-  }
-
-  export type ElementCreateWithoutValuesInput = {
-    fabricJson: string
-    zIndex?: number
-    elementType: ElementTypeCreateNestedOneWithoutElementsInput
-    moodboard: MoodboardCreateNestedOneWithoutElementsInput
-  }
-
-  export type ElementUncheckedCreateWithoutValuesInput = {
-    id?: number
-    fabricJson: string
-    zIndex?: number
-    elementTypeId: number
-    moodboardId: number
-  }
-
-  export type ElementCreateOrConnectWithoutValuesInput = {
-    where: ElementWhereUniqueInput
-    create: XOR<ElementCreateWithoutValuesInput, ElementUncheckedCreateWithoutValuesInput>
   }
 
   export type AttributeCreateWithoutElementValuesInput = {
@@ -19382,30 +18145,24 @@ export namespace Prisma {
     create: XOR<AttributeCreateWithoutElementValuesInput, AttributeUncheckedCreateWithoutElementValuesInput>
   }
 
-  export type ElementUpsertWithoutValuesInput = {
-    update: XOR<ElementUpdateWithoutValuesInput, ElementUncheckedUpdateWithoutValuesInput>
+  export type ElementCreateWithoutValuesInput = {
+    fabricJson: string
+    zIndex?: number
+    elementType: ElementTypeCreateNestedOneWithoutElementsInput
+    moodboard: MoodboardCreateNestedOneWithoutElementsInput
+  }
+
+  export type ElementUncheckedCreateWithoutValuesInput = {
+    id?: number
+    elementTypeId: number
+    moodboardId: number
+    fabricJson: string
+    zIndex?: number
+  }
+
+  export type ElementCreateOrConnectWithoutValuesInput = {
+    where: ElementWhereUniqueInput
     create: XOR<ElementCreateWithoutValuesInput, ElementUncheckedCreateWithoutValuesInput>
-    where?: ElementWhereInput
-  }
-
-  export type ElementUpdateToOneWithWhereWithoutValuesInput = {
-    where?: ElementWhereInput
-    data: XOR<ElementUpdateWithoutValuesInput, ElementUncheckedUpdateWithoutValuesInput>
-  }
-
-  export type ElementUpdateWithoutValuesInput = {
-    fabricJson?: StringFieldUpdateOperationsInput | string
-    zIndex?: IntFieldUpdateOperationsInput | number
-    elementType?: ElementTypeUpdateOneRequiredWithoutElementsNestedInput
-    moodboard?: MoodboardUpdateOneRequiredWithoutElementsNestedInput
-  }
-
-  export type ElementUncheckedUpdateWithoutValuesInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    fabricJson?: StringFieldUpdateOperationsInput | string
-    zIndex?: IntFieldUpdateOperationsInput | number
-    elementTypeId?: IntFieldUpdateOperationsInput | number
-    moodboardId?: IntFieldUpdateOperationsInput | number
   }
 
   export type AttributeUpsertWithoutElementValuesInput = {
@@ -19434,6 +18191,32 @@ export namespace Prisma {
     elementTypes?: ElementAttributeUncheckedUpdateManyWithoutAttributeNestedInput
   }
 
+  export type ElementUpsertWithoutValuesInput = {
+    update: XOR<ElementUpdateWithoutValuesInput, ElementUncheckedUpdateWithoutValuesInput>
+    create: XOR<ElementCreateWithoutValuesInput, ElementUncheckedCreateWithoutValuesInput>
+    where?: ElementWhereInput
+  }
+
+  export type ElementUpdateToOneWithWhereWithoutValuesInput = {
+    where?: ElementWhereInput
+    data: XOR<ElementUpdateWithoutValuesInput, ElementUncheckedUpdateWithoutValuesInput>
+  }
+
+  export type ElementUpdateWithoutValuesInput = {
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
+    elementType?: ElementTypeUpdateOneRequiredWithoutElementsNestedInput
+    moodboard?: MoodboardUpdateOneRequiredWithoutElementsNestedInput
+  }
+
+  export type ElementUncheckedUpdateWithoutValuesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    elementTypeId?: IntFieldUpdateOperationsInput | number
+    moodboardId?: IntFieldUpdateOperationsInput | number
+    fabricJson?: StringFieldUpdateOperationsInput | string
+    zIndex?: IntFieldUpdateOperationsInput | number
+  }
+
   export type ElementCreateWithoutMoodboardInput = {
     fabricJson: string
     zIndex?: number
@@ -19443,9 +18226,9 @@ export namespace Prisma {
 
   export type ElementUncheckedCreateWithoutMoodboardInput = {
     id?: number
+    elementTypeId: number
     fabricJson: string
     zIndex?: number
-    elementTypeId: number
     values?: ElementValueUncheckedCreateNestedManyWithoutElementInput
   }
 
@@ -19770,9 +18553,9 @@ export namespace Prisma {
 
   export type ElementCreateManyElementTypeInput = {
     id?: number
+    moodboardId: number
     fabricJson: string
     zIndex?: number
-    moodboardId: number
   }
 
   export type ElementAttributeCreateManyElementTypeInput = {
@@ -19788,17 +18571,17 @@ export namespace Prisma {
 
   export type ElementUncheckedUpdateWithoutElementTypeInput = {
     id?: IntFieldUpdateOperationsInput | number
+    moodboardId?: IntFieldUpdateOperationsInput | number
     fabricJson?: StringFieldUpdateOperationsInput | string
     zIndex?: IntFieldUpdateOperationsInput | number
-    moodboardId?: IntFieldUpdateOperationsInput | number
     values?: ElementValueUncheckedUpdateManyWithoutElementNestedInput
   }
 
   export type ElementUncheckedUpdateManyWithoutElementTypeInput = {
     id?: IntFieldUpdateOperationsInput | number
+    moodboardId?: IntFieldUpdateOperationsInput | number
     fabricJson?: StringFieldUpdateOperationsInput | string
     zIndex?: IntFieldUpdateOperationsInput | number
-    moodboardId?: IntFieldUpdateOperationsInput | number
   }
 
   export type ElementAttributeUpdateWithoutElementTypeInput = {
@@ -19835,9 +18618,9 @@ export namespace Prisma {
 
   export type ElementCreateManyMoodboardInput = {
     id?: number
+    elementTypeId: number
     fabricJson: string
     zIndex?: number
-    elementTypeId: number
   }
 
   export type ElementUpdateWithoutMoodboardInput = {
@@ -19849,17 +18632,17 @@ export namespace Prisma {
 
   export type ElementUncheckedUpdateWithoutMoodboardInput = {
     id?: IntFieldUpdateOperationsInput | number
+    elementTypeId?: IntFieldUpdateOperationsInput | number
     fabricJson?: StringFieldUpdateOperationsInput | string
     zIndex?: IntFieldUpdateOperationsInput | number
-    elementTypeId?: IntFieldUpdateOperationsInput | number
     values?: ElementValueUncheckedUpdateManyWithoutElementNestedInput
   }
 
   export type ElementUncheckedUpdateManyWithoutMoodboardInput = {
     id?: IntFieldUpdateOperationsInput | number
+    elementTypeId?: IntFieldUpdateOperationsInput | number
     fabricJson?: StringFieldUpdateOperationsInput | string
     zIndex?: IntFieldUpdateOperationsInput | number
-    elementTypeId?: IntFieldUpdateOperationsInput | number
   }
 
   export type GalleryPinLikeCreateManyPinInput = {

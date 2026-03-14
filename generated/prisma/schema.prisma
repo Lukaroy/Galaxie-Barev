@@ -5,22 +5,17 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-}
-
-enum UserRole {
-  USER
-  ADMIN
+  // url odstraněno podle nové syntaxe Prisma 7
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  firstName String?   @db.VarChar(64)
-  lastName  String?   @db.VarChar(64)
-  userName  String    @unique @db.VarChar(32)
-  birthday  DateTime?
-  role      UserRole  @default(USER)
-
+  id              String           @id @default(cuid())
+  email           String           @unique
+  firstName       String?          @db.VarChar(64)
+  lastName        String?          @db.VarChar(64)
+  userName        String           @unique @db.VarChar(32)
+  birthday        DateTime?
+  role            UserRole         @default(USER)
   galleryPins     GalleryPin[]
   galleryPinLikes GalleryPinLike[]
 }
@@ -29,16 +24,114 @@ model Font {
   id       Int     @id @default(autoincrement())
   name     String  @db.VarChar(64)
   category String  @db.VarChar(32)
-  url      String  @db.Text
-  tips     String? @db.Text
+  url      String
+  tips     String?
 }
 
-model Palette {
-  id          Int      @id @default(autoincrement())
-  mainColor   String   @db.VarChar(7) // HEX formát #FFFFFF
-  mixinColors String[] // Vyžaduje PostgreSQL, jinak nutná tabulka PaletteColor
-  tags        String[] // Vyžaduje PostgreSQL, jinak nutná tabulka PaletteTag
-  description String?  @db.Text
+model Segment {
+  id          Int         @id @default(autoincrement())
+  title       String      @db.VarChar(255)
+  slug        String      @unique
+  description String?
+  tags        String[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  color       String?     @db.VarChar(7)
+  content     String?
+  difficulty  Difficulty  @default(BEGINNER)
+  duration    String?     @db.VarChar(32)
+  icon        String?     @db.VarChar(32)
+  questions   Json?
+  type        SegmentType @default(LESSON)
+}
+
+model Attribute {
+  id            Int                @id @default(autoincrement())
+  name          String             @unique @db.VarChar(64)
+  description   String?            @db.VarChar(255)
+  isActive      Boolean            @default(true)
+  elementTypes  ElementAttribute[]
+  elementValues ElementValue[]
+}
+
+model ElementType {
+  id          Int                @id @default(autoincrement())
+  name        String             @unique @db.VarChar(32)
+  description String?            @db.VarChar(255)
+  isActive    Boolean            @default(true)
+  elements    Element[]
+  attributes  ElementAttribute[]
+}
+
+model ElementAttribute {
+  elementTypeId Int
+  attributeId   Int
+  attribute     Attribute   @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  elementType   ElementType @relation(fields: [elementTypeId], references: [id], onDelete: Cascade)
+
+  @@id([elementTypeId, attributeId])
+}
+
+model Element {
+  id            Int            @id @default(autoincrement())
+  elementTypeId Int
+  moodboardId   Int
+  fabricJson    String
+  zIndex        Int            @default(0)
+  elementType   ElementType    @relation(fields: [elementTypeId], references: [id])
+  moodboard     Moodboard      @relation(fields: [moodboardId], references: [id], onDelete: Cascade)
+  values        ElementValue[]
+}
+
+model ElementValue {
+  elementId   Int
+  attributeId Int
+  value       String
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  element     Element   @relation(fields: [elementId], references: [id], onDelete: Cascade)
+
+  @@id([elementId, attributeId])
+}
+
+model Moodboard {
+  id            Int       @id @default(autoincrement())
+  name          String    @db.VarChar(255)
+  createdAt     DateTime  @default(now())
+  userId        String
+  canvasJson    String?
+  canvasWidth   Int       @default(794)
+  canvasHeight  Int       @default(1123)
+  bgColor       String    @default("#ffffff") @db.VarChar(7)
+  viewportX     Float     @default(0)
+  viewportY     Float     @default(0)
+  viewportScale Float     @default(1)
+  elements      Element[]
+}
+
+model GalleryPin {
+  id          Int              @id @default(autoincrement())
+  title       String           @db.VarChar(128)
+  imageUrl    String
+  description String?
+  createdAt   DateTime         @default(now())
+  authorId    String
+  author      User             @relation(fields: [authorId], references: [id])
+  likes       GalleryPinLike[]
+}
+
+model GalleryPinLike {
+  id     Int        @id @default(autoincrement())
+  pinId  Int
+  userId String
+  pin    GalleryPin @relation(fields: [pinId], references: [id], onDelete: Cascade)
+  user   User       @relation(fields: [userId], references: [id])
+
+  @@unique([pinId, userId])
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }
 
 enum SegmentType {
@@ -50,115 +143,4 @@ enum Difficulty {
   BEGINNER
   INTERMEDIATE
   EXPERT
-}
-
-model Segment {
-  id          Int         @id @default(autoincrement())
-  title       String      @db.VarChar(255)
-  slug        String      @unique
-  description String?     @db.Text
-  content     String?     @db.Text // Obsah lekce (markdown/html)
-  type        SegmentType @default(LESSON) // Lekce nebo Test
-  difficulty  Difficulty  @default(BEGINNER)
-  duration    String?     @db.VarChar(32) // např. "15 min"
-  icon        String?     @db.VarChar(32) // název ikony z lucide
-  color       String?     @db.VarChar(7) // hex barva
-  tags        String[]
-  questions   Json? // JSON pole otázek pro testy
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-}
-
-model Attribute {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique @db.VarChar(64)
-  description String? @db.VarChar(255)
-  isActive    Boolean @default(true)
-
-  elementTypes  ElementAttribute[]
-  elementValues ElementValue[]
-}
-
-model ElementType {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique @db.VarChar(32)
-  description String? @db.VarChar(255)
-  isActive    Boolean @default(true)
-
-  elements   Element[]
-  attributes ElementAttribute[]
-}
-
-// Propojovací tabulka pro M:N vztah mezi Typem Elementu a Atributy
-model ElementAttribute {
-  elementTypeId Int
-  attributeId   Int
-
-  elementType ElementType @relation(fields: [elementTypeId], references: [id], onDelete: Cascade)
-  attribute   Attribute   @relation(fields: [attributeId], references: [id], onDelete: Cascade)
-
-  @@id([elementTypeId, attributeId])
-}
-
-model Element {
-  id         Int    @id @default(autoincrement())
-  fabricJson String @db.Text // Serializovaný fabric.js objekt
-  zIndex     Int    @default(0) // Pořadí vrstvy
-
-  elementTypeId Int
-  moodboardId   Int
-
-  elementType ElementType    @relation(fields: [elementTypeId], references: [id])
-  moodboard   Moodboard      @relation(fields: [moodboardId], references: [id], onDelete: Cascade)
-  values      ElementValue[]
-}
-
-model ElementValue {
-  elementId   Int
-  attributeId Int
-  value       String @db.Text
-
-  element   Element   @relation(fields: [elementId], references: [id], onDelete: Cascade)
-  attribute Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
-
-  @@id([elementId, attributeId])
-}
-
-model Moodboard {
-  id            Int      @id @default(autoincrement())
-  name          String   @db.VarChar(255)
-  createdAt     DateTime @default(now())
-  canvasWidth   Int      @default(794)
-  canvasHeight  Int      @default(1123)
-  bgColor       String   @default("#ffffff") @db.VarChar(7)
-  canvasJson    String?  @db.Text
-  viewportX     Float    @default(0)
-  viewportY     Float    @default(0)
-  viewportScale Float    @default(1)
-
-  userId   String // Firebase UID, bez foreign key pro jednodušší vývoj
-  elements Element[]
-}
-
-model GalleryPin {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(128)
-  imageUrl    String   @db.Text
-  description String?  @db.Text
-  createdAt   DateTime @default(now())
-
-  authorId String
-  author   User             @relation(fields: [authorId], references: [id])
-  likes    GalleryPinLike[]
-}
-
-model GalleryPinLike {
-  id     Int    @id @default(autoincrement())
-  pinId  Int
-  userId String
-
-  pin  GalleryPin @relation(fields: [pinId], references: [id], onDelete: Cascade)
-  user User       @relation(fields: [userId], references: [id])
-
-  @@unique([pinId, userId])
 }

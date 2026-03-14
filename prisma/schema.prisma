@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // url odstraněno podle nové syntaxe Prisma 7
 }
 
 model User {
@@ -26,14 +26,6 @@ model Font {
   category String  @db.VarChar(32)
   url      String
   tips     String?
-}
-
-model Palette {
-  id          Int      @id @default(autoincrement())
-  mainColor   String   @db.VarChar(7)
-  mixinColors String[]
-  tags        String[]
-  description String?
 }
 
 model Segment {
