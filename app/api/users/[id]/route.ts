@@ -60,9 +60,11 @@ export async function PUT(request: Request, context: { params: { id: string } })
 }
 
 export async function PATCH(request: Request, context: { params: { id: string } }) {
-  const { id } = context.params;
+  const params = await context.params;
+  const { id } = params;
   try {
     const data = await request.json();
+    console.log("PATCH /api/users/[id] - incoming data:", data);
     
     if (data.userName) {
       data.userName = data.userName.toLowerCase().replace(/[^a-z0-9_.-]/g, '_').slice(0, 32);
@@ -73,6 +75,7 @@ export async function PATCH(request: Request, context: { params: { id: string } 
         where: { userName: data.userName }
       });
       if (existingUser && existingUser.id !== id) {
+        console.warn("PATCH /api/users/[id] - userName already used:", data.userName);
         return NextResponse.json({ 
           error: 'Toto uživatelské jméno je již používáno' 
         }, { status: 409 });
@@ -83,11 +86,17 @@ export async function PATCH(request: Request, context: { params: { id: string } 
       data.birthday = new Date(data.birthday);
     }
     
-    const updated = await prisma.user.update({
-      where: { id: id as string },
-      data
-    });
-    return NextResponse.json(updated);
+    try {
+      const updated = await prisma.user.update({
+        where: { id: id as string },
+        data
+      });
+      console.log("PATCH /api/users/[id] - update success:", updated);
+      return NextResponse.json(updated);
+    } catch (dbError) {
+      console.error("PATCH /api/users/[id] - prisma update error:", dbError);
+      throw dbError;
+    }
   } catch (error: unknown) {
     console.error(`API PATCH /api/users/${id} error:`, error);
     if (isPrismaError(error) && error.code === 'P2025') {
@@ -98,7 +107,7 @@ export async function PATCH(request: Request, context: { params: { id: string } 
     }
     return NextResponse.json({ 
       error: 'Failed to update user',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : error
     }, { status: 500 });
   }
 }
