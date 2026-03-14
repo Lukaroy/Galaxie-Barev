@@ -1,14 +1,21 @@
+
+# Základní image s Node.js
 FROM node:22-bookworm-slim AS base
 WORKDIR /app
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# Instalace závislostí a OpenSSL pro Prisma
 FROM base AS deps
+RUN apt-get update -y && apt-get install -y openssl
 COPY package*.json ./
+COPY prisma ./prisma
 RUN npm install
 
+# Build aplikace
 FROM deps AS builder
 WORKDIR /app
 
+# Firebase proměnné
 ARG NEXT_PUBLIC_FIREBASE_API_KEY
 ARG NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
 ARG NEXT_PUBLIC_FIREBASE_PROJECT_ID
@@ -27,13 +34,16 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 
+# Produkční image
 FROM node:22-bookworm-slim AS runner
 WORKDIR /app
-
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
+
+# Instalace OpenSSL pro běh Prisma v produkci
+RUN apt-get update -y && apt-get install -y openssl
 
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
