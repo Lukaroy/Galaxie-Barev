@@ -1,0 +1,20 @@
+Odkaz na projekt:
+Projekt je uložen na GitHubu: https://github.com/Lukaroy/Galaxie-Barev.
+
+Webová aplikace je dostupná na: https://galaxie-barev.vercel.app/.
+
+Návod na spuštění:
+- Projekt můžete spustit přímo ve webovém prohlížeči na již víše zmíniném URL.
+- Alternativně lze projekt spustit lokálně pomocí Dockeru:
+  • Stáhněte a nainstalujte Docker Desktop (https://www.docker.com/products/docker-desktop/).
+  • Naklonujte projekt z GitHubu:
+    git clone https://github.com/Lukaroy/Galaxie-Barev.git
+  • V adresáři projektu použijte soubor start.bat pro automatické spuštění, nebo spusťte ručně příkaz:
+    "docker-compose up"
+  • Po spuštění bude aplikace dostupná na adrese http://localhost:3000
+
+Admin účet pro testování:
+- Email: luk.burrin@gmail.com
+- Heslo: R8f#2vQz!mLp9Xw
+
+Pro lokální spuštění je potřeba mít nainstalovaný Docker Desktop. Pro přístup k webové aplikaci stačí moderní webový prohlížeč.
